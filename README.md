@@ -3,4 +3,3 @@
 * Elizabeth Schuck
 * Mathilde Muller
 * Callista Lodzinski
-
