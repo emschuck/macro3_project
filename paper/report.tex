@@ -15,7 +15,56 @@
 \section{Replication Target}
 In this project, we aim to replicate the findings of \textit{From the French franc to the euro, is there an economic impact for the CFA franc zone countries? A 'bias-corrected' synthetic control method} by Alassane Diallo and Adama Ba, published in Cogent Economics \& Finance in 2024. This paper assesses the impact of pegging the CFA franc to the euro on real GDP per capita in the West African Economic and Monetary Union (WAEMU) and the Central African Economic and Monetary Community (CAEMC) countries. The original study uses a set of 35 annual country-level panel data from 1980 to 2019 and applies synthetic control methods to estimate the counterfactual economic outcomes for member countries.
 
-
 %\input{} % Use \input{} to include the content of other .tex files (such as charts). E.g. \input{../output/tables/regression_table.tex}.
+
+\section{Data}
+
+\begin{table}[htbp]
+\centering
+\caption{Variables}
+\begin{tabular}{llllll}
+\hline
+\textbf{Variable} & \textbf{Symbol} & \textbf{Type} & \textbf{Category} & \textbf{(First) Page Ref} & \textbf{Possible Sources} \\
+\hline
+
+Real GDP per capita & $Y_{it}$ & Continuous & Outcome & 6 &  \\
+
+Lagged GDP per capita & $Y_{i,t-k}$ & Continuous & Lagged outcome & 10 &  \\
+
+Gross Fixed Capital Formation (\% GDP) & $I_{it}$ & Continuous & Capital & 10 &  \\
+
+Government expenditure (\% GDP) & $G_{it}$ & Continuous & Fiscal & 10 &  \\
+
+Official Development Assistance (\% GDP) & $ODA_{it}$ & Continuous & External & 10 &  \\
+
+Foreign Development Aid (\% GDP) & $FDA_{it}$ & Continuous & External & 10 &  \\
+
+Employment rate & $L_{it}$ & Continuous & Labour & 10 &  \\
+
+Agriculture (\% GDP) & $Agri_{it}$ & Continuous & Structure & 10 & WDI, PennWorld Tables \\
+
+Industry (\% GDP) & $Ind_{it}$ & Continuous & Structure & 10 & WDI, PennWorld Tables \\
+
+Governance / institutional quality & $Inst_{it}$ & Index & Institutions & 10 &  \\
+
+Political regime characteristics & $Pol_{it}$ & Categorical/Index & Institutions & 10 &  \\
+
+Inflation & $\pi_{it}$ & Continuous & Macro controls & 5 &  \\
+
+\hline
+
+Euro peg dummy & $D_{it}$ & Binary & Treatment &  &  \\
+
+\hline
+\hline
+
+Synthetic GDP per capita & $\tilde{Y}_{it}$ & Continuous & Constructed &  &  \\
+
+Treatment effect & $\tau_{it}$ & Continuous & Constructed &  &  \\
+
+\hline
+\end{tabular}
+\end{table}
+
 
 \end{document}
