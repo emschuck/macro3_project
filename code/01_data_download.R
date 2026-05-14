@@ -57,7 +57,7 @@ View(pwt10.01)
 ### WDI ###
 
 # Finding relevant indicators for each variable
-View(WDIsearch("agricultural gdp"))
+View(WDIsearch("development assistance"))
 
 # GDP per capita
 #   NY.GDP.PCAP.PP.KD   -- GDP per capita, PPP (constant 2021 int. $)
@@ -75,6 +75,8 @@ View(WDIsearch("agricultural gdp"))
 #   DT.ODA.ALLD.CD
 #       -- Net official development assistance and official aid received
 #           (current US$)
+#   DT.ODA.ALLD.GI.ZS
+#   Net official development assistance received (% of gross capital formation)
 
 # Foreign Direct Investment
 #   BN.KLT.DINV.CD.ZS -- Foreign direct investment (% of GDP)
@@ -85,10 +87,19 @@ View(WDIsearch("agricultural gdp"))
 # SL.UEM.TOTL.ZS
 #       -- Unemployment, total (% of total labor force) (modeled ILO estimate)
 
-# Agriculture share of GDP
+# Agriculture share of GDP ***
+# NV.AGR.TOTL.ZS
+#   Agriculture, forestry, and fishing, value added (% of GDP)
 
-# Industry share of GDP
+# Industry share of GDP ***
+#   NV.IND.TOTL.ZS
+#   Industry (including construction), value added (% of GDP)
+
 # Inflation
+#   FP.CPI.TOTL.ZG
+#   Inflation, consumer prices (annual %)
 
 # Institution quality
+
+
 # Political regime characteristics
