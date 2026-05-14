@@ -54,7 +54,6 @@ data("pwt10.01")
 View(pwt10.01)
 
 
-
 ### WDI ###
 
 # Finding relevant indicators for each variable
