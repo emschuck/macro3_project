@@ -238,6 +238,29 @@ df %>%
 #Temporary conclusion : Some values are quite far from the paper's one, not so sure about the explanation
 
 # =====================================================
+# 8. GDP growth graph
+# =====================================================
+
+df<-df %>%
+  arrange(iso3c, year) %>%
+  group_by(iso3c) %>%
+  mutate(growth = (gdp_pc / lag(gdp_pc) - 1) * 100)
+
+library(ggplot2)
+
+df_growth <- df %>% group_by(region,year) %>% summarize(growth=mean(growth,na.rm=TRUE))
+
+ggplot(df_growth, aes(x = year, y = growth, color = region)) +
+   geom_line(size = 1) + geom_vline(xintercept=2002,linetype ="dashed",color="black")+
+    labs(
+       title = "Evolution of GDP per capita growth",
+         x = "Year",
+         y = "Growth rate (%)"
+       ) 
+  +   theme_minimal()
+
+
+# =====================================================
 # 8. Load Polity data (institutions)
 # =====================================================
 
