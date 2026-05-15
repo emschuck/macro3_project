@@ -245,7 +245,7 @@ df %>%
 # -10 = full autocracy
 # +10 = full democracy
 
-polity <- read_excel("data/p5v2018.xls")
+polity <- read_excel("data/raw/polity5/p5v2018.xlsx")
 
 polity_clean <- polity %>%
   select(country, year, polity2) %>%
