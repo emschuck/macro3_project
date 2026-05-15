@@ -103,3 +103,167 @@ View(WDIsearch("development assistance"))
 
 
 # Political regime characteristics
+
+
+
+  # =====================================================
+# Objective:
+# - Load WDI data
+# - Clean dataset
+# - Validate inflation (pre vs post 2002)
+# - Load and merge Polity data (institutions)
+# =====================================================
+
+
+# =====================================================
+# 1. Load libraries
+# =====================================================
+library(WDI)
+library(tidyverse)
+library(readxl)
+library(countrycode)
+
+
+# =====================================================
+# 2. Define countries and variables
+# =====================================================
+
+# CFA countries (treated countries)
+countries <- c("BEN","BFA","CIV","MLI","NER","SEN","TGO",
+               "CMR","CAF","TCD","COG","GAB","GNQ")
+
+# WDI indicators (consistent with paper)
+indicators <- c(
+  gdp_pc = "NY.GDP.PCAP.KD",
+  agriculture = "NV.AGR.TOTL.ZS",
+  industry = "NV.IND.TOTL.ZS",
+  investment = "NE.GDI.TOTL.ZS",
+  government = "NE.CON.GOVT.ZS",
+  fdi = "BX.KLT.DINV.WD.GD.ZS",
+  inflation = "FP.CPI.TOTL.ZG",
+  oda = "DT.ODA.ODAT.GD.ZS"
+)
+
+
+# =====================================================
+# 3. Download WDI data
+# =====================================================
+
+df <- WDI(
+  country = countries,
+  indicator = indicators,
+  start = 1980,
+  end = 2019
+)
+
+# Quick overview
+summary(df)
+
+
+# =====================================================
+# 4. Define regions and periods
+# =====================================================
+
+# Regions
+waemu <- c("BEN","BFA","CIV","MLI","NER","SEN","TGO")
+caemc <- c("CMR","CAF","TCD","COG","GAB","GNQ")
+
+df <- df %>%
+  mutate(
+    region = case_when(
+      iso3c %in% waemu ~ "WAEMU",
+      iso3c %in% caemc ~ "CAEMC"
+    ),
+    period = ifelse(year <= 2001, "pre", "post")
+  )
+
+# Check distribution
+table(df$region)
+table(df$period)
+
+
+# =====================================================
+# 5. Inflation validation (country level)
+# =====================================================
+
+inflation_table <- df %>%
+  group_by(country, period) %>%
+  summarise(inflation_avg = mean(inflation, na.rm = TRUE)) %>%
+  pivot_wider(names_from = period, values_from = inflation_avg) %>%
+  select(country, pre, post) %>%
+  mutate(
+    pre = round(pre, 2),
+    post = round(post, 2)
+  )
+
+print(inflation_table)
+
+
+# =====================================================
+# 6. Inflation validation (regional averages)
+# =====================================================
+
+inflation_region <- df %>%
+  group_by(region, period) %>%
+  summarise(inflation_avg = mean(inflation, na.rm = TRUE)) %>%
+  pivot_wider(names_from = period, values_from = inflation_avg) %>%
+  select(region, pre, post) %>%
+  mutate(
+    pre = round(pre, 2),
+    post = round(post, 2)
+  )
+
+print(inflation_region)
+
+
+# =====================================================
+# 7. Additional data checks
+# =====================================================
+
+# Missing values per variable
+df %>%
+  summarise(across(everything(), ~sum(is.na(.))))
+
+# Check duplicates
+df %>%
+  count(iso3c, year) %>%
+  filter(n > 1)
+
+# Check extreme inflation values
+df %>%
+  summarise(
+    min_inflation = min(inflation, na.rm = TRUE),
+    max_inflation = max(inflation, na.rm = TRUE)
+  )
+#Temporary conclusion : Some values are quite far from the paper's one, not so sure about the explanation
+
+# =====================================================
+# 8. Load Polity data (institutions)
+# =====================================================
+
+# Polity score:
+# -10 = full autocracy
+# +10 = full democracy
+
+polity <- read_excel("data/p5v2018.xls")
+
+polity_clean <- polity %>%
+  select(country, year, polity2) %>%
+  mutate(
+    iso3c = countrycode(country,
+                        origin = "country.name",
+                        destination = "iso3c")
+  ) %>%
+  filter(iso3c %in% countries,
+         year >= 1980, year <= 2019)
+
+
+# =====================================================
+# 9. Merge Polity data with WDI dataset
+# =====================================================
+
+df <- df %>%
+  left_join(polity_clean, by = c("iso3c", "year"))
+
+# Check polity values
+summary(df$polity2)
