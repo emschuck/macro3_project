@@ -36,7 +36,7 @@ library(dplyr)
 library(stargazer)
 
 # Create output directories
-dir.create("output/tables",  recursive = TRUE, showWarnings = FALSE)
+dir.create("../output/tables",  recursive = TRUE, showWarnings = FALSE)
 dir.create("data/processed", recursive = TRUE, showWarnings = FALSE)
 
 
@@ -267,7 +267,7 @@ ggplot(df_growth, aes(x = year, y = growth, color = region)) +
 # -10 = full autocracy
 # +10 = full democracy
 
-polity <- read_excel("./data/raw/polity5/p5v2018.xlsx")
+polity <- read_excel("../data/raw/polity5/p5v2018.xlsx")
 
 polity_clean <- polity %>%
   select(country, year, polity2) %>%
