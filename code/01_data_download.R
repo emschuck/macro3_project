@@ -57,10 +57,12 @@ View(pwt10.01)
 ### WDI ###
 
 # Finding relevant indicators for each variable
-### View(WDIsearch("development assistance"))
+View(WDIsearch("gdp"))
 
 # GDP per capita
 #   NY.GDP.PCAP.PP.KD   -- GDP per capita, PPP (constant 2021 int. $)
+#   NY.GDP.MKTP.CD -- GDP (current US$)
+#   NY.GDP.PCAP.CD  -- GDP per capita (current US$)
 
 # Gross Fixed Capital Formation (expenditure, used for investment metric)
 #   NE.GDI.FTOT.ZS  -- Gross fixed capital formation (% of GDP)
@@ -134,7 +136,7 @@ countries <- c("BEN","BFA","CIV","MLI","NER","SEN","TGO",
 
 # WDI indicators (consistent with paper)
 indicators <- c(
-  gdp_pc = "NY.GDP.PCAP.KD",
+  gdp_pc = "NY.GDP.PCAP.CD", # GDP per capita (current US$)
   agriculture = "NV.AGR.TOTL.ZS",
   industry = "NV.IND.TOTL.ZS",
   investment = "NE.GDI.TOTL.ZS",
@@ -208,17 +210,36 @@ donor_countries <- c(
   "SYC"   # Seychelles
 )
 
-# =====================================================
-# Donor pool countries (Table 3 controls)
-# WDI-compatible ISO3 country codes
-# =====================================================
+# Table 2 non-CFA countries
+non_cfa_comparison_countries <- c(
+  "AGO",  # Angola
+  "BDI",  # Burundi
+  "COD",  # Congo, Dem. Rep.
+  "ETH",  # Ethiopia
+  "GMB",  # Gambia, The
+  "GHA",  # Ghana
+  "GIN",  # Guinea
+  "KEN",  # Kenya
+  "MDG",  # Madagascar
+  "MWI",  # Malawi
+  "NGA",  # Nigeria
+  "STP",  # Sao Tome and Principe
+  "SLE",  # Sierra Leone
+  "SDN",  # Sudan
+  "TZA",  # Tanzania
+  "UGA",  # Uganda
+  "ZMB",  # Zambia
+  "ZWE"   # Zimbabwe
+)
 
 
 df <- df %>%
   mutate(
     region = case_when(
       iso3c %in% waemu ~ "WAEMU",
-      iso3c %in% caemc ~ "CAEMC"
+      iso3c %in% caemc ~ "CAEMC",
+      iso3c %in% caemc ~ "donor_countries",
+      iso3c %in% caemc ~ "non_cfa_comparison_countries",
     ),
     period = ifelse(year <= 2001, "pre", "post")
   )
