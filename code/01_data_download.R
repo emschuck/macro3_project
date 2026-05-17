@@ -166,8 +166,53 @@ View(df)
 # =====================================================
 
 # Regions
-waemu <- c("BEN","BFA","CIV","MLI","NER","SEN","TGO")
-caemc <- c("CMR","CAF","TCD","COG","GAB","GNQ")
+waemu <- c(
+  "BEN", # Benin
+  "BFA", # Burkina Faso
+  "CIV", # Ivory Coast
+  "MLI", # Mali
+  "NER", # Niger
+  "SEN", # Senegal
+  "TGO"  # Togo
+)
+
+caemc <- c(
+  "CMR", # Cameroon
+  "CAF", # Central African Republic
+  "COG", # Republic of Congo
+  "GAB", # Gabon
+  "GNQ", # Equatorial guinea
+  "TCD", # Chad
+)
+
+donor_countries <- c(
+  "BGD",  # Bangladesh
+  "BRB",  # Barbados
+  "BTN",  # Bhutan
+  "BOL",  # Bolivia
+  "BWA",  # Botswana
+  "CPV",  # Cabo Verde
+  "DMA",  # Dominica
+  "ECU",  # Ecuador
+  "SWZ",  # Eswatini
+  "GRD",  # Grenada
+  "LAO",  # Lao PDR
+  "LSO",  # Lesotho
+  "MUS",  # Mauritius
+  "MAR",  # Morocco
+  "NAM",  # Namibia
+  "OMN",  # Oman
+  "PAN",  # Panama
+  "KNA",  # St. Kitts and Nevis
+  "LCA",  # St. Lucia
+  "SYC"   # Seychelles
+)
+
+# =====================================================
+# Donor pool countries (Table 3 controls)
+# WDI-compatible ISO3 country codes
+# =====================================================
+
 
 df <- df %>%
   mutate(
@@ -236,7 +281,7 @@ df %>%
     min_inflation = min(inflation, na.rm = TRUE),
     max_inflation = max(inflation, na.rm = TRUE)
   )
-  
+
 #Temporary conclusion : Some values are quite far from the paper's one, not so sure about the explanation
 
 # =====================================================
