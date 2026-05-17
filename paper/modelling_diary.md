@@ -8,3 +8,5 @@
 * 17-05-2026 : Initially using NY.GDP.PCAP.KD = constant-price GDP per capita, but appendix lists Output-side real GDP at current $. Swapping to using NY.GDP.PCAP.CD  -- GDP per capita (current US$).
 * 17-05-2026 : Penn world tables have more reliable data for output-side gdp, and include population variables -- testing using this instead of WDI variables.
 * 17-05-2026 : Using PWT for employment, government consumption share, and investment share instead of WDI 
+* 17-05-2026 : Trying to match inflation is giving different numbers. Likely partially from WDI data revisions, but also missing some values for Guinea, SL, and Zimbabwe. Testing GDP deflator inflation values (NY.GDP.DEFL.87.ZG, NY.GDP.DEFL.KD.ZG) matches for table 1B, but still not accurate for table 1a.
+

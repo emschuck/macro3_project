@@ -173,6 +173,8 @@ pwt <- pwt10.01 |>
 # Download World Development Indicator data
 # -----------------------------
 
+View(WDIsearch("inflation"))
+
 # WDI indicators used for variables not taken from PWT
 indicators <- c(
   agriculture = "NV.AGR.TOTL.ZS",
@@ -183,6 +185,8 @@ indicators <- c(
   # Foreign direct investment, net inflows (% of GDP)
   inflation = "FP.CPI.TOTL.ZG",
   # Inflation, consumer prices (annual %)
+  alt_inflation = "NY.GDP.DEFL.KD.ZG",
+  # Inflation, GDP deflator (annual %) (used for diagnostic of NA vals)
   oda = "DT.ODA.ODAT.GD.ZS"
   # Net official development assistance received (% of GNI)
 )
@@ -263,7 +267,7 @@ make_inflation_table <- function(
     filter(!is.na(table_period)) |>
     group_by(iso3c, country, table_period) |>
     summarise(
-      inflation_avg = mean(inflation, na.rm = TRUE),
+      inflation_avg = mean(alt_inflation, na.rm = TRUE),
       .groups = "drop"
     ) |>
     pivot_wider(
@@ -272,13 +276,13 @@ make_inflation_table <- function(
     ) |>
     mutate(order = match(iso3c, country_order)) |>
     arrange(order) |>
-    select(country, `1980-2001`, `2002-2021`)
+    select(country, `1980--2001`, `2002--2021`)
 
   average_row <- country_rows |>
     summarise(
       country = average_label,
-      `1980--2001` = mean(`1980-2001`, na.rm = TRUE),
-      `2002--2021` = mean(`2002-2021`, na.rm = TRUE)
+      `1980--2001` = mean(`1980--2001`, na.rm = TRUE),
+      `2002--2021` = mean(`2002--2021`, na.rm = TRUE)
     )
 
   bind_rows(country_rows, average_row) |>
@@ -322,9 +326,9 @@ table2_non_cfa_inflation <- make_inflation_table(
 )
 
 # Print tables
-print(table1_waemu)
-print(table1_caemc)
-print(table2_non_cfa_inflation)
+View(table1_waemu)
+View(table1_caemc)
+View(table2_non_cfa_inflation)
 
 # Save LaTeX outputs
 cat(
