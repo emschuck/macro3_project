@@ -191,9 +191,10 @@ indicators <- c(
   # Inflation, consumer prices (annual %)( not currently used)
   inflation = "NY.GDP.DEFL.KD.ZG",
   # Inflation, GDP deflator (annual %) 
-  gdp_pc_wdi = "NY.GDP.PCAP.CD",
+  gdp_pc_wdi_alt = "NY.GDP.PCAP.CD",
   # GDP per capita (current US$)
-  gdp_pc_growth_wdi_direct = "NY.GDP.PCAP.KD.ZG",
+  gdp_pc_wdi = "NY.GDP.PCAP.PP.CD",
+  # GDP per capita, PPP (current international $)
   oda = "DT.ODA.ODAT.GD.ZS"
   # Net official development assistance received (% of GNI)
 )
@@ -439,24 +440,27 @@ ggsave(
   dpi = 300
 )
 
+
+
 # =====================================================
-# GDP per capita growth factor appendix tables
+# GDP per capita growth appendix tables
 # Compare PWT GDP per capita (gdp_pc) and WDI GDP per capita (gdp_pc_wdi)
-# Growth factor = GDP_pc_t / GDP_pc_{t-1}
 # =====================================================
+safe_mean <- function(x) {
+  if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE)
+}
 
-
-# Compute annual GDP per capita growth factors for both variables
+# Compute annual GDP per capita growth for both variables
 df_gdp_growth <- df |>
   arrange(iso3c, year) |>
   group_by(iso3c) |>
   mutate(
-    growth_factor_gdp_pc = gdp_pc / lag(gdp_pc),
-    growth_factor_gdp_pc_wdi = gdp_pc_wdi / lag(gdp_pc_wdi)
+    growth_gdp_pc = 100 * (gdp_pc / lag(gdp_pc) - 1),
+    growth_gdp_pc_wdi = 100 * (gdp_pc_wdi / lag(gdp_pc_wdi) - 1)
   ) |>
   ungroup()
 
-# Helper function for GDP growth factor tables
+# Helper function for GDP growth tables
 make_gdp_growth_table <- function(data, country_order, average_label) {
   country_rows <- data |>
     filter(
@@ -474,22 +478,22 @@ make_gdp_growth_table <- function(data, country_order, average_label) {
     filter(!is.na(period)) |>
     group_by(iso3c, country, period) |>
     summarise(
-      gdp_pc_factor = safe_mean(growth_factor_gdp_pc),
-      gdp_pc_wdi_factor = safe_mean(growth_factor_gdp_pc_wdi),
+      gdp_pc_growth = safe_mean(growth_gdp_pc),
+      gdp_pc_wdi_growth = safe_mean(growth_gdp_pc_wdi),
       .groups = "drop"
     ) |>
     pivot_wider(
       names_from = period,
-      values_from = c(gdp_pc_factor, gdp_pc_wdi_factor)
+      values_from = c(gdp_pc_growth, gdp_pc_wdi_growth)
     ) |>
     mutate(order = match(iso3c, country_order)) |>
     arrange(order) |>
     select(
       country,
-      `gdp_pc 1990-2001` = `gdp_pc_factor_1990-2001`,
-      `gdp_pc 2002-2021` = `gdp_pc_factor_2002-2021`,
-      `gdp_pc_wdi 1990-2001` = `gdp_pc_wdi_factor_1990-2001`,
-      `gdp_pc_wdi 2002-2021` = `gdp_pc_wdi_factor_2002-2021`
+      `gdp_pc 1990-2001` = `gdp_pc_growth_1990-2001`,
+      `gdp_pc 2002-2021` = `gdp_pc_growth_2002-2021`,
+      `gdp_pc_wdi 1990-2001` = `gdp_pc_wdi_growth_1990-2001`,
+      `gdp_pc_wdi 2002-2021` = `gdp_pc_wdi_growth_2002-2021`
     )
 
   average_row <- country_rows |>
@@ -502,7 +506,7 @@ make_gdp_growth_table <- function(data, country_order, average_label) {
     )
 
   bind_rows(country_rows, average_row) |>
-    mutate(across(where(is.numeric), ~ round(.x, 4)))
+    mutate(across(where(is.numeric), ~ round(.x, 3)))
 }
 
 # Appendix 3, Panel A: WAEMU
@@ -556,9 +560,9 @@ cat(
     gdp_growth_waemu,
     format = "latex",
     booktabs = TRUE,
-    caption = "WAEMU countries' mean annual GDP per capita growth factor: PWT and WDI GDP variables"
+    caption = "WAEMU countries' mean annual GDP per capita growth: PWT and WDI GDP variables"
   ),
-  file = "output/tables/appendix3_panelA_waemu_gdp_growth_factor.tex"
+  file = "output/tables/appendix3_panelA_waemu_gdp_growth.tex"
 )
 
 cat(
@@ -566,9 +570,9 @@ cat(
     gdp_growth_caemc,
     format = "latex",
     booktabs = TRUE,
-    caption = "CAEMC countries' mean annual GDP per capita growth factor: PWT and WDI GDP variables"
+    caption = "CAEMC countries' mean annual GDP per capita growth: PWT and WDI GDP variables"
   ),
-  file = "output/tables/appendix3_panelB_caemc_gdp_growth_factor.tex"
+  file = "output/tables/appendix3_panelB_caemc_gdp_growth.tex"
 )
 
 cat(
@@ -576,9 +580,9 @@ cat(
     gdp_growth_non_cfa,
     format = "latex",
     booktabs = TRUE,
-    caption = "Non-CFA countries' mean annual GDP per capita growth factor: PWT and WDI GDP variables"
+    caption = "Non-CFA countries' mean annual GDP per capita growth: PWT and WDI GDP variables"
   ),
-  file = "output/tables/appendix4_non_cfa_gdp_growth_factor.tex"
+  file = "output/tables/appendix4_non_cfa_gdp_growth.tex"
 )
 
 
@@ -590,7 +594,7 @@ cat(
 # -10 = full autocracy
 # +10 = full democracy
 
-polity <- read_excel("../data/raw/polity5/p5v2018.xlsx")
+polity <- read_excel("./data/raw/polity5/p5v2018.xlsx")
 
 polity_clean <- polity |>
   select(country, year, polity2) |>
@@ -615,3 +619,5 @@ df <- df |>
 
 # Check polity values
 summary(df$polity2)
+
+
