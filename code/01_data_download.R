@@ -36,7 +36,8 @@ library(dplyr)
 library(stargazer)
 
 # Create output directories
-dir.create("../output/tables",  recursive = TRUE, showWarnings = FALSE)
+dir.create("./output/tables",  recursive = TRUE, showWarnings = FALSE)
+dir.create("./output/figures",  recursive = TRUE, showWarnings = FALSE)
 dir.create("data/processed", recursive = TRUE, showWarnings = FALSE)
 
 
@@ -56,7 +57,7 @@ View(pwt10.01)
 ### WDI ###
 
 # Finding relevant indicators for each variable
-View(WDIsearch("development assistance"))
+### View(WDIsearch("development assistance"))
 
 # GDP per capita
 #   NY.GDP.PCAP.PP.KD   -- GDP per capita, PPP (constant 2021 int. $)
@@ -105,7 +106,7 @@ View(WDIsearch("development assistance"))
 
 
 
-  # =====================================================
+# =====================================================
 # Objective:
 # - Load WDI data
 # - Clean dataset
@@ -158,6 +159,7 @@ df <- WDI(
 # Quick overview
 summary(df)
 
+View(df)
 
 # =====================================================
 # 4. Define regions and periods
@@ -234,6 +236,7 @@ df %>%
     min_inflation = min(inflation, na.rm = TRUE),
     max_inflation = max(inflation, na.rm = TRUE)
   )
+  
 #Temporary conclusion : Some values are quite far from the paper's one, not so sure about the explanation
 
 # =====================================================
