@@ -56,14 +56,14 @@ data("pwt10.01")
 
 pwt <- pwt10.01 |>
   select(
-    countrycode, country, year,
+    isocode, country, year,
     rgdpo,      # Output-side real GDP at chained PPPs (mil. 2021 US$)
     pop,        # Population (millions)
     emp,        # Number of persons engaged (millions)
     csh_g,      # Share of government consumption at current PPPs
     csh_i,      # Share of gross capital formation at current PPPs
     hc          # Human capital index
-  ) %>%
+  ) |>
   mutate(
     gdp_pc = rgdpo / pop,          # Real GDP per capita, output-side PPP
     labour = 100 * emp / pop,      # Employment as % of population
@@ -71,9 +71,9 @@ pwt <- pwt10.01 |>
     invest_share = csh_i           # Investment / capital formation share
   )
 
-# Match country codes
+# Match country code label
 pwt <- pwt |>
-  rename(iso3c = countrycode)
+  rename(iso3c = isocode)
 
 
 ### WDI ###
@@ -93,23 +93,27 @@ indicators <- c(
 )
 
 # Download WDI data
-df <- WDI(
+wdi <- WDI(
   country = countries,
   indicator = indicators,
   start = 1980,
-  end = 2019
+  end = 2019 # could pick more recent year? 
 )
 
-# Quick overview
-summary(df)
+# Merge WDI with PWT 
+df <- left_join(wdi, pwt, by = c("iso3c", "year")) |>
+  select(-country.y) |>
+  rename(country = country.x)
 
+# Check for missing values after merge
+summary(is.na(df$gdp_pc)) # FALSE 520 
+summary(is.na(df$labour))
+
+# Inspect
+summary(df)
 View(df)
 
-# =====================================================
-# 4. Define regions and periods
-# =====================================================
-
-# Regions
+# Define Regions
 waemu <- c(
   "BEN", # Benin
   "BFA", # Burkina Faso
@@ -126,7 +130,7 @@ caemc <- c(
   "COG", # Republic of Congo
   "GAB", # Gabon
   "GNQ", # Equatorial guinea
-  "TCD", # Chad
+  "TCD" # Chad
 )
 
 donor_countries <- c(
@@ -151,9 +155,6 @@ donor_countries <- c(
   "LCA",  # St. Lucia
   "SYC"   # Seychelles
 )
-
-
-
 
 # Table 2 non-CFA countries
 non_cfa_comparison_countries <- c(
@@ -189,6 +190,8 @@ df <- df %>%
     period = ifelse(year <= 2001, "pre", "post")
   )
 
+
+
 # Check distribution
 table(df$region)
 table(df$period)
@@ -198,11 +201,11 @@ table(df$period)
 # 5. Inflation validation (country level)
 # =====================================================
 
-inflation_table <- df %>%
-  group_by(country, period) %>%
-  summarise(inflation_avg = mean(inflation, na.rm = TRUE)) %>%
-  pivot_wider(names_from = period, values_from = inflation_avg) %>%
-  select(country, pre, post) %>%
+inflation_table <- df |>
+  group_by(country, period) |> # country.x 
+  summarise(inflation_avg = mean(inflation, na.rm = TRUE)) |>
+  pivot_wider(names_from = period, values_from = inflation_avg) |>
+  select(country, pre, post) |>
   mutate(
     pre = round(pre, 2),
     post = round(post, 2)
@@ -215,11 +218,11 @@ print(inflation_table)
 # 6. Inflation validation (regional averages)
 # =====================================================
 
-inflation_region <- df %>%
-  group_by(region, period) %>%
-  summarise(inflation_avg = mean(inflation, na.rm = TRUE)) %>%
-  pivot_wider(names_from = period, values_from = inflation_avg) %>%
-  select(region, pre, post) %>%
+inflation_region <- df |>
+  group_by(region, period) |>
+  summarise(inflation_avg = mean(inflation, na.rm = TRUE)) |>
+  pivot_wider(names_from = period, values_from = inflation_avg) |>
+  select(region, pre, post) |>
   mutate(
     pre = round(pre, 2),
     post = round(post, 2)

@@ -7,3 +7,4 @@
 * 16-05-2026 : Initial investigation shows some differences in inflation rate from those shown in the table -- needs investigation into reasons
 * 17-05-2026 : Initially using NY.GDP.PCAP.KD = constant-price GDP per capita, but appendix lists Output-side real GDP at current $. Swapping to using NY.GDP.PCAP.CD  -- GDP per capita (current US$).
 * 17-05-2026 : Penn world tables have more reliable data for output-side gdp, and include population variables -- testing using this instead of WDI variables.
+* 17-05-2026 : Using PWT for employment, government consumption share, and investment share instead of WDI 
