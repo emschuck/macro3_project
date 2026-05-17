@@ -45,3 +45,54 @@
 
 
 # Political regime characteristics
+
+
+
+
+
+
+### CHECKING TABLE 1 difference
+safe_mean <- function(x) {
+  if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE)
+}
+table1_waemu_1980_2021_check <- df |>
+  filter(
+    iso3c %in% waemu_table1,
+    year >= 1980,
+    year <= 2021
+  ) |>
+  group_by(iso3c, country) |>
+  summarise(
+    `1980-2021` = safe_mean(inflation),
+    `2002-2021` = safe_mean(inflation[year >= 2002 & year <= 2021]),
+    .groups = "drop"
+  ) |>
+  mutate(order = match(iso3c, waemu_table1)) |>
+  arrange(order) |>
+  select(country, `1980-2021`, `2002-2021`) |>
+  mutate(across(where(is.numeric), ~ round(.x, 4)))
+
+waemu_avg <- table1_waemu_1980_2021_check |>
+  summarise(
+    country = "Average inflation for the WAEMU zone",
+    `1980-2021` = safe_mean(`1980-2021`),
+    `2002-2021` = safe_mean(`2002-2021`)
+  )
+
+waemu_avg_excl_gnb <- table1_waemu_1980_2021_check |>
+  filter(country != "Guinea-Bissau") |>
+  summarise(
+    country = "Average inflation without Guinea-Bissau",
+    `1980-2021` = safe_mean(`1980-2021`),
+    `2002-2021` = safe_mean(`2002-2021`)
+  )
+
+table1_waemu_1980_2021_check <- bind_rows(
+  table1_waemu_1980_2021_check,
+  waemu_avg,
+  waemu_avg_excl_gnb
+) |>
+  mutate(across(where(is.numeric), ~ round(.x, 4)))
+
+print(table1_waemu_1980_2021_check)
+View(table1_waemu_1980_2021_check)

@@ -173,7 +173,7 @@ pwt <- pwt10.01 |>
 # Download World Development Indicator data
 # -----------------------------
 
-View(WDIsearch("inflation"))
+#View(WDIsearch("inflation"))
 
 # WDI indicators used for variables not taken from PWT
 indicators <- c(
@@ -183,10 +183,10 @@ indicators <- c(
   # Industry including construction, value added (% of GDP)
   fdi = "BX.KLT.DINV.WD.GD.ZS",
   # Foreign direct investment, net inflows (% of GDP)
-  inflation = "FP.CPI.TOTL.ZG",
-  # Inflation, consumer prices (annual %)
-  alt_inflation = "NY.GDP.DEFL.KD.ZG",
-  # Inflation, GDP deflator (annual %) (used for diagnostic of NA vals)
+  alt_inflation = "FP.CPI.TOTL.ZG",
+  # Inflation, consumer prices (annual %)( not currently used)
+  inflation = "NY.GDP.DEFL.KD.ZG",
+  # Inflation, GDP deflator (annual %) 
   oda = "DT.ODA.ODAT.GD.ZS"
   # Net official development assistance received (% of GNI)
 )
@@ -267,7 +267,7 @@ make_inflation_table <- function(
     filter(!is.na(table_period)) |>
     group_by(iso3c, country, table_period) |>
     summarise(
-      inflation_avg = mean(alt_inflation, na.rm = TRUE),
+      inflation_avg = mean(inflation, na.rm = TRUE),
       .groups = "drop"
     ) |>
     pivot_wider(
@@ -383,8 +383,7 @@ inflation_region <- df |>
     post = round(post, 2)
   )
 
-print(inflation_region)
-
+View(inflation_region)
 
 # =====================================================
 # GDP growth graph
