@@ -389,25 +389,58 @@ View(inflation_region)
 # GDP growth graph
 # =====================================================
 
+# GDP per capita growth graph: WAEMU, CAEMC, non-CFA countries
+
 df <- df |>
   arrange(iso3c, year) |>
   group_by(iso3c) |>
-  mutate(growth = (gdp_pc / lag(gdp_pc) - 1) * 100)
+  mutate(growth = 100 * (gdp_pc / lag(gdp_pc) - 1)) |>
+  ungroup()
 
-library(ggplot2)
 df_growth <- df |>
-  group_by(region, year) |>
-  summarize(growth = mean(growth, na.rm = TRUE))
+  filter(region %in% c("WAEMU", "CAEMC", "Non-CFA comparison")) |>
+  mutate(region_plot = recode(region,
+                              "Non-CFA comparison" = "Non-CFA countries")) |>
+  group_by(region_plot, year) |>
+  summarise(growth = mean(growth, na.rm = TRUE), .groups = "drop") |>
+  filter(year >= 1990, year <= 2021)
 
-ggplot(df_growth, aes(x = year, y = growth, color = region)) +
-  geom_line(size = 1) +
-  geom_vline(xintercept = 2002, linetype = "dashed", color = "black") +
+p_gdp_growth <- ggplot(df_growth, aes(year, growth, color = region_plot)) +
+  geom_line(linewidth = 0.9) +
+  geom_vline(xintercept = 2002, linewidth = 1.1, color = "black") +
+  scale_x_continuous(breaks = seq(1990, 2020, 2)) +
+  scale_y_continuous(breaks = seq(-25, 25, 5), limits = c(-25, 25)) +
   labs(
     title = "Evolution of GDP per capita growth",
-    x = "Year",
-    y = "Growth rate (%)"
+    x = NULL,
+    y = "Growth rate (%)",
+    color = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
   )
-+theme_minimal()
+
+print(p_gdp_growth)
+
+ggsave(
+  "output/figures/gdp_pc_growth_regions.png",
+  p_gdp_growth,
+  width = 12,
+  height = 4,
+  dpi = 300
+)
+
+
+
+# =====================================================
+# GDP growth tables
+# =====================================================
+
+
+
+
 
 
 # =====================================================

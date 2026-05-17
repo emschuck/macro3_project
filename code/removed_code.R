@@ -49,7 +49,7 @@
 
 
 
-
+====================
 
 ### CHECKING TABLE 1 difference
 safe_mean <- function(x) {
@@ -96,3 +96,42 @@ table1_waemu_1980_2021_check <- bind_rows(
 
 print(table1_waemu_1980_2021_check)
 View(table1_waemu_1980_2021_check)
+
+
+#============================
+
+
+
+## Smoothed graph 
+
+
+
+### Testing smoothed graph to match paper
+p_gdp_growth <- ggplot(df_growth, aes(year, growth, color = region_plot)) +
+  geom_line(linewidth = 0.4, alpha = 0.35) +
+  geom_smooth(se = FALSE, method = "loess", span = 0.3, linewidth = 0.9) +
+  geom_vline(xintercept = 2002, linewidth = 1.1, color = "black") +
+  scale_x_continuous(breaks = seq(1990, 2020, 2)) +
+  scale_y_continuous(breaks = seq(-25, 25, 5)) +
+  coord_cartesian(ylim = c(-25, 25)) +
+  labs(
+    title = "Evolution of GDP per capita growth",
+    x = NULL,
+    y = "Growth rate (%)",
+    color = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+
+print(p_gdp_growth)
+
+ggsave(
+  "output/figures/gdp_pc_growth_regions_smoothed.png",
+  p_gdp_growth,
+  width = 12,
+  height = 4,
+  dpi = 300
+)
