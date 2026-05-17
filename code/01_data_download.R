@@ -484,7 +484,7 @@ p_gdp_growth <- ggplot(df_growth, aes(year, growth, color = region_plot)) +
     panel.grid.minor = element_blank()
   )
 
-print(p_gdp_growth)
+#print(p_gdp_growth)
 
 ggsave(
   "output/figures/gdp_pc_growth_regions.png",
