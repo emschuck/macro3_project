@@ -35,6 +35,141 @@ safe_mean <- function(x) {
 # Load processed data
 df <- readRDS("data/processed/processed_panel.rds")
 
+#Country lists for inflation and gdp tables
+
+# WAEMU countries used in the main synthetic-control analysis
+waemu <- c(
+  "BEN", # Benin
+  "BFA", # Burkina Faso
+  "CIV", # Côte d'Ivoire
+  "MLI", # Mali
+  "NER", # Niger
+  "SEN", # Senegal
+  "TGO"  # Togo
+)
+
+# Guinea-Bissau not in main analysis, but in table 1
+waemu_table1 <- c(
+  "BEN", # Benin
+  "BFA", # Burkina Faso
+  "CIV", # Côte d'Ivoire
+  "GNB", # Guinea-Bissau
+  "MLI", # Mali
+  "NER", # Niger
+  "SEN", # Senegal
+  "TGO"  # Togo
+)
+
+# CAEMC countries
+caemc <- c(
+  "CMR", # Cameroon
+  "CAF", # Central African Republic
+  "TCD", # Chad
+  "COG", # Republic of Congo
+  "GNQ", # Equatorial Guinea
+  "GAB"  # Gabon
+)
+
+# Table 3 donor/control countries
+donor_countries <- c(
+  "BGD", # Bangladesh
+  "BRB", # Barbados
+  "BTN", # Bhutan
+  "BOL", # Bolivia
+  "BWA", # Botswana
+  "CPV", # Cabo Verde
+  "DMA", # Dominica
+  "ECU", # Ecuador
+  "SWZ", # Eswatini
+  "GRD", # Grenada
+  "LAO", # Lao PDR
+  "LSO", # Lesotho
+  "MUS", # Mauritius
+  "MAR", # Morocco
+  "NAM", # Namibia
+  "OMN", # Oman
+  "PAN", # Panama
+  "KNA", # St. Kitts and Nevis
+  "LCA", # St. Lucia
+  "SYC"  # Seychelles
+)
+
+# Table 2 non-CFA comparison countries
+non_cfa_comparison_countries <- c(
+  "AGO", # Angola
+  "BDI", # Burundi
+  "COD", # Congo, Dem. Rep.
+  "ETH", # Ethiopia
+  "GMB", # Gambia, The
+  "GHA", # Ghana
+  "GIN", # Guinea
+  "KEN", # Kenya
+  "MDG", # Madagascar
+  "MWI", # Malawi
+  "NGA", # Nigeria
+  "STP", # Sao Tome and Principe
+  "SLE", # Sierra Leone
+  "SDN", # Sudan
+  "TZA", # Tanzania
+  "UGA", # Uganda
+  "ZMB", # Zambia
+  "ZWE"  # Zimbabwe
+)
+
+# Full country list for data download
+countries <- unique(c(
+  waemu_table1,
+  caemc,
+  donor_countries,
+  non_cfa_comparison_countries
+))
+
+
+
+
+# Country lists for treated and control
+
+treated_countries <- c(
+  "BEN", # Benin
+  "BFA", # Burkina Faso
+  "CIV", # Côte d'Ivoire
+  "MLI", # Mali
+  "NER", # Niger
+  "SEN", # Senegal
+  "TGO", # Togo
+  "CMR", # Cameroon
+  "CAF", # Central African Republic
+  "TCD", # Chad
+  "COG", # Republic of Congo
+  "GAB", # Gabon
+  "GNQ"  # Equatorial Guinea
+)
+
+donor_countries <- c(
+  "BGD", # Bangladesh
+  "BRB", # Barbados
+  "BTN", # Bhutan
+  "BOL", # Bolivia
+  "BWA", # Botswana
+  "CPV", # Cabo Verde
+  "DMA", # Dominica
+  "ECU", # Ecuador
+  "SWZ", # Eswatini
+  "GRD", # Grenada
+  "LAO", # Lao PDR
+  "LSO", # Lesotho
+  "MUS", # Mauritius
+  "MAR", # Morocco
+  "NAM", # Namibia
+  "OMN", # Oman
+  "PAN", # Panama
+  "KNA", # St. Kitts and Nevis
+  "LCA", # St. Lucia
+  "SYC"  # Seychelles
+)
+
+scm_countries <- c(treated_countries, donor_countries)
+
 #### ========================================================================###
 #### ==================== == INFLATION TABLES ===============================###
 #### ========================================================================###
@@ -236,7 +371,7 @@ ggsave(
 
 
 #### ========================================================================###
-#### ========================== GDP TABLES ===============================###
+#### ============================= GDP TABLES ===============================###
 #### ========================================================================###
 
 # =====================================================
@@ -382,5 +517,72 @@ cat(
 
 
 
+
+
+
+#### ========================================================================###
+#### ======================== SYNTEHETIC CONTROL METHOD ====================###
+#### ========================================================================###
+
+# -----------------------------------------------------
+#  Prepare SCM panel
+# -----------------------------------------------------
+
+scm_df <- df |>
+  filter(
+    iso3c %in% scm_countries,
+    year >= 1980,
+    year <= 2019
+  ) |>
+  mutate(
+    treated = if_else(iso3c %in% treated_countries, 1, 0),
+
+    # Devaluation dummy: treated CFA countries in 1994
+    devaluation_1994 = if_else(
+      iso3c %in% treated_countries & year == 1994,
+      1, 0
+    )
+  ) |>
+  arrange(iso3c, year) |>
+  group_by(iso3c) |>
+  mutate(
+    unit_id = cur_group_id()
+  ) |>
+  ungroup()
+
+# Keep only countries with enough data for the core SCM variables
+scm_vars <- c(
+  "gdp_pc",
+  "agriculture",
+  "industry",
+  "govt_share",
+  "invest_share",
+  "oda",
+  "fdi",
+  "labour",
+  "polity2",
+  "devaluation_1994"
+)
+
+missing_check <- scm_df |>
+  filter(year >= 1980, year <= 2001) |>
+  group_by(iso3c, country) |>
+  summarise(
+    across(all_of(scm_vars), ~ sum(is.na(.x)), .names = "missing_{.col}"),
+    .groups = "drop"
+  )
+
+print(missing_check, n = Inf)
+
+# Optional: save missingness check
+cat(
+  kable(
+    missing_check,
+    format = "latex",
+    booktabs = TRUE,
+    caption = "Missing values in pre-treatment SCM variables"
+  ),
+  file = "output/tables/scm_missingness_check.tex"
+)
 
 
