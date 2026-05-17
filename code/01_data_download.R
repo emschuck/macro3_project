@@ -167,7 +167,8 @@ pwt <- pwt10.01 |>
     country_pwt = country
   ) |>
   mutate(
-    gdp_pc = cgdpo / pop, # Real GDP per capita, output-side PPP
+    gdp_pc = rgdpo / pop, # Real GDP per capita, output-side PPP
+    gdp_pc_current = cgdpo / pop, # Current-price output-side GDP per capita, PPP
     labour = 100 * emp / pop, # Employment as % of population
     govt_share = csh_g, # Government consumption share
     invest_share = csh_i # Investment / capital formation share
@@ -194,7 +195,9 @@ indicators <- c(
   # Inflation, GDP deflator (annual %) 
   gdp_pc_wdi_alt = "NY.GDP.PCAP.CD",
   # GDP per capita (current US$)
-  gdp_pc_wdi = "NY.GDP.PCAP.PP.CD",
+  gdp_pc_wdi = "NY.GDP.PCAP.PP.KD",
+  # real gdp
+  #gdp_pc_wdi = "NY.GDP.PCAP.PP.CD",
   # GDP per capita, PPP (current international $)
   oda = "DT.ODA.ODAT.GD.ZS"
   # Net official development assistance received (% of GNI)
@@ -234,7 +237,7 @@ df <- wdi |>
   select(-country_wdi, -country_pwt)
 
 # Basic checks
-table(df$region, useNA = "ifany") # Expect 252 882 756 336
+table(df$region, useNA = "ifany") # Expect 252 840 756 336
 table(df$period, useNA = "ifany") # Expect 1080 1188
 
 df |>
@@ -263,16 +266,18 @@ polity <- read_excel("./data/raw/polity5/p5v2018.xlsx")
 polity_clean <- polity |>
   select(country, year, polity2) |>
   mutate(
-    iso3c = countrycode(country,
+    iso3c = countrycode(
+      country,
       origin = "country.name",
       destination = "iso3c"
     )
   ) |>
   filter(
     iso3c %in% countries,
-    year >= 1980, year <= 2019
-  )
-
+    year >= 1980,
+    year <= 2019
+  ) |>
+  select(iso3c, year, polity2)
 
 # =====================================================
 # Merge Polity data with WDI dataset
@@ -644,3 +649,4 @@ cat(
 )
 
 print("Complete")
+
