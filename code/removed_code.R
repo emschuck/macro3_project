@@ -135,3 +135,153 @@ ggsave(
   height = 4,
   dpi = 300
 )
+
+
+
+
+
+####### Growth table instead of growth factor
+
+
+# =====================================================
+# GDP per capita growth appendix tables
+# Compare PWT GDP per capita (gdp_pc) and WDI GDP per capita (gdp_pc_wdi)
+# =====================================================
+safe_mean <- function(x) {
+  if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE)
+}
+
+# Compute annual GDP per capita growth for both variables
+df_gdp_growth <- df |>
+  arrange(iso3c, year) |>
+  group_by(iso3c) |>
+  mutate(
+    growth_gdp_pc = 100 * (gdp_pc / lag(gdp_pc) - 1),
+    growth_gdp_pc_wdi = 100 * (gdp_pc_wdi / lag(gdp_pc_wdi) - 1)
+  ) |>
+  ungroup()
+
+# Helper function for GDP growth tables
+make_gdp_growth_table <- function(data, country_order, average_label) {
+  country_rows <- data |>
+    filter(
+      iso3c %in% country_order,
+      year >= 1990,
+      year <= 2021
+    ) |>
+    mutate(
+      period = case_when(
+        year >= 1990 & year <= 2001 ~ "1990-2001",
+        year >= 2002 & year <= 2021 ~ "2002-2021",
+        TRUE ~ NA_character_
+      )
+    ) |>
+    filter(!is.na(period)) |>
+    group_by(iso3c, country, period) |>
+    summarise(
+      gdp_pc_growth = safe_mean(growth_gdp_pc),
+      gdp_pc_wdi_growth = safe_mean(growth_gdp_pc_wdi),
+      .groups = "drop"
+    ) |>
+    pivot_wider(
+      names_from = period,
+      values_from = c(gdp_pc_growth, gdp_pc_wdi_growth)
+    ) |>
+    mutate(order = match(iso3c, country_order)) |>
+    arrange(order) |>
+    select(
+      country,
+      `gdp_pc 1990-2001` = `gdp_pc_growth_1990-2001`,
+      `gdp_pc 2002-2021` = `gdp_pc_growth_2002-2021`,
+      `gdp_pc_wdi 1990-2001` = `gdp_pc_wdi_growth_1990-2001`,
+      `gdp_pc_wdi 2002-2021` = `gdp_pc_wdi_growth_2002-2021`
+    )
+
+  average_row <- country_rows |>
+    summarise(
+      country = average_label,
+      `gdp_pc 1990-2001` = safe_mean(`gdp_pc 1990-2001`),
+      `gdp_pc 2002-2021` = safe_mean(`gdp_pc 2002-2021`),
+      `gdp_pc_wdi 1990-2001` = safe_mean(`gdp_pc_wdi 1990-2001`),
+      `gdp_pc_wdi 2002-2021` = safe_mean(`gdp_pc_wdi 2002-2021`)
+    )
+
+  bind_rows(country_rows, average_row) |>
+    mutate(across(where(is.numeric), ~ round(.x, 3)))
+}
+
+# Appendix 3, Panel A: WAEMU
+gdp_growth_waemu <- make_gdp_growth_table(
+  df_gdp_growth,
+  country_order = waemu_table1,
+  average_label = "Average for the WAEMU area"
+)
+
+# Additional WAEMU average excluding Guinea-Bissau
+gdp_growth_waemu_excl_gnb <- gdp_growth_waemu |>
+  filter(!country %in% c(
+    "Guinea-Bissau",
+    "Average for the WAEMU area"
+  )) |>
+  summarise(
+    country = "Average without Guinea-Bissau",
+    `gdp_pc 1990-2001` = safe_mean(`gdp_pc 1990-2001`),
+    `gdp_pc 2002-2021` = safe_mean(`gdp_pc 2002-2021`),
+    `gdp_pc_wdi 1990-2001` = safe_mean(`gdp_pc_wdi 1990-2001`),
+    `gdp_pc_wdi 2002-2021` = safe_mean(`gdp_pc_wdi 2002-2021`)
+  ) |>
+  mutate(across(where(is.numeric), ~ round(.x, 4)))
+
+gdp_growth_waemu <- bind_rows(gdp_growth_waemu, gdp_growth_waemu_excl_gnb)
+
+# Appendix 3, Panel B: CAEMC
+gdp_growth_caemc <- make_gdp_growth_table(
+  df_gdp_growth,
+  country_order = caemc,
+  average_label = "Average for the CAEMC zone"
+)
+
+# Appendix 4: Non-CFA comparison countries
+gdp_growth_non_cfa <- make_gdp_growth_table(
+  df_gdp_growth,
+  country_order = non_cfa_comparison_countries,
+  average_label = "Average"
+)
+
+# Print tables
+print(gdp_growth_waemu)
+print(gdp_growth_caemc)
+print(gdp_growth_non_cfa)
+
+# Save LaTeX outputs
+dir.create("output/tables", recursive = TRUE, showWarnings = FALSE)
+
+cat(
+  kable(
+    gdp_growth_waemu,
+    format = "latex",
+    booktabs = TRUE,
+    caption = "WAEMU countries' mean annual GDP per capita growth: PWT and WDI GDP variables"
+  ),
+  file = "output/tables/appendix3_panelA_waemu_gdp_growth.tex"
+)
+
+cat(
+  kable(
+    gdp_growth_caemc,
+    format = "latex",
+    booktabs = TRUE,
+    caption = "CAEMC countries' mean annual GDP per capita growth: PWT and WDI GDP variables"
+  ),
+  file = "output/tables/appendix3_panelB_caemc_gdp_growth.tex"
+)
+
+cat(
+  kable(
+    gdp_growth_non_cfa,
+    format = "latex",
+    booktabs = TRUE,
+    caption = "Non-CFA countries' mean annual GDP per capita growth: PWT and WDI GDP variables"
+  ),
+  file = "output/tables/appendix4_non_cfa_gdp_growth.tex"
+)
