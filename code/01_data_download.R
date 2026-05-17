@@ -35,6 +35,10 @@ library(ggplot2)
 library(dplyr)
 library(stargazer)
 
+library(tidyverse)
+library(readxl)
+library(countrycode)
+
 # Create output directories
 dir.create("./output/tables",  recursive = TRUE, showWarnings = FALSE)
 dir.create("./output/figures",  recursive = TRUE, showWarnings = FALSE)
@@ -46,111 +50,49 @@ dir.create("data/processed", recursive = TRUE, showWarnings = FALSE)
 ####=========================== 2. LOAD DATA ================================###
 ####=========================================================================###
 
-
 ### Penn World Tables ###
-
 # Load and inspect Penn World Tables
 data("pwt10.01")
-View(pwt10.01)
+
+pwt <- pwt10.01 |>
+  select(
+    countrycode, country, year,
+    rgdpo,      # Output-side real GDP at chained PPPs (mil. 2021 US$)
+    pop,        # Population (millions)
+    emp,        # Number of persons engaged (millions)
+    csh_g,      # Share of government consumption at current PPPs
+    csh_i,      # Share of gross capital formation at current PPPs
+    hc          # Human capital index
+  ) %>%
+  mutate(
+    gdp_pc = rgdpo / pop,          # Real GDP per capita, output-side PPP
+    labour = 100 * emp / pop,      # Employment as % of population
+    govt_share = csh_g,            # Government consumption share
+    invest_share = csh_i           # Investment / capital formation share
+  )
+
+# Match country codes
+pwt <- pwt |>
+  rename(iso3c = countrycode)
 
 
 ### WDI ###
+# WDI indicators used for variables not taken from PWT
 
-# Finding relevant indicators for each variable
-View(WDIsearch("gdp"))
-
-# GDP per capita
-#   NY.GDP.PCAP.PP.KD   -- GDP per capita, PPP (constant 2021 int. $)
-#   NY.GDP.MKTP.CD -- GDP (current US$)
-#   NY.GDP.PCAP.CD  -- GDP per capita (current US$)
-
-# Gross Fixed Capital Formation (expenditure, used for investment metric)
-#   NE.GDI.FTOT.ZS  -- Gross fixed capital formation (% of GDP)
-
-# Govt expenditure
-#   NE.CON.GOVT.ZS
-#       -- General government final consumption expenditure (% of GDP)
-#   NE.CON.GOVT.CD
-#       -- General government final consumption expenditure (current US$)
-
-# Official Development Assistance
-#   DT.ODA.ALLD.CD
-#       -- Net official development assistance and official aid received
-#           (current US$)
-#   DT.ODA.ALLD.GI.ZS
-#   Net official development assistance received (% of gross capital formation)
-
-# Foreign Direct Investment
-#   BN.KLT.DINV.CD.ZS -- Foreign direct investment (% of GDP)
-
-# Employment Rate
-# SL.UEM.TOTL.NE.ZS
-#       -- Unemployment, total (% of total labor force) (national estimate)
-# SL.UEM.TOTL.ZS
-#       -- Unemployment, total (% of total labor force) (modeled ILO estimate)
-
-# Agriculture share of GDP ***
-# NV.AGR.TOTL.ZS
-#   Agriculture, forestry, and fishing, value added (% of GDP)
-
-# Industry share of GDP ***
-#   NV.IND.TOTL.ZS
-#   Industry (including construction), value added (% of GDP)
-
-# Inflation
-#   FP.CPI.TOTL.ZG
-#   Inflation, consumer prices (annual %)
-
-# Institution quality
-
-
-# Political regime characteristics
-
-
-
-# =====================================================
-# Objective:
-# - Load WDI data
-# - Clean dataset
-# - Validate inflation (pre vs post 2002)
-# - Load and merge Polity data (institutions)
-# =====================================================
-
-
-# =====================================================
-# 1. Load libraries
-# =====================================================
-library(WDI)
-library(tidyverse)
-library(readxl)
-library(countrycode)
-
-
-# =====================================================
-# 2. Define countries and variables
-# =====================================================
-
-# CFA countries (treated countries)
-countries <- c("BEN","BFA","CIV","MLI","NER","SEN","TGO",
-               "CMR","CAF","TCD","COG","GAB","GNQ")
-
-# WDI indicators (consistent with paper)
 indicators <- c(
-  gdp_pc = "NY.GDP.PCAP.CD", # GDP per capita (current US$)
   agriculture = "NV.AGR.TOTL.ZS",
+  # Agriculture, forestry, and fishing, value added (% of GDP)
   industry = "NV.IND.TOTL.ZS",
-  investment = "NE.GDI.TOTL.ZS",
-  government = "NE.CON.GOVT.ZS",
+  # Industry, including construction, value added (% of GDP)
   fdi = "BX.KLT.DINV.WD.GD.ZS",
+  # Foreign direct investment, net inflows (% of GDP)
   inflation = "FP.CPI.TOTL.ZG",
+  # Inflation, consumer prices (annual %)
   oda = "DT.ODA.ODAT.GD.ZS"
+  # Net official development assistance received (% of GNI)
 )
 
-
-# =====================================================
-# 3. Download WDI data
-# =====================================================
-
+# Download WDI data
 df <- WDI(
   country = countries,
   indicator = indicators,
@@ -209,6 +151,9 @@ donor_countries <- c(
   "LCA",  # St. Lucia
   "SYC"   # Seychelles
 )
+
+
+
 
 # Table 2 non-CFA countries
 non_cfa_comparison_countries <- c(
