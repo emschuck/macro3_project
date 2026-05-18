@@ -208,7 +208,7 @@ country_ids |>
 # Run SCM for one country - to make into function
 # =====================================================
 
-treated_iso3c <- "BEN"   # to change
+treated_iso3c <- "CAM"   # to change
 
 # Dataprep to organise data into form reqruired for synth:
 dataprep.out <- dataprep(
@@ -265,7 +265,7 @@ synth.out <- synth(
   data.prep.obj = dataprep.out
 )
 
-# Show predictor balance and donor weights using synth.tab summaries
+# Show predictor balance and donor weights using synth.tab summaries:
 # 1. donor weights: which countries make up synthetic contry;
 # 2. predictor balance: how similar country is to synthetic before treatment.
 synth.tables <- synth.tab(
@@ -279,9 +279,9 @@ print(synth.tables)
 # =====================================================
 # Plot actual vs synthetic GDP per capita
 # =====================================================
-
-# NOTE 17/5: need to update to have file name automatic from country
-png("output/figures/scm_path_BEN.png", width = 900, height = 600)
+png(
+  paste0("output/figures/scm_path_", treated_iso3c, ".png"),
+   width = 900, height = 600)
 
 path.plot(
   synth.res = synth.out,
@@ -293,7 +293,7 @@ path.plot(
   Legend.position = "topleft"
 )
 
-dev.off()
+dev.off() # close graphic
 
 
 # =====================================================
@@ -301,7 +301,9 @@ dev.off()
 # =====================================================
 
 # NOTE 17/5: need to update to have file name automatic from country
-png("output/figures/scm_gap_BEN.png", width = 900, height = 600)
+png(
+  paste0("output/figures/scm_gap_", treated_iso3c, ".png"),
+  width = 900, height = 600)
 
 gaps.plot(
   synth.res = synth.out,
