@@ -179,7 +179,7 @@ pwt <- pwt10.01 |>
 # Download World Development Indicator data
 # -----------------------------
 
-#View(WDIsearch("gdp"))
+View(WDIsearch("gdp"))
 
 # WDI indicators used for variables not taken from PWT
 indicators <- c(
