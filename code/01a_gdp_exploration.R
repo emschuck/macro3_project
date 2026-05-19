@@ -8,6 +8,7 @@ library(WDI)
 library(pwt10)
 library(knitr)
 library(readr)
+library(patchwork)
 
 # Set output directory
 
@@ -590,6 +591,7 @@ gdp_tests <- tibble::tribble(
 
 gdp_results <- vector("list", nrow(gdp_tests))
 
+
 for (i in seq_len(nrow(gdp_tests))) {
   gdp_results[[i]] <- run_gdp_exploration(
     data = df,
@@ -603,6 +605,30 @@ names(gdp_results) <- make_safe_name(
   gdp_tests$source,
   gdp_tests$gdp_var,
   gdp_tests$method
+)
+
+#### Saved combined chart
+
+plot_list <- lapply(gdp_results, function(x) x$plot)
+
+# Remove any NULL plots, just in case
+plot_list <- plot_list[!sapply(plot_list, is.null)]
+
+combined_plot <- wrap_plots(
+  plot_list,
+  ncol = 4
+) +
+  plot_annotation(
+    title = "GDP exploration charts"
+  )
+
+ggsave(
+  filename = file.path(output_dir, "combined_gdp_exploration_charts.png"),
+  plot = combined_plot,
+  width = 32,
+  height = 4 * ceiling(length(plot_list) / 4),
+  dpi = 300,
+  limitsize = FALSE
 )
 
 saveRDS(
