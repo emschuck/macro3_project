@@ -98,7 +98,6 @@ scm_df <- df |>
   ) |>
   distinct(iso3c, year, .keep_all = TRUE)
 
-# EXPLANATION: Balance the panel so every country has one row for every year.
 # Synth requires a balanced panel.
 scm_df <- scm_df |>
   tidyr::complete( # add any rows that are missing
@@ -133,7 +132,7 @@ scm_df <- scm_df |>
     unit_id = as.numeric(unit_id)
   )
 
-# Drop donor countries that are missing a main predictor across whole pre-treatment
+# Drop donor countries that are missing a main predictor across whole pre-treatment period
 ### NOTE 17/5: need to find root cause of these: shouldn't be the case
 bad_controls <- scm_df |>
   filter(
