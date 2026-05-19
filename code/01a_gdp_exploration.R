@@ -1,6 +1,6 @@
 # =====================================================
 # GDP source and calculation exploration
-# Standalone file: downloads WDI + PWT, then tests GDP methods
+# Downloads WDI + PWT, then tests different GDP methods
 # =====================================================
 
 library(tidyverse)
@@ -9,17 +9,13 @@ library(pwt10)
 library(knitr)
 library(readr)
 
-# =====================================================
-# 1. Output folder
-# =====================================================
+# Set output directory
 
 output_dir <- "output/gdp_exploration"
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
 
-# =====================================================
-# 2. Country groups
-# =====================================================
+# Country groups
 
 waemu_table1 <- c(
   "BEN", # Benin
@@ -69,9 +65,7 @@ gdp_exploration_countries <- c(
 )
 
 
-# =====================================================
-# 3. Download Penn World Tables data
-# =====================================================
+# Download PWT variables
 
 data("pwt10.01")
 
@@ -105,16 +99,21 @@ pwt <- pwt10.01 |>
   )
 
 
-# =====================================================
-# 4. Download WDI data
-# =====================================================
+# Download WDI variables
 
 wdi_indicators <- c(
+  # per capita variables
   wdi_gdp_pc_ppp_constant = "NY.GDP.PCAP.PP.KD", # GDP per capita, PPP, constant international $
   wdi_gdp_pc_ppp_current  = "NY.GDP.PCAP.PP.CD", # GDP per capita, PPP, current international $
   wdi_gdp_pc_constant     = "NY.GDP.PCAP.KD",    # GDP per capita, constant 2015 US$
   wdi_gdp_pc_current      = "NY.GDP.PCAP.CD",    # GDP per capita, current US$
-  wdi_gdp_pc_growth       = "NY.GDP.PCAP.KD.ZG"  # GDP per capita growth, annual %
+  wdi_gdp_pc_growth       = "NY.GDP.PCAP.KD.ZG", # GDP per capita growth, annual %
+
+  # Not per capita
+  wdi_gdp_ppp_constant    = "NY.GDP.MKTP.PP.KD", # GDP, PPP, constant international $
+  wdi_gdp_ppp_current     = "NY.GDP.MKTP.PP.CD", # GDP, PPP, current international $
+  wdi_gdp_constant        = "NY.GDP.MKTP.KD",    # GDP, constant 2015 US$
+  wdi_gdp_current         = "NY.GDP.MKTP.CD"     # GDP, current US$
 )
 
 wdi <- WDI(
@@ -126,20 +125,25 @@ wdi <- WDI(
   rename(country_wdi = country)
 
 
-# =====================================================
-# 5. Merge WDI and PWT
-# =====================================================
+# Merge WDI and PWT, with pc calculations for aggregate values
 
 df <- wdi |>
   left_join(pwt, by = c("iso3c", "year")) |>
   mutate(
     country = coalesce(country_wdi, country_pwt),
+
     region = case_when(
       iso3c %in% waemu_table1 ~ "WAEMU",
       iso3c %in% caemc ~ "CAEMC",
       iso3c %in% non_cfa_comparison_countries ~ "Non-CFA comparison",
       TRUE ~ NA_character_
-    )
+    ),
+
+    # WDI aggregate GDP divided by PWT population (in millions)
+    wdi_gdp_ppp_constant_pc_pwtpop = wdi_gdp_ppp_constant / (pop * 1e6),
+    wdi_gdp_ppp_current_pc_pwtpop  = wdi_gdp_ppp_current  / (pop * 1e6),
+    wdi_gdp_constant_pc_pwtpop     = wdi_gdp_constant     / (pop * 1e6),
+    wdi_gdp_current_pc_pwtpop      = wdi_gdp_current      / (pop * 1e6)
   ) |>
   select(-country_wdi, -country_pwt)
 
@@ -147,9 +151,7 @@ df <- wdi |>
 write_csv(df, file.path(output_dir, "gdp_exploration_raw_panel.csv"))
 
 
-# =====================================================
-# 6. Helper functions
-# =====================================================
+# misc helper functions
 
 safe_mean <- function(x) {
   if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE)
@@ -171,9 +173,7 @@ assign_country_group <- function(iso3c) {
 }
 
 
-# =====================================================
-# 7. GDP calculation function
-# =====================================================
+# Functions for different GDP calculation methods
 
 # Methods:
 #   pct_growth:
@@ -297,9 +297,7 @@ compute_gdp_measure <- function(data, gdp_var, method) {
 }
 
 
-# =====================================================
-# 8. Completeness check function
-# =====================================================
+# Data completeness check function
 
 make_gdp_checks <- function(data, gdp_var) {
 
@@ -329,9 +327,7 @@ make_gdp_checks <- function(data, gdp_var) {
 }
 
 
-# =====================================================
-# 9. Combined table function
-# =====================================================
+# Function to make combined table with vaalues
 
 make_combined_gdp_table <- function(data) {
 
@@ -393,9 +389,7 @@ make_combined_gdp_table <- function(data) {
 }
 
 
-# =====================================================
-# 10. Chart function
-# =====================================================
+# Function to create charts
 
 make_gdp_chart <- function(data, source, gdp_var, method, file_stub) {
 
@@ -445,9 +439,7 @@ make_gdp_chart <- function(data, source, gdp_var, method, file_stub) {
 }
 
 
-# =====================================================
-# 11. Main exploration function
-# =====================================================
+# GDP exploration functino
 
 run_gdp_exploration <- function(data, source, gdp_var, method) {
 
@@ -527,69 +519,74 @@ run_gdp_exploration <- function(data, source, gdp_var, method) {
 }
 
 
-# =====================================================
-# 12. Define GDP tests
-# =====================================================
+# Define all GDP tests to do
 
 gdp_tests <- tibble::tribble(
-  ~source, ~gdp_var,                    ~method,
+~source, ~gdp_var, ~method,
 
-  # PWT output-side real GDP per capita
-  "PWT",   "pwt_rgdpo_pc",              "pct_growth",
-  "PWT",   "pwt_rgdpo_pc",              "growth_factor",
-  "PWT",   "pwt_rgdpo_pc",              "log_growth",
-  "PWT",   "pwt_rgdpo_pc",              "avg_relative_level_change",
-  "PWT",   "pwt_rgdpo_pc",              "avg_relative_level_change_pct",
-  "PWT",   "pwt_rgdpo_pc",              "cagr_factor",
-  "PWT",   "pwt_rgdpo_pc",              "cagr_pct",
-  "PWT",   "pwt_rgdpo_pc",              "mean_index_to_period_start",
+# PWT output-side real GDP per capita
+"PWT", "pwt_rgdpo_pc", "pct_growth",
+"PWT", "pwt_rgdpo_pc", "growth_factor",
+"PWT", "pwt_rgdpo_pc", "log_growth",
+"PWT", "pwt_rgdpo_pc", "mean_index_to_period_start",
 
-  # PWT expenditure-side real GDP per capita
-  "PWT",   "pwt_rgdpe_pc",              "pct_growth",
-  "PWT",   "pwt_rgdpe_pc",              "growth_factor",
-  "PWT",   "pwt_rgdpe_pc",              "mean_index_to_period_start",
+# PWT expenditure-side real GDP per capita
+"PWT", "pwt_rgdpe_pc", "pct_growth",
+"PWT", "pwt_rgdpe_pc", "growth_factor",
+"PWT", "pwt_rgdpe_pc", "mean_index_to_period_start",
 
-  # PWT current PPP output-side GDP per capita
-  "PWT",   "pwt_cgdpo_pc",              "pct_growth",
-  "PWT",   "pwt_cgdpo_pc",              "growth_factor",
-  "PWT",   "pwt_cgdpo_pc",              "mean_index_to_period_start",
+# PWT current PPP output-side GDP per capita
+"PWT", "pwt_cgdpo_pc", "pct_growth",
+"PWT", "pwt_cgdpo_pc", "growth_factor",
+"PWT", "pwt_cgdpo_pc", "mean_index_to_period_start",
 
-  # PWT constant national-price GDP per capita
-  "PWT",   "pwt_rgdpna_pc",             "pct_growth",
-  "PWT",   "pwt_rgdpna_pc",             "growth_factor",
-  "PWT",   "pwt_rgdpna_pc",             "mean_index_to_period_start",
+# PWT constant national-price GDP per capita
+"PWT", "pwt_rgdpna_pc", "pct_growth",
+"PWT", "pwt_rgdpna_pc", "growth_factor",
+"PWT", "pwt_rgdpna_pc", "mean_index_to_period_start",
 
-  # WDI real GDP per capita variants
-  "WDI",   "wdi_gdp_pc_ppp_constant",   "pct_growth",
-  "WDI",   "wdi_gdp_pc_ppp_constant",   "growth_factor",
-  "WDI",   "wdi_gdp_pc_ppp_constant",   "log_growth",
-  "WDI",   "wdi_gdp_pc_ppp_constant",   "avg_relative_level_change",
-  "WDI",   "wdi_gdp_pc_ppp_constant",   "avg_relative_level_change_pct",
-  "WDI",   "wdi_gdp_pc_ppp_constant",   "cagr_factor",
-  "WDI",   "wdi_gdp_pc_ppp_constant",   "cagr_pct",
-  "WDI",   "wdi_gdp_pc_ppp_constant",   "mean_index_to_period_start",
+# WDI real GDP per capita variants
+"WDI", "wdi_gdp_pc_ppp_constant", "pct_growth",
+"WDI", "wdi_gdp_pc_ppp_constant", "growth_factor",
+"WDI", "wdi_gdp_pc_ppp_constant", "log_growth",
+"WDI", "wdi_gdp_pc_ppp_constant", "mean_index_to_period_start",
 
-  "WDI",   "wdi_gdp_pc_constant",       "pct_growth",
-  "WDI",   "wdi_gdp_pc_constant",       "growth_factor",
-  "WDI",   "wdi_gdp_pc_constant",       "mean_index_to_period_start",
+"WDI", "wdi_gdp_pc_constant", "pct_growth",
+"WDI", "wdi_gdp_pc_constant", "growth_factor",
+"WDI", "wdi_gdp_pc_constant", "mean_index_to_period_start",
 
-  # WDI current-price variants
-  "WDI",   "wdi_gdp_pc_ppp_current",    "pct_growth",
-  "WDI",   "wdi_gdp_pc_ppp_current",    "growth_factor",
-  "WDI",   "wdi_gdp_pc_ppp_current",    "mean_index_to_period_start",
+# WDI current-price variants
+"WDI", "wdi_gdp_pc_ppp_current", "pct_growth",
+"WDI", "wdi_gdp_pc_ppp_current", "growth_factor",
+"WDI", "wdi_gdp_pc_ppp_current", "mean_index_to_period_start",
 
-  "WDI",   "wdi_gdp_pc_current",        "pct_growth",
-  "WDI",   "wdi_gdp_pc_current",        "growth_factor",
-  "WDI",   "wdi_gdp_pc_current",        "mean_index_to_period_start",
+"WDI", "wdi_gdp_pc_current", "pct_growth",
+"WDI", "wdi_gdp_pc_current", "growth_factor",
+"WDI", "wdi_gdp_pc_current", "mean_index_to_period_start",
 
-  # WDI direct growth rate
-  "WDI",   "wdi_gdp_pc_growth",         "direct"
+# WDI direct growth rate
+"WDI", "wdi_gdp_pc_growth", "direct",
+
+# WDI aggregate GDP divided by PWT population
+"WDI_PWTPOP", "wdi_gdp_ppp_constant_pc_pwtpop", "pct_growth",
+"WDI_PWTPOP", "wdi_gdp_ppp_constant_pc_pwtpop", "growth_factor",
+"WDI_PWTPOP", "wdi_gdp_ppp_constant_pc_pwtpop", "mean_index_to_period_start",
+
+"WDI_PWTPOP", "wdi_gdp_ppp_current_pc_pwtpop", "pct_growth",
+"WDI_PWTPOP", "wdi_gdp_ppp_current_pc_pwtpop", "growth_factor",
+"WDI_PWTPOP", "wdi_gdp_ppp_current_pc_pwtpop", "mean_index_to_period_start",
+
+"WDI_PWTPOP", "wdi_gdp_constant_pc_pwtpop", "pct_growth",
+"WDI_PWTPOP", "wdi_gdp_constant_pc_pwtpop", "growth_factor",
+"WDI_PWTPOP", "wdi_gdp_constant_pc_pwtpop", "mean_index_to_period_start",
+
+"WDI_PWTPOP", "wdi_gdp_current_pc_pwtpop", "pct_growth",
+"WDI_PWTPOP", "wdi_gdp_current_pc_pwtpop", "growth_factor",
+"WDI_PWTPOP", "wdi_gdp_current_pc_pwtpop", "mean_index_to_period_start"
 )
 
 
-# =====================================================
-# 13. Run all tests
-# =====================================================
+# Run all tests
 
 gdp_results <- vector("list", nrow(gdp_tests))
 
