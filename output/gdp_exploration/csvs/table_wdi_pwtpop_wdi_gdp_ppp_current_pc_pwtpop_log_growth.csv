@@ -1,0 +1,36 @@
+group,country,1980-2021,1990-2001,2002-2021
+WAEMU,Average WAEMU,3.1816,2.6136,3.5288
+WAEMU,Benin,3.4235,3.4397,3.4137
+WAEMU,Burkina Faso,4.6991,4.5832,4.7699
+WAEMU,Cote d'Ivoire,2.7135,1.3523,3.5453
+WAEMU,Guinea-Bissau,3.5479,2.5836,4.1372
+WAEMU,Mali,3.6838,4.195,3.3713
+WAEMU,Niger,2.0858,0.6665,2.9531
+WAEMU,Senegal,2.9586,2.6607,3.1407
+WAEMU,Togo,2.3409,1.4274,2.8992
+CAEMC,Average CAEMC,3.7037,5.5139,2.5975
+CAEMC,Cameroon,2.6215,0.677,3.8098
+CAEMC,Central African Republic,1.6564,0.9395,2.0945
+CAEMC,Chad,3.2106,1.6959,4.1363
+CAEMC,"Congo, Rep.",1.8699,0.8508,2.4927
+CAEMC,Equatorial Guinea,11.8433,27.7324,2.1334
+CAEMC,Gabon,1.0205,1.1878,0.9183
+Non-CFA comparison,Angola,3.0173,0.2992,4.6784
+Non-CFA comparison,Average Non-CFA comparison,3.0163,1.5253,3.9275
+Non-CFA comparison,Burundi,1.4023,-1.2228,3.0066
+Non-CFA comparison,"Congo, Dem. Rep.",0.8582,-6.4271,5.3104
+Non-CFA comparison,Ethiopia,5.9314,2.0423,8.3081
+Non-CFA comparison,"Gambia, The",1.6832,2.3025,1.3047
+Non-CFA comparison,Ghana,4.5532,3.5987,5.1365
+Non-CFA comparison,Guinea,4.4112,3.3089,5.0848
+Non-CFA comparison,Kenya,3.4705,1.1212,4.9062
+Non-CFA comparison,Madagascar,1.1411,1.0507,1.1963
+Non-CFA comparison,Malawi,2.6758,2.8939,2.5425
+Non-CFA comparison,Nigeria,3.4471,1.5265,4.6208
+Non-CFA comparison,Sao Tome and Principe,3.7612,1.9303,4.8801
+Non-CFA comparison,Sierra Leone,2.378,-1.7566,4.9048
+Non-CFA comparison,Sudan,2.6167,5.1829,1.0485
+Non-CFA comparison,Tanzania,3.9771,2.465,4.9011
+Non-CFA comparison,Uganda,4.3371,5.1647,3.8313
+Non-CFA comparison,Zambia,2.9661,1.4222,3.9096
+Non-CFA comparison,Zimbabwe,1.6667,2.553,1.1251

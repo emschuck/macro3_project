@@ -15,6 +15,20 @@ library(patchwork)
 output_dir <- "output/gdp_exploration"
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
+table_output_dir <- "output/gdp_exploration/tables"
+dir.create(table_output_dir, recursive = TRUE, showWarnings = FALSE)
+
+
+csv_output_dir <- "output/gdp_exploration/csvs"
+dir.create(csv_output_dir, recursive = TRUE, showWarnings = FALSE)
+
+
+chart_output_dir <- "output/gdp_exploration/charts"
+dir.create(chart_output_dir, recursive = TRUE, showWarnings = FALSE)
+
+
+country_output_dir <- "output/gdp_exploration/countries"
+dir.create(country_output_dir, recursive = TRUE, showWarnings = FALSE)
 
 # Country groups
 
@@ -149,7 +163,7 @@ df <- wdi |>
   select(-country_wdi, -country_pwt)
 
 # Save the GDP exploration raw panel
-write_csv(df, file.path(output_dir, "gdp_exploration_raw_panel.csv"))
+write_csv(df, file.path(csv_output_dir, "gdp_exploration_raw_panel.csv"))
 
 
 # misc helper functions
@@ -225,6 +239,16 @@ compute_gdp_measure <- function(data, gdp_var, method) {
   if (method == "direct") {
     data <- data |>
       mutate(gdp_measure = gdp_value)
+  }
+
+  if (method == "index_change_from_1990") {
+    data <- data |>
+      group_by(iso3c) |>
+      mutate(
+        gdp_1990 = gdp_value[year == 1990][1],
+        gdp_measure = 100 * (gdp_value / gdp_1990 - 1)
+      ) |>
+      ungroup()
   }
 
   if (method == "mean_index_to_period_start") {
@@ -330,9 +354,33 @@ make_gdp_checks <- function(data, gdp_var) {
 
 # Function to make combined table with vaalues
 
+# Function to make combined table with values
+
 make_combined_gdp_table <- function(data) {
 
-  country_rows <- data |>
+  # Calculate full-period average: 1980-2021
+  full_period_rows <- data |>
+    filter(
+      iso3c %in% gdp_exploration_countries,
+      year >= 1980,
+      year <= 2021
+    ) |>
+    mutate(
+      group = assign_country_group(iso3c),
+      period = "1980-2021"
+    ) |>
+    group_by(group, iso3c, country, period) |>
+    summarise(
+      value = safe_mean(gdp_measure),
+      .groups = "drop"
+    ) |>
+    pivot_wider(
+      names_from = period,
+      values_from = value
+    )
+
+  # Calculate pre- and post-period averages
+  pre_post_rows <- data |>
     filter(
       iso3c %in% gdp_exploration_countries,
       year >= 1990,
@@ -355,6 +403,13 @@ make_combined_gdp_table <- function(data) {
     pivot_wider(
       names_from = period,
       values_from = value
+    )
+
+  # Combine full period with pre/post periods
+  country_rows <- pre_post_rows |>
+    left_join(
+      full_period_rows,
+      by = c("group", "iso3c", "country")
     ) |>
     mutate(
       order = case_when(
@@ -367,12 +422,14 @@ make_combined_gdp_table <- function(data) {
       )
     ) |>
     arrange(order) |>
-    select(group, country, `1990-2001`, `2002-2021`)
+    select(group, country, `1980-2021`, `1990-2001`, `2002-2021`)
 
+  # Group averages
   average_rows <- country_rows |>
     group_by(group) |>
     summarise(
       country = paste("Average", first(group)),
+      `1980-2021` = safe_mean(`1980-2021`),
       `1990-2001` = safe_mean(`1990-2001`),
       `2002-2021` = safe_mean(`2002-2021`),
       .groups = "drop"
@@ -429,7 +486,7 @@ make_gdp_chart <- function(data, source, gdp_var, method, file_stub) {
     )
 
   ggsave(
-    filename = file.path(output_dir, paste0("chart_", file_stub, ".png")),
+    filename = file.path(chart_output_dir, paste0("chart_", file_stub, ".png")),
     plot = p,
     width = 12,
     height = 4,
@@ -456,7 +513,7 @@ run_gdp_exploration <- function(data, source, gdp_var, method) {
 
   write_csv(
     checks,
-    file.path(output_dir, paste0("checks_", file_stub, ".csv"))
+    file.path(csv_output_dir, paste0("checks_", file_stub, ".csv"))
   )
 
   cat(
@@ -466,7 +523,7 @@ run_gdp_exploration <- function(data, source, gdp_var, method) {
       booktabs = TRUE,
       caption = paste("GDP completeness checks:", source, gdp_var)
     ),
-    file = file.path(output_dir, paste0("checks_", file_stub, ".tex"))
+    file = file.path(table_output_dir, paste0("checks_", file_stub, ".tex"))
   )
 
   incomplete_rows <- checks |>
@@ -491,7 +548,7 @@ run_gdp_exploration <- function(data, source, gdp_var, method) {
 
   write_csv(
     table_out,
-    file.path(output_dir, paste0("table_", file_stub, ".csv"))
+    file.path(csv_output_dir, paste0("table_", file_stub, ".csv"))
   )
 
   cat(
@@ -501,7 +558,7 @@ run_gdp_exploration <- function(data, source, gdp_var, method) {
       booktabs = TRUE,
       caption = paste("GDP table:", source, gdp_var, method)
     ),
-    file = file.path(output_dir, paste0("table_", file_stub, ".tex"))
+    file = file.path(table_output_dir, paste0("table_", file_stub, ".tex"))
   )
 
   plot_out <- make_gdp_chart(
@@ -521,70 +578,62 @@ run_gdp_exploration <- function(data, source, gdp_var, method) {
 
 
 # Define all GDP tests to do
+# =====================================================
+# GDP variables to test
+# =====================================================
 
-gdp_tests <- tibble::tribble(
-~source, ~gdp_var, ~method,
+gdp_variables <- tibble::tribble(
+  ~source,        ~gdp_var,
+  "PWT",          "pwt_rgdpo_pc",
+  "PWT",          "pwt_rgdpe_pc",
+  "PWT",          "pwt_cgdpo_pc",
+  "PWT",          "pwt_cgdpe_pc",
+  "PWT",          "pwt_rgdpna_pc",
 
-# PWT output-side real GDP per capita
-"PWT", "pwt_rgdpo_pc", "pct_growth",
-"PWT", "pwt_rgdpo_pc", "growth_factor",
-"PWT", "pwt_rgdpo_pc", "log_growth",
-"PWT", "pwt_rgdpo_pc", "mean_index_to_period_start",
+  "WDI",          "wdi_gdp_pc_ppp_constant",
+  "WDI",          "wdi_gdp_pc_ppp_current",
+  "WDI",          "wdi_gdp_pc_constant",
+  "WDI",          "wdi_gdp_pc_current",
 
-# PWT expenditure-side real GDP per capita
-"PWT", "pwt_rgdpe_pc", "pct_growth",
-"PWT", "pwt_rgdpe_pc", "growth_factor",
-"PWT", "pwt_rgdpe_pc", "mean_index_to_period_start",
-
-# PWT current PPP output-side GDP per capita
-"PWT", "pwt_cgdpo_pc", "pct_growth",
-"PWT", "pwt_cgdpo_pc", "growth_factor",
-"PWT", "pwt_cgdpo_pc", "mean_index_to_period_start",
-
-# PWT constant national-price GDP per capita
-"PWT", "pwt_rgdpna_pc", "pct_growth",
-"PWT", "pwt_rgdpna_pc", "growth_factor",
-"PWT", "pwt_rgdpna_pc", "mean_index_to_period_start",
-
-# WDI real GDP per capita variants
-"WDI", "wdi_gdp_pc_ppp_constant", "pct_growth",
-"WDI", "wdi_gdp_pc_ppp_constant", "growth_factor",
-"WDI", "wdi_gdp_pc_ppp_constant", "log_growth",
-"WDI", "wdi_gdp_pc_ppp_constant", "mean_index_to_period_start",
-
-"WDI", "wdi_gdp_pc_constant", "pct_growth",
-"WDI", "wdi_gdp_pc_constant", "growth_factor",
-"WDI", "wdi_gdp_pc_constant", "mean_index_to_period_start",
-
-# WDI current-price variants
-"WDI", "wdi_gdp_pc_ppp_current", "pct_growth",
-"WDI", "wdi_gdp_pc_ppp_current", "growth_factor",
-"WDI", "wdi_gdp_pc_ppp_current", "mean_index_to_period_start",
-
-"WDI", "wdi_gdp_pc_current", "pct_growth",
-"WDI", "wdi_gdp_pc_current", "growth_factor",
-"WDI", "wdi_gdp_pc_current", "mean_index_to_period_start",
-
-# WDI direct growth rate
-"WDI", "wdi_gdp_pc_growth", "direct",
-
-# WDI aggregate GDP divided by PWT population
-"WDI_PWTPOP", "wdi_gdp_ppp_constant_pc_pwtpop", "pct_growth",
-"WDI_PWTPOP", "wdi_gdp_ppp_constant_pc_pwtpop", "growth_factor",
-"WDI_PWTPOP", "wdi_gdp_ppp_constant_pc_pwtpop", "mean_index_to_period_start",
-
-"WDI_PWTPOP", "wdi_gdp_ppp_current_pc_pwtpop", "pct_growth",
-"WDI_PWTPOP", "wdi_gdp_ppp_current_pc_pwtpop", "growth_factor",
-"WDI_PWTPOP", "wdi_gdp_ppp_current_pc_pwtpop", "mean_index_to_period_start",
-
-"WDI_PWTPOP", "wdi_gdp_constant_pc_pwtpop", "pct_growth",
-"WDI_PWTPOP", "wdi_gdp_constant_pc_pwtpop", "growth_factor",
-"WDI_PWTPOP", "wdi_gdp_constant_pc_pwtpop", "mean_index_to_period_start",
-
-"WDI_PWTPOP", "wdi_gdp_current_pc_pwtpop", "pct_growth",
-"WDI_PWTPOP", "wdi_gdp_current_pc_pwtpop", "growth_factor",
-"WDI_PWTPOP", "wdi_gdp_current_pc_pwtpop", "mean_index_to_period_start"
+  "WDI_PWTPOP",   "wdi_gdp_ppp_constant_pc_pwtpop",
+  "WDI_PWTPOP",   "wdi_gdp_ppp_current_pc_pwtpop",
+  "WDI_PWTPOP",   "wdi_gdp_constant_pc_pwtpop",
+  "WDI_PWTPOP",   "wdi_gdp_current_pc_pwtpop"
 )
+
+# =====================================================
+# GDP calculation methods to test
+# =====================================================
+
+gdp_methods <- tibble::tibble(
+  method = c(
+    "pct_growth",
+    "growth_factor",
+    "log_growth",
+    # "mean_index_to_period_start",
+    "index_change_from_1990"
+    # "avg_relative_level_change",
+    # "avg_relative_level_change_pct",
+    # "cagr_factor",
+    # "cagr_pct"
+  )
+)
+
+# Create all source-variable-method combinations
+gdp_tests <- tidyr::crossing(
+  gdp_variables,
+  gdp_methods
+)
+
+# Add WDI direct growth rate separately because it is already a growth rate
+gdp_tests <- bind_rows(
+  gdp_tests,
+  tibble::tribble(
+    ~source, ~gdp_var,             ~method,
+    "WDI",   "wdi_gdp_pc_growth",  "direct"
+  )
+)
+
 
 
 # Run all tests
@@ -623,7 +672,7 @@ combined_plot <- wrap_plots(
   )
 
 ggsave(
-  filename = file.path(output_dir, "combined_gdp_exploration_charts.png"),
+  filename = file.path(chart_output_dir, "combined_gdp_exploration_charts.png"),
   plot = combined_plot,
   width = 32,
   height = 4 * ceiling(length(plot_list) / 4),
@@ -637,3 +686,151 @@ saveRDS(
 )
 
 print("GDP exploration complete.")
+
+
+
+# =====================================================
+# Country-specific method comparison table
+# =====================================================
+
+make_country_method_table <- function(data, tests, country_iso3c) {
+
+  country_name <- data |>
+    filter(iso3c == country_iso3c) |>
+    summarise(country = first(na.omit(country))) |>
+    pull(country)
+
+  output_rows <- list()
+
+  for (i in seq_len(nrow(tests))) {
+
+    source_i <- tests$source[i]
+    gdp_var_i <- tests$gdp_var[i]
+    method_i <- tests$method[i]
+
+    if (!(gdp_var_i %in% names(data))) {
+      warning(paste("Skipping", gdp_var_i, "- variable not found in data."))
+      next
+    }
+
+    processed_i <- compute_gdp_measure(
+      data = data,
+      gdp_var = gdp_var_i,
+      method = method_i
+    )
+
+    # Full-period average: 1980-2021
+    row_all <- processed_i |>
+      filter(
+        iso3c == country_iso3c,
+        year >= 1980,
+        year <= 2021
+      ) |>
+      summarise(
+        period = "1980-2021",
+        value = safe_mean(gdp_measure),
+        n_obs = sum(!is.na(gdp_measure))
+      )
+
+    # Pre- and post-period averages
+    row_sub <- processed_i |>
+      filter(
+        iso3c == country_iso3c,
+        year >= 1990,
+        year <= 2021
+      ) |>
+      mutate(
+        period = case_when(
+          year >= 1990 & year <= 2001 ~ "1990-2001",
+          year >= 2002 & year <= 2021 ~ "2002-2021",
+          TRUE ~ NA_character_
+        )
+      ) |>
+      filter(!is.na(period)) |>
+      group_by(period) |>
+      summarise(
+        value = safe_mean(gdp_measure),
+        n_obs = sum(!is.na(gdp_measure)),
+        .groups = "drop"
+      )
+
+    row_i <- bind_rows(row_all, row_sub) |>
+      pivot_wider(
+        names_from = period,
+        values_from = c(value, n_obs)
+      ) |>
+      mutate(
+        source = source_i,
+        gdp_variable = gdp_var_i,
+        method = method_i
+      ) |>
+      select(
+        source,
+        gdp_variable,
+        method,
+        `1980-2021` = `value_1980-2021`,
+        `1990-2001` = `value_1990-2001`,
+        `2002-2021` = `value_2002-2021`,
+        `n 1980-2021` = `n_obs_1980-2021`,
+        `n 1990-2001` = `n_obs_1990-2001`,
+        `n 2002-2021` = `n_obs_2002-2021`
+      )
+
+    output_rows[[length(output_rows) + 1]] <- row_i
+  }
+
+  table_out <- bind_rows(output_rows) |>
+    mutate(
+      country_iso3c = country_iso3c,
+      country = country_name,
+      across(c(`1980-2021`, `1990-2001`, `2002-2021`), ~ round(.x, 4))
+    ) |>
+    select(
+      country,
+      method,
+      `1980-2021`,
+      `1990-2001`,
+      `2002-2021`,
+      `n 1980-2021`,
+      `n 1990-2001`,
+      `n 2002-2021`
+    )
+
+  table_out
+}
+
+
+# =====================================================
+# Produce country-specific comparison tables
+# =====================================================
+
+country_to_check <- "AGO"
+
+country_method_table <- make_country_method_table(
+  data = df,
+  tests = gdp_tests,
+  country_iso3c = country_to_check
+)
+
+print(country_method_table)
+
+write_csv(
+  country_method_table,
+  file.path(
+    country_output_dir,
+    paste0("country_method_table_", country_to_check, ".csv")
+  )
+)
+
+cat(
+  kable(
+    country_method_table,
+    format = "latex",
+    booktabs = TRUE,
+    caption = paste("GDP method comparison for", country_to_check)
+  ),
+  file = file.path(
+    country_output_dir,
+    paste0("country_method_table_", country_to_check, ".tex")
+  )
+)
