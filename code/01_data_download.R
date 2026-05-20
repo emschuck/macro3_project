@@ -202,9 +202,49 @@ country_names <- tibble::tribble(
   "ZWE", "Zimbabwe"
 )
 
+
+
+
+### IMPUTATION PLAN
+
+# method options:
+#   "zero"          : replace missing values with 0
+#   "linear"        : linear interpolation + linear extrapolation at endpoints
+#   "nearest_fill"  : fill endpoint/interior gaps using nearest observed value
+#
+# Use country = "ALL" to apply a rule to all countries.
+
+imputation_plan <- tibble::tribble(
+  ~country, ~variable, ~method,
+
+  "ALL", "polity2", "zero", # Missing for countries less than 500k pop
+
+  "CAR", "industry", "nearest_fill", # pre-2009
+  "GNQ", "industry", "nearest_fill", # pre-2006
+  "LAO", "industry", "linear", # pre-1989 
+  "LCA", "industry", "nearest_fill", # pre-2006
+
+  "BRB", "oda_share", "nearest_fill", # 2010 onwards
+  "NAM", "oda_share", "nearest_fill", # pre 1984
+  "OMN", "oda_share", "nearest_fill", # 2010 onwards
+  "SYC", "oda_share", "nearest_fill", # 2018 
+  "KNA", "oda_share", "nearest_fill", # 2013 onwards
+
+  "GNQ", "fdi", "zero", # 1980 (near zero after)
+  "BTN", "fdi", "zero", # pre 2001 (near zero after)
+  "LAO", "fdi", "zero", # pre-1984 (near zero after)
+  "NAM", "fdi", "zero", # pre 1985 (near zero after)
+
+  "DMA", "labour", "nearest_fill", # Most
+  "GRD", "labour", "nearest_fill", # pre 1988
+  "SYC", "labour", "nearest_fill", # pre 1992 
+  "KNA", "labour", "nearest_fill" # post 2001
+)
+
 # -----------------------------
 #  Download Penn World Tables
 # -----------------------------
+
 
 data("pwt10.01")
 
@@ -273,6 +313,7 @@ indicators <- c(
   gdp_pc_wdi = "NY.GDP.PCAP.PP.KD", #GDP, PPP (constant 2021 international $)
   gdp_wdi = "NY.GDP.MKTP.PP.KD", #GDP, PPP (constant 2021 international $)
   gdp_pc_growth_wdi = "NY.GDP.PCAP.KD.ZG", 
+  gdp_wdi_current = "NY.GDP.MKTP.CD",
   #GDP growth rate, PPP (constant 2021 international $)
   # real gdp pc
   #gdp_pc_wdi = "NY.GDP.PCAP.PP.CD",
@@ -313,7 +354,9 @@ df <- wdi |>
       year >= 1980 & year <= 2001 ~ "pre",
       year >= 2002 & year <= 2021 ~ "post",
       TRUE ~ NA_character_
-    )
+    ),
+    # ODA as share of GDP annually (both are current US$)
+    oda_share = 100 * oda_alt / gdp_wdi_current
   )
 
 # Basic checks
@@ -370,12 +413,219 @@ df <- df |>
 summary(df$polity2)
 
 
+# =====================================================
+# FAOSTAT Ag data
+# =====================================================
+
+ag_extra <- read_csv("data/raw/FAOSTAT_data_en_5-20-2026.csv")
+
+ag_extra_clean <- ag_extra |>
+  transmute(
+    iso3c = `Area Code (ISO3)`,
+    year = as.integer(Year),
+    agriculture_extra = as.numeric(Value)
+  ) |>
+  filter(
+    year >= 1980,
+    year <= 2021
+  ) |>
+  distinct(iso3c, year, .keep_all = TRUE)
+
+# Add agriculture data where missing
+df <- df |>
+  left_join(ag_extra_clean, by = c("iso3c", "year")) |>
+  mutate(
+    agriculture_original = agriculture,
+    agriculture = coalesce(agriculture, agriculture_extra),
+    agriculture_filled_from_extra = is.na(agriculture_original) & !is.na(agriculture_extra)
+  ) |>
+  select(-agriculture_extra)
+
+
+
+# =====================================================
+# Data imputation functions
+# ====================================================
+
+fill_zero <- function(x) {
+  ifelse(is.na(x), 0, x)
+}
+
+fill_linear <- function(x, year) {
+  # Linear interpolation and extrapolation.
+  # rule = 2 means values outside observed range are extended linearly
+  # from the nearest available segment.
+  if (sum(!is.na(x)) < 2) {
+    return(x)
+  }
+
+  zoo::na.approx(
+    object = x,
+    x = year,
+    xout = year,
+    na.rm = FALSE,
+    rule = 2
+  )
+}
+
+fill_nearest <- function(x) {
+  # Fill missing values using nearest available observed value.
+  # First fill forward, then backward.
+  out <- x
+  out <- tidyr::fill(
+    tibble(value = out),
+    value,
+    .direction = "downup"
+  )$value
+
+  out
+}
+
+apply_one_imputation <- function(data, country_i, variable_i, method_i) {
+
+  if (!(variable_i %in% names(data))) {
+    warning(paste("Variable not found:", variable_i))
+    return(data)
+  }
+
+  if (!(method_i %in% c("zero", "linear", "nearest_fill"))) {
+    warning(paste("Unknown imputation method:", method_i))
+    return(data)
+  }
+
+  data |>
+    group_by(iso3c) |>
+    arrange(year, .by_group = TRUE) |>
+    mutate(
+      "{variable_i}" := case_when(
+        country_i == "ALL" & method_i == "zero" ~
+          fill_zero(.data[[variable_i]]),
+
+        country_i == iso3c & method_i == "zero" ~
+          fill_zero(.data[[variable_i]]),
+
+        country_i == "ALL" & method_i == "linear" ~
+          fill_linear(.data[[variable_i]], year),
+
+        country_i == iso3c & method_i == "linear" ~
+          fill_linear(.data[[variable_i]], year),
+
+        country_i == "ALL" & method_i == "nearest_fill" ~
+          fill_nearest(.data[[variable_i]]),
+
+        country_i == iso3c & method_i == "nearest_fill" ~
+          fill_nearest(.data[[variable_i]]),
+
+        TRUE ~ .data[[variable_i]]
+      )
+    ) |>
+    ungroup()
+}
+
+
+# =====================================================
+# Apply imputation and check changes
+# =====================================================
+
+df_before_imputation <- df
+
+df_imputed <- df
+
+for (i in seq_len(nrow(imputation_plan))) {
+  df_imputed <- apply_one_imputation(
+    data = df_imputed,
+    country_i = imputation_plan$country[i],
+    variable_i = imputation_plan$variable[i],
+    method_i = imputation_plan$method[i]
+  )
+}
+
+
+# CHECK DIFFERENCES
+
+make_missing_check <- function(data, variables_to_check) {
+  data |>
+    select(iso3c, country, year, all_of(variables_to_check)) |>
+    pivot_longer(
+      cols = all_of(variables_to_check),
+      names_to = "variable",
+      values_to = "value"
+    ) |>
+    group_by(iso3c, country, variable) |>
+    summarise(
+      n_years = n(),
+      n_missing = sum(is.na(value)),
+      first_non_missing_year = ifelse(
+        all(is.na(value)),
+        NA_integer_,
+        min(year[!is.na(value)])
+      ),
+      last_non_missing_year = ifelse(
+        all(is.na(value)),
+        NA_integer_,
+        max(year[!is.na(value)])
+      ),
+      .groups = "drop"
+    ) |>
+    arrange(variable, iso3c)
+}
+
+variables_imputed <- unique(imputation_plan$variable)
+
+missing_before <- make_missing_check(
+  df_before_imputation,
+  variables_imputed
+)
+
+missing_after <- make_missing_check(
+  df_imputed,
+  variables_imputed
+)
+
+imputation_check <- missing_before |>
+  rename(
+    n_missing_before = n_missing,
+    first_non_missing_before = first_non_missing_year,
+    last_non_missing_before = last_non_missing_year
+  ) |>
+  left_join(
+    missing_after |>
+      rename(
+        n_missing_after = n_missing,
+        first_non_missing_after = first_non_missing_year,
+        last_non_missing_after = last_non_missing_year
+      ),
+    by = c("iso3c", "country", "variable", "n_years")
+  ) |>
+  mutate(
+    missing_filled = n_missing_before - n_missing_after
+  )
+
+print(imputation_check, n = Inf)
+
+
+
+
+
+
+
+
+
+
+
+
 
 # =====================================================
 # Save processed data
 # =====================================================
+saveRDS(df_imputed, "data/processed/processed_panel_imputed.rds")
+saveRDS(df_before_imputation, "data/processed/processed_panel_unimputed.rds")
 
-saveRDS(df, "data/processed/processed_panel.rds")
+#View(df)
+
+
+
+
 
 
 

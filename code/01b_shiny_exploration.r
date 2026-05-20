@@ -2,13 +2,11 @@ library(shiny)
 library(tidyverse)
 
 # Load compiled dataset
-df <- readRDS("../data/processed/processed_panel.rds")
-
-
+df <- readRDS("./data/processed/processed_panel_imputed.rds")
 
 # Keep only 1980-2021
 df <- df |>
-  filter(year >= 1980, year <= 2021)
+  filter(year >= 1980, year <= 2018)
 
 # Automatically include all numeric variables except year
 dashboard_vars <- df |>

@@ -106,7 +106,8 @@ scm_df <- scm_df |>
   ) |>
   arrange(iso3c, year) |> # sorts by country and by year
   group_by(iso3c) |> # for each country
-  tidyr::fill(country, .direction = "downup") |> # fill country name from above/below for missing
+  tidyr::fill(country, .direction = "downup") |> 
+  # fill country name from above/below for missing
   ungroup()
 
 
