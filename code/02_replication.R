@@ -207,7 +207,7 @@ country_ids |>
 # Run SCM for one country - to make into function
 # =====================================================
 
-treated_iso3c <- "CAM"   # to change
+treated_iso3c <- "GAB"   # to change
 
 # Dataprep to organise data into form reqruired for synth:
 dataprep.out <- dataprep(
@@ -274,6 +274,17 @@ synth.tables <- synth.tab(
 
 print(synth.tables)
 
+#Add refined optimizer settings to allow for zero-weights
+synth.out_set <- synth(
+  data.prep.obj = dataprep.out,
+  Margin.ipop = .0005, Sigf.ipop = 10, Bound.ipop = 10
+)
+
+synth.tables_set <- synth.tab(
+  dataprep.res = dataprep.out,
+  synth.res    = synth.out_set
+)
+synth.tables_set
 
 # =====================================================
 # Plot actual vs synthetic GDP per capita
@@ -288,7 +299,7 @@ path.plot(
   tr.intake = 2002,
   Ylab = "Real GDP per capita",
   Xlab = "Year",
-  Legend = c("Benin", "Synthetic Benin"),
+  Legend = c("Gabon", "Synthetic Gabon"),
   Legend.position = "topleft"
 )
 
