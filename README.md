@@ -15,5 +15,8 @@ The Polity5 data was downloaded from https://www.systemicpeace.org/inscrdata.htm
 
 Contents: Polity5 Project, Political Regime Characteristics and Transitions, 1800-2018, annual, cross-national, time-series and polity-case formats coding democratic and autocratic "patterns of authority" and regime changes in all independent countries with total population greater than 500,000 in 2018 (167 countries in 2018) .
 
-
+## Code
+01_data_download.R - downloads data from different sources and merges. ALso produces replicated inflation tables for report
+01a_gdp_exploration.R - investigates all possible sources for GDP to try to find one which is aligned
+01b_shiny_exploration.R - creates shiny app to visualise data during data exploration - for manual confirmation
 

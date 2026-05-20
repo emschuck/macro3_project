@@ -11,4 +11,6 @@
 * 17-05-2026 : Trying to match inflation is giving different numbers. Likely partially from WDI data revisions, but also missing some values for Guinea, SL, and Zimbabwe. Testing GDP deflator inflation values (NY.GDP.DEFL.87.ZG, NY.GDP.DEFL.KD.ZG) matches for table 1B, but still not accurate for table 1a.
 * 17-05-2026 : Testing for table 1A if it is 1980-2021 values (as written in the report) not 1980-2001, but this does not seem to be the case -- much lower values
 * 17-05-2026 : GDP growth rate giving negative values and different scale. Investigating WDI variables options and PWT variable options, no improvement.
-* 17-05-2026 : Tested
+* 18-05-2026 : Full test suite of all GDP variables available, including manual calculation from PWT population and WDI values -- none match. 
+* 19-05-2026 : The GDP table in the report has a mistake - both columns have the same values. Priortitising getting values close to the chart, and working from there
+* 20-05-2026 : Checking the data availability for different countries
