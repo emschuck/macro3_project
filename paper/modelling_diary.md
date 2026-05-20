@@ -13,4 +13,8 @@
 * 17-05-2026 : GDP growth rate giving negative values and different scale. Investigating WDI variables options and PWT variable options, no improvement.
 * 18-05-2026 : Full test suite of all GDP variables available, including manual calculation from PWT population and WDI values -- none match. 
 * 19-05-2026 : The GDP table in the report has a mistake - both columns have the same values. Priortitising getting values close to the chart, and working from there
-* 20-05-2026 : Checking the data availability for different countries
+* 20-05-2026 : Data availability problems: Laos and St Lucia missing agriculture and industry data. Duplications for CPV and SWZ. For cemac countries, CAR and GNQ missing ag and industry data. Starting to solve data problems for donor countries, so complete analysis can be completed for WAEMU countries.
+* 20-05-2026 : Ag. data for Laos key block: missing WDI data until 1989, but high weights on Laos for many countries in method. Found a paper with estimates of Laos ag. GDP back to 1970s -- seems to support a backwards linear extrapolation of existing data
+* 20-05-2026 : Barbados, Namibia, Oman, Seychelles, St kitts and Nevis, all missing some ODA data. Forwards and backwards extrapolation reasonable in some cases, but some (BRB, OMN, KNA) missing substantial share. 
+* 20-05-2026 : 
+

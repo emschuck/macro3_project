@@ -142,6 +142,65 @@ countries <- unique(c(
   non_cfa_comparison_countries
 ))
 
+# Override country names to avoid inconsistency with Eswatini and Cape Verde
+country_names <- tibble::tribble(
+  ~iso3c, ~country,
+  "BEN", "Benin",
+  "BFA", "Burkina Faso",
+  "CIV", "Côte d'Ivoire",
+  "GNB", "Guinea-Bissau",
+  "MLI", "Mali",
+  "NER", "Niger",
+  "SEN", "Senegal",
+  "TGO", "Togo",
+
+  "CMR", "Cameroon",
+  "CAF", "Central African Republic",
+  "TCD", "Chad",
+  "COG", "Republic of Congo",
+  "GNQ", "Equatorial Guinea",
+  "GAB", "Gabon",
+
+  "BGD", "Bangladesh",
+  "BRB", "Barbados",
+  "BTN", "Bhutan",
+  "BOL", "Bolivia",
+  "BWA", "Botswana",
+  "CPV", "Cabo Verde",
+  "DMA", "Dominica",
+  "ECU", "Ecuador",
+  "SWZ", "Eswatini",
+  "GRD", "Grenada",
+  "LAO", "Lao PDR",
+  "LSO", "Lesotho",
+  "MUS", "Mauritius",
+  "MAR", "Morocco",
+  "NAM", "Namibia",
+  "OMN", "Oman",
+  "PAN", "Panama",
+  "KNA", "St. Kitts and Nevis",
+  "LCA", "St. Lucia",
+  "SYC", "Seychelles",
+
+  "AGO", "Angola",
+  "BDI", "Burundi",
+  "COD", "Congo, Dem. Rep.",
+  "ETH", "Ethiopia",
+  "GMB", "Gambia, The",
+  "GHA", "Ghana",
+  "GIN", "Guinea",
+  "KEN", "Kenya",
+  "MDG", "Madagascar",
+  "MWI", "Malawi",
+  "NGA", "Nigeria",
+  "STP", "Sao Tome and Principe",
+  "SLE", "Sierra Leone",
+  "SDN", "Sudan",
+  "TZA", "Tanzania",
+  "UGA", "Uganda",
+  "ZMB", "Zambia",
+  "ZWE", "Zimbabwe"
+)
 
 # -----------------------------
 #  Download Penn World Tables
@@ -152,26 +211,30 @@ data("pwt10.01")
 pwt <- pwt10.01 |>
   select(
     isocode,
-    country,
     year,
-    rgdpo, # Output-side real GDP at chained PPPs, million 2021 US$
-    cgdpo, # Output-side real GDP at current PPPs, million 2021 US$
-    pop, # Population, millions
-    emp, # Persons engaged, millions
-    csh_g, # Government consumption share at current PPPs
-    csh_i, # Gross capital formation share at current PPPs
-    hc # Human capital index
+    rgdpo,
+    cgdpo,
+    pop,
+    emp,
+    csh_g,
+    csh_i,
+    hc
   ) |>
   rename(
-    iso3c = isocode, # marching with wdi
-    country_pwt = country
+    iso3c = isocode
   ) |>
+  filter(
+    iso3c %in% countries,
+    year >= 1980,
+    year <= 2021
+  ) |>
+  distinct(iso3c, year, .keep_all = TRUE) |>
   mutate(
-    gdp_pc = rgdpo / pop, # Real GDP per capita, output-side PPP
-    gdp_pc_current = cgdpo / pop, # Current-price output-side GDP per capita, PPP
-    labour = 100 * emp / pop, # Employment as % of population
-    govt_share = csh_g, # Government consumption share
-    invest_share = csh_i # Investment / capital formation share
+    gdp_pc = rgdpo / pop,
+    gdp_pc_current = cgdpo / pop,
+    labour = 100 * emp / pop,
+    govt_share = csh_g,
+    invest_share = csh_i
   )
 
 
@@ -179,21 +242,27 @@ pwt <- pwt10.01 |>
 # Download World Development Indicator data
 # -----------------------------
 
-View(WDIsearch("investment"))
+#View(WDIsearch("gdp"))
 
 # WDI indicators used for variables not taken from PWT
 indicators <- c(
   agriculture = "NV.AGR.TOTL.ZS", # NV.AGR.TOTL.CD for levels
   # Agriculture, forestry, and fishing, value added (% of GDP)
+  agriculture_alt = "NV.AGR.TOTL.CD", # NV.AGR.TOTL.CD for levels
+  # Agriculture, forestry, and fishing, value added (current US$)
+  ag_alt_2 = "NP.AGR.TOTL.CN",
+  ag_alt_3 = "NA.GDP.AGR.CR",
   industry = "NV.IND.TOTL.ZS", # NV.IND.MANF.ZS for manufacturing only
   # Industry including construction, value added (% of GDP)
+  industry_alt = "NV.IND.TOTL.CD",
+  # Industry including construction, value added (level)
   fdi = "BX.KLT.DINV.WD.GD.ZS",
   # Foreign direct investment, net inflows (% of GDP)
   govt_share_alt = "NE.CON.GOVT.ZS",
   # General government final consumption expenditure (% of GDP)
   invest_share_alt = "NE.GDI.FTOT.ZS",
   # Gross fixed capital formation (% of GDP)=
-  fdi_alt = "X.KLT.DINV.CD.WD",
+  fdi_alt = "BN.KLT.DINV.CD.DRS",
   # Foreign direct investment, net inflows (current USD)
   alt_inflation = "FP.CPI.TOTL.ZG",
   # Inflation, consumer prices (annual %)( not currently used)
@@ -201,7 +270,10 @@ indicators <- c(
   # Inflation, GDP deflator (annual %) 
   gdp_pc_wdi_alt = "NY.GDP.PCAP.CD",
   # GDP per capita (current US$)
-  gdp_pc_wdi = "NY.GDP.PCAP.PP.KD",
+  gdp_pc_wdi = "NY.GDP.PCAP.PP.KD", #GDP, PPP (constant 2021 international $)
+  gdp_wdi = "NY.GDP.MKTP.PP.KD", #GDP, PPP (constant 2021 international $)
+  gdp_pc_growth_wdi = "NY.GDP.PCAP.KD.ZG", 
+  #GDP growth rate, PPP (constant 2021 international $)
   # real gdp pc
   #gdp_pc_wdi = "NY.GDP.PCAP.PP.CD",
   # GDP per capita, PPP (current international $)
@@ -211,38 +283,38 @@ indicators <- c(
   # Net ODA received (current USD)
 )
 
+
 wdi <- WDI(
   country = countries,
   indicator = indicators,
   start = 1980,
-  end = 2021 # 2021 for matching with inflation table not 2019 for main analysis
+  end = 2021
 ) |>
-  rename(country_wdi = country)
-
+  select(-country) |>
+  distinct(iso3c, year, .keep_all = TRUE)
 
 # -----------------------------
 # Merge WDI and PWT
 # -----------------------------
 
+# Merge datasets and add in country names
 df <- wdi |>
   left_join(pwt, by = c("iso3c", "year")) |>
+  left_join(country_names, by = "iso3c") |>
   mutate(
-    country = coalesce(country_wdi, country_pwt), 
-    region = case_when( # Label the list the country is from
+    region = case_when(
       iso3c %in% waemu_table1 ~ "WAEMU",
       iso3c %in% caemc ~ "CAEMC",
       iso3c %in% donor_countries ~ "Donor pool",
       iso3c %in% non_cfa_comparison_countries ~ "Non-CFA comparison",
-      TRUE ~ NA_character_ # assign missing value to any other cases
+      TRUE ~ NA_character_
     ),
-    period = case_when( # label pre and post 2001 (2001 in pre)
-      year >= 1980 & year <= 2001 ~ "pre", 
+    period = case_when(
+      year >= 1980 & year <= 2001 ~ "pre",
       year >= 2002 & year <= 2021 ~ "post",
-      TRUE ~ NA_character_ # assign missing value to any other cases
+      TRUE ~ NA_character_
     )
-  ) |>
-  # drop temporary name columns (replaced by coalesced column)
-  select(-country_wdi, -country_pwt)
+  )
 
 # Basic checks
 table(df$region, useNA = "ifany") # Expect 252 840 756 336
