@@ -159,6 +159,8 @@ bad_controls <- scm_df |>
   pull(unit_id)
 
 # Define the treated-country ID and the usable donor-country IDs
+treated_iso3c <- "GAB"   # to change
+
 treated_id <- country_ids$unit_id[country_ids$iso3c == treated_iso3c]
 
 control_ids <- country_ids$unit_id[
@@ -206,8 +208,6 @@ country_ids |>
 # =====================================================
 # Run SCM for one country - to make into function
 # =====================================================
-
-treated_iso3c <- "GAB"   # to change
 
 # Dataprep to organise data into form reqruired for synth:
 dataprep.out <- dataprep(
