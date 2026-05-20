@@ -179,16 +179,22 @@ pwt <- pwt10.01 |>
 # Download World Development Indicator data
 # -----------------------------
 
-View(WDIsearch("gdp"))
+View(WDIsearch("investment"))
 
 # WDI indicators used for variables not taken from PWT
 indicators <- c(
-  agriculture = "NV.AGR.TOTL.ZS",
+  agriculture = "NV.AGR.TOTL.ZS", # NV.AGR.TOTL.CD for levels
   # Agriculture, forestry, and fishing, value added (% of GDP)
-  industry = "NV.IND.TOTL.ZS",
+  industry = "NV.IND.TOTL.ZS", # NV.IND.MANF.ZS for manufacturing only
   # Industry including construction, value added (% of GDP)
   fdi = "BX.KLT.DINV.WD.GD.ZS",
   # Foreign direct investment, net inflows (% of GDP)
+  govt_share_alt = "NE.CON.GOVT.ZS",
+  # General government final consumption expenditure (% of GDP)
+  invest_share_alt = "NE.GDI.FTOT.ZS",
+  # Gross fixed capital formation (% of GDP)=
+  fdi_alt = "X.KLT.DINV.CD.WD",
+  # Foreign direct investment, net inflows (current USD)
   alt_inflation = "FP.CPI.TOTL.ZG",
   # Inflation, consumer prices (annual %)( not currently used)
   inflation = "NY.GDP.DEFL.KD.ZG",
@@ -196,11 +202,13 @@ indicators <- c(
   gdp_pc_wdi_alt = "NY.GDP.PCAP.CD",
   # GDP per capita (current US$)
   gdp_pc_wdi = "NY.GDP.PCAP.PP.KD",
-  # real gdp
+  # real gdp pc
   #gdp_pc_wdi = "NY.GDP.PCAP.PP.CD",
   # GDP per capita, PPP (current international $)
-  oda = "DT.ODA.ODAT.GD.ZS"
+  oda = "DT.ODA.ODAT.GD.ZS",
   # Net official development assistance received (% of GNI)
+  oda_alt = "DT.ODA.ODAT.CD",
+  # Net ODA received (current USD)
 )
 
 wdi <- WDI(
