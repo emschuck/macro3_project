@@ -207,7 +207,7 @@ indicators <- c(
   # GDP per capita, PPP (current international $)
   oda = "DT.ODA.ODAT.GD.ZS",
   # Net official development assistance received (% of GNI)
-  oda_alt = "DT.ODA.ODAT.CD",
+  oda_alt = "DT.ODA.ODAT.CD"
   # Net ODA received (current USD)
 )
 
