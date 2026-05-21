@@ -34,7 +34,7 @@ safe_mean <- function(x) {
 }
 
 # Load processed data
-df <- readRDS("data/processed/processed_panel.rds")
+df <- readRDS("data/processed/processed_panel_imputed.rds")
 
 # Country lists for treated and control
 
@@ -79,6 +79,75 @@ donor_countries <- c(
 
 scm_countries <- c(treated_countries, donor_countries)
 
+
+
+# Country names for charts
+country_names <- tibble::tribble(
+  ~iso3c, ~country,
+  "BEN", "Benin",
+  "BFA", "Burkina Faso",
+  "CIV", "Côte d'Ivoire",
+  "GNB", "Guinea-Bissau",
+  "MLI", "Mali",
+  "NER", "Niger",
+  "SEN", "Senegal",
+  "TGO", "Togo",
+
+  "CMR", "Cameroon",
+  "CAF", "Central African Republic",
+  "TCD", "Chad",
+  "COG", "Republic of Congo",
+  "GNQ", "Equatorial Guinea",
+  "GAB", "Gabon",
+
+  "BGD", "Bangladesh",
+  "BRB", "Barbados",
+  "BTN", "Bhutan",
+  "BOL", "Bolivia",
+  "BWA", "Botswana",
+  "CPV", "Cabo Verde",
+  "DMA", "Dominica",
+  "ECU", "Ecuador",
+  "SWZ", "Eswatini",
+  "GRD", "Grenada",
+  "LAO", "Lao PDR",
+  "LSO", "Lesotho",
+  "MUS", "Mauritius",
+  "MAR", "Morocco",
+  "NAM", "Namibia",
+  "OMN", "Oman",
+  "PAN", "Panama",
+  "KNA", "St. Kitts and Nevis",
+  "LCA", "St. Lucia",
+  "SYC", "Seychelles",
+
+  "AGO", "Angola",
+  "BDI", "Burundi",
+  "COD", "Congo, Dem. Rep.",
+  "ETH", "Ethiopia",
+  "GMB", "Gambia, The",
+  "GHA", "Ghana",
+  "GIN", "Guinea",
+  "KEN", "Kenya",
+  "MDG", "Madagascar",
+  "MWI", "Malawi",
+  "NGA", "Nigeria",
+  "STP", "Sao Tome and Principe",
+  "SLE", "Sierra Leone",
+  "SDN", "Sudan",
+  "TZA", "Tanzania",
+  "UGA", "Uganda",
+  "ZMB", "Zambia",
+  "ZWE", "Zimbabwe"
+)
+
+# Function to get country name form list
+get_country_name <- function(code) {
+  country_names |>
+    filter(iso3c == code) |>
+    pull(country)
+}
+
 #### ========================================================================###
 #### ======================== SYNTEHETIC CONTROL METHOD ====================###
 #### ========================================================================###
@@ -92,9 +161,9 @@ scm_df <- df |>
   ) |>
   select(
     iso3c, country, year,
-    gdp_pc,
+    gdp_pc_wdi,
     agriculture, industry, govt_share, invest_share,
-    oda, fdi, labour, polity2
+    oda_share, fdi, labour, polity2
   ) |>
   distinct(iso3c, year, .keep_all = TRUE)
 
@@ -147,7 +216,7 @@ bad_controls <- scm_df |>
     bad_industry    = all(is.na(industry)),
     bad_govt        = all(is.na(govt_share)),
     bad_invest      = all(is.na(invest_share)),
-    bad_oda         = all(is.na(oda)),
+    bad_oda         = all(is.na(oda_share)),
     bad_fdi         = all(is.na(fdi)),
     bad_labour      = all(is.na(labour)),
     bad_polity      = all(is.na(polity2)),
@@ -159,8 +228,14 @@ bad_controls <- scm_df |>
   ) |>
   pull(unit_id)
 
+
+
+
 # Define the treated-country ID and the usable donor-country IDs
 treated_iso3c <- "GNQ"   # to change
+
+country_name_treated <- get_country_name(treated_iso3c)
+
 
 treated_id <- country_ids$unit_id[country_ids$iso3c == treated_iso3c]
 
@@ -173,6 +248,7 @@ control_ids <- country_ids$unit_id[
 # column 1 = numeric unit ID
 # column 2 = country name/code
 # column 3 = year
+
 scm_df <- scm_df |>
   select(
     unit_id,
@@ -180,12 +256,12 @@ scm_df <- scm_df |>
     year,
     iso3c,
     country,
-    gdp_pc,
+    gdp_pc_wdi,
     agriculture,
     industry,
     govt_share,
     invest_share,
-    oda,
+    oda_share,
     fdi,
     labour,
     polity2,
@@ -220,21 +296,21 @@ dataprep.out <- dataprep(
     "industry",
     "govt_share",
     "invest_share",
-    "oda",
+    "oda_share",
     "fdi",
     "labour",
     "polity2"
-    # "devaluation_1994" # Removed bc no variation across some control units
+    # "devaluation_1994" # Removed bc no variation across control units
   ),
 
   # (averaged over pre period to choose donor weights)
   predictors.op = "mean",
 
   # Outcome variable
-  dependent = "gdp_pc",
+  dependent = "gdp_pc_wdi",
 
   # Country and time identifiers
-  
+
   unit.variable = 1, # country identifiers
   unit.names.variable = 2, # country names
   time.variable = 3, # time var
@@ -253,9 +329,9 @@ dataprep.out <- dataprep(
   # Lagged outcome values used as predictors in the paper 
   # (1980, 1995, and 2001 gdppc) - to match important points
   special.predictors = list(
-    list("gdp_pc", 1980, c("mean")),
-    list("gdp_pc", 1995, c("mean")),
-    list("gdp_pc", 2001, c("mean"))
+    list("gdp_pc_wdi", 1980, c("mean")),
+    list("gdp_pc_wdi", 1995, c("mean")),
+    list("gdp_pc_wdi", 2001, c("mean"))
   )
 )
 
@@ -298,9 +374,11 @@ path.plot(
   synth.res = synth.out,
   dataprep.res = dataprep.out,
   tr.intake = 2002,
-  Ylab = "Real GDP per capita",
+  Ylab = paste0("Real GDP per capita: ", country_name_treated),
   Xlab = "Year",
-  Legend = c("Equatorial Guinea", "Synthetic Equatorial Guinea"),
+  Legend = c(
+  country_name_treated,
+  paste("Synthetic", country_name_treated)),
   Legend.position = "topleft"
 )
 
@@ -320,7 +398,7 @@ gaps.plot(
   synth.res = synth.out_set,
   dataprep.res = dataprep.out,
   tr.intake = 2002,
-  Ylab = "Gap in real GDP per capita",
+  Ylab = paste0("Gap in real GDP per capita: ",country_name_treated),
   Xlab = "Year"
 )
 

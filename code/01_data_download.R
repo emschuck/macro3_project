@@ -356,7 +356,8 @@ df <- wdi |>
       TRUE ~ NA_character_
     ),
     # ODA as share of GDP annually (both are current US$)
-    oda_share = 100 * oda_alt / gdp_wdi_current
+    oda_share = 100 * oda_alt / gdp_wdi_current,
+    gdp_wdi_current_pc = gdp_wdi_current / pop
   )
 
 # Basic checks
