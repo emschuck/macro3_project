@@ -25,6 +25,7 @@ library(knitr)
 library(tidyverse)
 library(readxl)
 library(countrycode)
+library(stringr)
 
 library(Synth)
 
@@ -455,7 +456,137 @@ for (country_code in treated_countries) {
 }
 
 
+# =====================================================
+# Synthetic control weights table
+# Donor countries as rows, treated countries as columns
+# =====================================================
 
+
+# Optional: short labels for treated-country columns
+treated_labels <- tibble::tribble(
+  ~iso3c, ~treated_label,
+  "BEN", "Benin",
+  "BFA", "Burkina F.",
+  "CIV", "Ivory Coast",
+  "MLI", "Mali",
+  "NER", "Niger",
+  "SEN", "Senegal",
+  "TGO", "Togo",
+  "CMR", "Cameroon",
+  "CAF", "CAR",
+  "TCD", "Chad",
+  "COG", "Congo",
+  "GAB", "Gabon",
+  "GNQ", "E. Guinea"
+)
+
+# Optional: donor labels for rows
+donor_labels <- tibble::tribble(
+  ~unit.names, ~donor_label,
+  "BGD", "Bangladesh",
+  "BRB", "Barbados",
+  "BTN", "Bhutan",
+  "BOL", "Bolivia",
+  "BWA", "Botswana",
+  "CPV", "Cabo Verde",
+  "DMA", "Dominica",
+  "ECU", "Ecuador",
+  "SWZ", "Eswatini",
+  "GRD", "Grenada",
+  "LAO", "Laos",
+  "LSO", "Lesotho",
+  "MUS", "Mauritius",
+  "MAR", "Morocco",
+  "NAM", "Namibia",
+  "OMN", "Oman",
+  "PAN", "Panama",
+  "KNA", "Saint Kitts and N.",
+  "LCA", "Saint Lucia",
+  "SYC", "Seychelles"
+)
+
+# Extract weights from each successful SCM result
+weights_long <- bind_rows(
+  lapply(names(scm_results), function(treated_code) {
+
+    result <- scm_results[[treated_code]]
+
+    if (is.null(result)) {
+      return(NULL)
+    }
+
+    result$tables$tab.w |>
+      as.data.frame() |>
+      mutate(
+        treated_iso3c = treated_code
+      )
+  })
+)
+
+# Clean tiny numerical weights for reporting
+# Change threshold if needed. 1e-4 means values below 0.0001 become 0.
+weight_threshold <- 1e-4
+
+weights_long_clean <- weights_long |>
+  mutate(
+    w_clean = ifelse(w.weights < weight_threshold, 0, w.weights)
+  ) |>
+  left_join(treated_labels, by = c("treated_iso3c" = "iso3c")) |>
+  left_join(donor_labels, by = "unit.names") |>
+  mutate(
+    treated_label = ifelse(is.na(treated_label), treated_iso3c, treated_label),
+    donor_label = ifelse(is.na(donor_label), unit.names, donor_label)
+  )
+
+# Make wide table
+weights_wide <- weights_long_clean |>
+  select(donor_label, treated_label, w_clean) |>
+  pivot_wider(
+    names_from = treated_label,
+    values_from = w_clean,
+    values_fill = 0
+  )
+
+# Put donor rows in the same order as donor_countries
+weights_wide <- donor_labels |>
+  select(donor_label) |>
+  left_join(weights_wide, by = "donor_label") |>
+  mutate(across(where(is.numeric), ~ ifelse(is.na(.x), 0, .x)))
+
+# Round for display
+weights_wide_display <- weights_wide |>
+  mutate(across(where(is.numeric), ~ round(.x, 3)))
+
+print(weights_wide_display, n = Inf)
+
+# Save CSV
+dir.create("output/tables", recursive = TRUE, showWarnings = FALSE)
+
+write.csv(
+  weights_wide_display,
+  "output/tables/scm_weights_all_treated_wide.csv",
+  row.names = FALSE
+)
+
+weights_latex_display <- weights_wide_display |>
+  mutate(
+    across(
+      where(is.numeric),
+      ~ ifelse(.x == 0, "0", sub("^0", "", sprintf("%.3f", .x)))
+    )
+  )
+
+cat(
+  kable(
+    weights_latex_display,
+    format = "latex",
+    booktabs = TRUE,
+    caption = "Estimated synthetic control weights by treated country",
+    col.names = c("Donor country", names(weights_latex_display)[-1]),
+    escape = FALSE
+  ),
+  file = "output/tables/scm_weights_all_treated_wide_formatted.tex"
+)
 
 # =====================================================
 # Combine SCM paths and make multi-plots

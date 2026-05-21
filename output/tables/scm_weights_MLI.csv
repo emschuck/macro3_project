@@ -1,5 +1,5 @@
 "w.weights","unit.names","unit.numbers"
-0.953,"BGD",3
+0,"BGD",3
 0,"BOL",4
 0,"BRB",5
 0,"BTN",6
@@ -9,12 +9,12 @@
 0,"ECU",14
 0,"GRD",17
 0,"KNA",18
-0.034,"LAO",19
+1,"LAO",19
 0,"LCA",20
 0,"LSO",21
 0,"MAR",22
 0,"MUS",24
-0.013,"NAM",25
+0,"NAM",25
 0,"OMN",27
 0,"PAN",28
 0,"SWZ",30

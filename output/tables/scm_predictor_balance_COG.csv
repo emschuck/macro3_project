@@ -1,12 +1,12 @@
 "","Treated","Synthetic","Sample Mean"
-"agriculture",9.839,18.295,13.467
-"industry",47.398,29.005,25.781
-"govt_share",0.435,0.254,0.231
-"invest_share",0.176,0.157,0.216
-"oda_share",6.14,7.224,6.885
-"fdi",0.578,2.628,3.101
-"labour",32.097,40.22,34.535
-"polity2",-4.227,5.109,-0.123
-"special.gdp_wdi_current_pc.1980",959.426,930.146,1535.518
-"special.gdp_wdi_current_pc.1995",781.524,997.885,3227.328
-"special.gdp_wdi_current_pc.2001",869.1,1041.362,3870.204
+"agriculture",9.839,26.288,13.467
+"industry",47.398,22.615,25.781
+"govt_share",0.435,0.16,0.231
+"invest_share",0.176,0.176,0.216
+"oda_share",6.14,5.833,6.885
+"fdi",0.578,0.491,3.101
+"labour",32.097,32.174,34.535
+"polity2",-4.227,1.717,0.014
+"special.gdp_pc_current.1980",2676.381,2627.523,5190.514
+"special.gdp_pc_current.1995",1879.053,2520.601,7877.318
+"special.gdp_pc_current.2001",2556.755,2589.534,8619.126
