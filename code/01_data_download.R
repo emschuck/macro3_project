@@ -210,15 +210,16 @@ country_names <- tibble::tribble(
 # method options:
 #   "zero"          : replace missing values with 0
 #   "linear"        : linear interpolation + linear extrapolation at endpoints
-#   "nearest_fill"  : fill endpoint/interior gaps using nearest observed value
+#   "nearest_fill"  : fill endpoint/interior gaps using nearest observed value 
 #
 # Use country = "ALL" to apply a rule to all countries.
 
 imputation_plan <- tibble::tribble(
   ~country, ~variable, ~method,
 
-  "ALL", "polity2", "zero", # Missing for countries less than 500k pop
+  "ALL", "polity2", "nearest_fill", # Missing for countries less than 500k pop
 
+  "CAF", "industry", "nearest_fill", # pre-2009
   "CAR", "industry", "nearest_fill", # pre-2009
   "GNQ", "industry", "nearest_fill", # pre-2006
   "LAO", "industry", "linear", # pre-1989 
@@ -473,10 +474,15 @@ fill_linear <- function(x, year) {
 
 fill_nearest <- function(x) {
   # Fill missing values using nearest available observed value.
-  # First fill forward, then backward.
-  out <- x
+  # If the whole series is missing, fill with zero.
+
+  # If all are na, fill with zeros
+  if (all(is.na(x))) {
+    return(rep(0, length(x)))
+  }
+
   out <- tidyr::fill(
-    tibble(value = out),
+    tibble(value = x),
     value,
     .direction = "downup"
   )$value
