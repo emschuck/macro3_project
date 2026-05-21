@@ -365,6 +365,11 @@ run_scm_country <- function(treated_iso3c) {
   # Estimate synthetic control
   synth.out <- synth(
     data.prep.obj = dataprep.out
+    #optimxmethod='All'
+    #optimxmethod = c("Nelder-Mead", "BFGS")
+    #genoud = TRUE
+    #quadopt = "ipop"
+    #Margin.ipop = 5e-04
   )
 
   # Create summary tables
