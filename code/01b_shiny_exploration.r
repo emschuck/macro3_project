@@ -2,7 +2,8 @@ library(shiny)
 library(tidyverse)
 
 # Load compiled dataset
-df <- readRDS("./data/processed/processed_panel_imputed.rds")
+df <- readRDS("../data/processed/processed_panel_imputed.rds")
+
 
 # Keep only 1980-2021
 df <- df |>

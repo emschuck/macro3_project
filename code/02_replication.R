@@ -148,6 +148,11 @@ get_country_name <- function(code) {
     pull(country)
 }
 
+
+
+
+
+
 #### ========================================================================###
 #### ======================== SYNTEHETIC CONTROL METHOD ====================###
 #### ========================================================================###
@@ -161,7 +166,7 @@ scm_df <- df |>
   ) |>
   select(
     iso3c, country, year,
-    gdp_pc_wdi,
+    gdp_wdi_current_pc,
     agriculture, industry, govt_share, invest_share,
     oda_share, fdi, labour, polity2
   ) |>
@@ -256,7 +261,7 @@ scm_df <- scm_df |>
     year,
     iso3c,
     country,
-    gdp_pc_wdi,
+    gdp_wdi_current_pc,
     agriculture,
     industry,
     govt_share,
@@ -282,6 +287,20 @@ str(scm_df$unit_id) # 1 1 1 ...
 country_ids |>
   filter(unit_id %in% bad_controls)
   
+
+
+
+# Variables and years used as special predictors
+special_var <- "gdp_wdi_current_pc"
+special_years <- c(1980, 1995, 2001)
+
+
+
+
+
+
+
+
 # =====================================================
 # Run SCM for one country - to make into function
 # =====================================================
@@ -307,7 +326,7 @@ dataprep.out <- dataprep(
   predictors.op = "mean",
 
   # Outcome variable
-  dependent = "gdp_pc_wdi",
+  dependent = "gdp_wdi_current_pc",
 
   # Country and time identifiers
 
@@ -329,21 +348,41 @@ dataprep.out <- dataprep(
   # Lagged outcome values used as predictors in the paper 
   # (1980, 1995, and 2001 gdppc) - to match important points
   special.predictors = list(
-    list("gdp_pc_wdi", 1980, c("mean")),
-    list("gdp_pc_wdi", 1995, c("mean")),
-    list("gdp_pc_wdi", 2001, c("mean"))
+    list("gdp_wdi_current_pc", 1980, c("mean")),
+    list("gdp_wdi_current_pc", 1995, c("mean")),
+    list("gdp_wdi_current_pc", 2001, c("mean"))
   )
 )
 
+
+
+# =====================================================
+# Check dataprep matrices for NA / NaN / Inf
+# =====================================================
+
+check_matrix <- function(x, name) {
+  cat("\n", name, "\n")
+  cat("NA values:  ", sum(is.na(x)), "\n")
+  cat("NaN values: ", sum(is.nan(x)), "\n")
+  cat("Inf values: ", sum(is.infinite(x)), "\n")
+}
+
+check_matrix(dataprep.out$X1, "X1: treated predictors")
+check_matrix(dataprep.out$X0, "X0: donor predictors")
+check_matrix(dataprep.out$Z1, "Z1: treated outcome path")
+check_matrix(dataprep.out$Z0, "Z0: donor outcome paths")
+# =====================================================
 # Estimate synthetic control
-# solves for donor-country weights
+# =====================================================
+
+# Solve for donor-country weights using the default Synth optimizer
 synth.out <- synth(
   data.prep.obj = dataprep.out
 )
 
 # Show predictor balance and donor weights using synth.tab summaries:
-# 1. donor weights: which countries make up synthetic contry;
-# 2. predictor balance: how similar country is to synthetic before treatment.
+# 1. donor weights: which countries make up the synthetic country;
+# 2. predictor balance: how similar the treated country is to the synthetic country before treatment.
 synth.tables <- synth.tab(
   dataprep.res = dataprep.out,
   synth.res = synth.out
@@ -351,24 +390,16 @@ synth.tables <- synth.tab(
 
 print(synth.tables)
 
-#Add refined optimizer settings to allow for zero-weights
-synth.out_set <- synth(
-  data.prep.obj = dataprep.out,
-  Margin.ipop = .0005, Sigf.ipop = 10, Bound.ipop = 10
-)
-
-synth.tables_set <- synth.tab(
-  dataprep.res = dataprep.out,
-  synth.res    = synth.out_set
-)
-synth.tables_set
 
 # =====================================================
 # Plot actual vs synthetic GDP per capita
 # =====================================================
+
 png(
   paste0("output/figures/scm_path_", treated_iso3c, ".png"),
-   width = 900, height = 600)
+  width = 900,
+  height = 600
+)
 
 path.plot(
   synth.res = synth.out,
@@ -377,30 +408,48 @@ path.plot(
   Ylab = paste0("Real GDP per capita: ", country_name_treated),
   Xlab = "Year",
   Legend = c(
-  country_name_treated,
-  paste("Synthetic", country_name_treated)),
+    country_name_treated,
+    paste("Synthetic", country_name_treated)
+  ),
   Legend.position = "topleft"
 )
 
-dev.off() # close graphic
+dev.off()
 
 
 # =====================================================
 # Plot gap between actual and synthetic
 # =====================================================
 
-# NOTE 17/5: need to update to have file name automatic from country
 png(
   paste0("output/figures/scm_gap_", treated_iso3c, ".png"),
-  width = 900, height = 600)
+  width = 900,
+  height = 600
+)
 
 gaps.plot(
-  synth.res = synth.out_set,
+  synth.res = synth.out,
   dataprep.res = dataprep.out,
   tr.intake = 2002,
-  Ylab = paste0("Gap in real GDP per capita: ",country_name_treated),
+  Ylab = paste0("Gap in real GDP per capita: ", country_name_treated),
   Xlab = "Year"
 )
 
-dev.off() # close graphic
+dev.off()
 
+
+# =====================================================
+# Check special predictor values for treated country
+# =====================================================
+
+scm_df |>
+  filter(
+    iso3c == treated_iso3c,
+    year %in% c(1980, 1995, 2001)
+  ) |>
+  select(
+    iso3c,
+    unit_name,
+    year,
+    gdp_wdi_current_pc
+  )

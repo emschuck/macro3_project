@@ -238,7 +238,9 @@ imputation_plan <- tibble::tribble(
   "DMA", "labour", "nearest_fill", # Most
   "GRD", "labour", "nearest_fill", # pre 1988
   "SYC", "labour", "nearest_fill", # pre 1992 
-  "KNA", "labour", "nearest_fill" # post 2001
+  "KNA", "labour", "nearest_fill", # post 2001
+
+  "LAO", "gdp_wdi_current_pc", "linear" # pre-1980
 )
 
 # -----------------------------
@@ -357,7 +359,7 @@ df <- wdi |>
     ),
     # ODA as share of GDP annually (both are current US$)
     oda_share = 100 * oda_alt / gdp_wdi_current,
-    gdp_wdi_current_pc = gdp_wdi_current / pop
+    gdp_wdi_current_pc = gdp_wdi_current / (pop * 1000000) # 
   )
 
 # Basic checks
@@ -824,11 +826,6 @@ ggsave(
   height = 4,
   dpi = 300
 )
-
-
-
-
-
 
 
 
