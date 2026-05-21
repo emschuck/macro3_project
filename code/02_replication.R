@@ -689,7 +689,7 @@ p_gaps_all <- ggplot(
   geom_line(linewidth = 0.7) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_vline(xintercept = 2002, linetype = "dashed") +
-  facet_wrap(~ country, scales = "free_y", ncol = 4) +
+  facet_wrap(~ country, scales = "free_y", ncol = 3) +
   labs(
     title = "GDP per capita gaps: WAEMU and CAEMC countries",
     x = NULL,
@@ -703,7 +703,7 @@ p_gaps_all <- ggplot(
 ggsave(
   filename = "output/figures/scm_gaps_all_treated.png",
   plot = p_gaps_all,
-  width = 14,
+  width = 20,
   height = 10,
   dpi = 300
 )
