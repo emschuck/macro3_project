@@ -248,7 +248,13 @@ imputation_plan <- tibble::tribble(
   "SYC", "labour", "nearest_fill", # pre 1992
   "KNA", "labour", "nearest_fill", # post 2001
 
-  "LAO", "gdp_wdi_current_pc", "linear" # pre-1980
+  "LAO", "gdp_wdi_current_pc", "linear", # pre-1980
+
+
+  "ALL", "industry", "nearest_fill", # post 2001
+  "ALL", "oda_share", "nearest_fill", # post 2001
+  "ALL", "fdi", "nearest_fill", # post 2001
+  "ALL", "labour", "nearest_fill" # post 2001
 )
 
 # -----------------------------
