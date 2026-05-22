@@ -716,13 +716,20 @@ ggsave(
 
 
 
-
 # =====================================================
-# Export treated, synthetic, and donor real values
+# Export SCM data in wide form only
 # =====================================================
 
-# Variables to export.
-# These are the outcome and SCM predictors currently used in the model.
+dir.create("data/processed", recursive = TRUE, showWarnings = FALSE)
+
+# Keep only successful SCM results
+scm_success <- scm_results[!vapply(scm_results, is.null, logical(1))]
+
+if (length(scm_success) == 0) {
+  stop("No successful SCM results found. scm_results contains only NULL values.")
+}
+
+# Variables to export: outcome plus SCM predictors
 scm_export_vars <- c(
   "gdp_pc_current",
   "agriculture",
@@ -735,98 +742,31 @@ scm_export_vars <- c(
   "polity2"
 )
 
-# Keep the usable donor IDs used in the SCM.
-# This matches the donor pool inside run_scm_country().
-usable_control_ids <- country_ids$unit_id[
-  country_ids$iso3c %in% donor_countries &
-    !(country_ids$unit_id %in% bad_controls)
-]
+# Keep only variables that actually exist in scm_df
+scm_export_vars <- scm_export_vars[scm_export_vars %in% names(scm_df)]
 
-# Helper function to extract donor weights for one treated country.
+if (length(scm_export_vars) == 0) {
+  stop("None of the requested export variables are present in scm_df.")
+}
+
 extract_weights_for_country <- function(result) {
-
-  if (is.null(result)) {
-    return(NULL)
-  }
-
   result$tables$tab.w |>
     as.data.frame() |>
     transmute(
       treated_iso3c = result$treated_iso3c,
-      donor_iso3c = unit.names,
-      donor_unit_id = unit.numbers,
-      donor_weight = w.weights
+      donor_iso3c = as.character(unit.names),
+      donor_weight = as.numeric(w.weights)
     )
 }
 
-# Helper function to create synthetic values for all exported variables.
-make_synthetic_values <- function(result, data, vars_to_export) {
-
-  if (is.null(result)) {
-    return(NULL)
-  }
+make_export_for_country <- function(result, data, vars_to_export) {
 
   treated_code <- result$treated_iso3c
   treated_name <- result$country_name
 
   weights_i <- extract_weights_for_country(result)
 
-  # Donor data in long form
-  donor_long <- data |>
-    filter(
-      unit_id %in% weights_i$donor_unit_id,
-      year >= 1980,
-      year <= 2019
-    ) |>
-    select(
-      unit_id,
-      unit_name,
-      iso3c,
-      country,
-      year,
-      all_of(vars_to_export)
-    ) |>
-    pivot_longer(
-      cols = all_of(vars_to_export),
-      names_to = "variable",
-      values_to = "value"
-    ) |>
-    left_join(
-      weights_i,
-      by = c("unit_id" = "donor_unit_id")
-    )
-
-  # Weighted donor values collapsed to synthetic country-year-variable values
-  synthetic_long <- donor_long |>
-    group_by(treated_iso3c, year, variable) |>
-    summarise(
-      value = sum(donor_weight * value, na.rm = TRUE),
-      donor_weight_sum = sum(donor_weight[!is.na(value)], na.rm = TRUE),
-      .groups = "drop"
-    ) |>
-    mutate(
-      unit_type = "synthetic",
-      iso3c = paste0("SYN_", treated_iso3c),
-      country = paste("Synthetic", treated_name),
-      donor_iso3c = NA_character_,
-      donor_country = NA_character_,
-      donor_weight = NA_real_
-    )
-
-  synthetic_long
-}
-
-# Helper function to create actual treated values for all exported variables.
-make_treated_values <- function(result, data, vars_to_export) {
-
-  if (is.null(result)) {
-    return(NULL)
-  }
-
-  treated_code <- result$treated_iso3c
-  treated_name <- result$country_name
-
-  data |>
+  treated_actual <- data |>
     filter(
       iso3c == treated_code,
       year >= 1980,
@@ -845,120 +785,123 @@ make_treated_values <- function(result, data, vars_to_export) {
     ) |>
     mutate(
       treated_iso3c = treated_code,
+      treated_country = treated_name,
       unit_type = "treated_actual",
       donor_iso3c = NA_character_,
       donor_country = NA_character_,
-      donor_weight = NA_real_,
-      donor_weight_sum = NA_real_
+      donor_weight = NA_real_
+    ) |>
+    select(
+      treated_iso3c,
+      treated_country,
+      unit_type,
+      iso3c,
+      country,
+      year,
+      variable,
+      value,
+      donor_iso3c,
+      donor_country,
+      donor_weight
     )
-}
 
-# Helper function to create donor real values for all exported variables.
-make_donor_values <- function(result, data, vars_to_export) {
-
-  if (is.null(result)) {
-    return(NULL)
-  }
-
-  weights_i <- extract_weights_for_country(result)
-
-  data |>
+  donor_real <- data |>
     filter(
-      unit_id %in% weights_i$donor_unit_id,
+      iso3c %in% weights_i$donor_iso3c,
       year >= 1980,
       year <= 2019
     ) |>
     select(
-      unit_id,
-      unit_name,
       iso3c,
       country,
       year,
       all_of(vars_to_export)
+    ) |>
+    left_join(
+      weights_i,
+      by = c("iso3c" = "donor_iso3c")
     ) |>
     pivot_longer(
       cols = all_of(vars_to_export),
       names_to = "variable",
       values_to = "value"
     ) |>
-    left_join(
-      weights_i,
-      by = c("unit_id" = "donor_unit_id")
-    ) |>
-    transmute(
-      treated_iso3c,
+    mutate(
+      treated_country = treated_name,
       unit_type = "donor_real",
+      donor_iso3c = iso3c,
+      donor_country = country
+    ) |>
+    select(
+      treated_iso3c,
+      treated_country,
+      unit_type,
       iso3c,
       country,
       year,
       variable,
       value,
-      donor_iso3c = iso3c,
-      donor_country = country,
-      donor_weight,
-      donor_weight_sum = NA_real_
+      donor_iso3c,
+      donor_country,
+      donor_weight
     )
+
+  synthetic_values <- donor_real |>
+    group_by(
+      treated_iso3c,
+      treated_country,
+      year,
+      variable
+    ) |>
+    summarise(
+      value = ifelse(
+        all(is.na(value)),
+        NA_real_,
+        sum(donor_weight * value, na.rm = TRUE)
+      ),
+      .groups = "drop"
+    ) |>
+    mutate(
+      unit_type = "synthetic",
+      iso3c = paste0("SYN_", treated_code),
+      country = paste("Synthetic", treated_name),
+      donor_iso3c = NA_character_,
+      donor_country = NA_character_,
+      donor_weight = NA_real_
+    ) |>
+    select(
+      treated_iso3c,
+      treated_country,
+      unit_type,
+      iso3c,
+      country,
+      year,
+      variable,
+      value,
+      donor_iso3c,
+      donor_country,
+      donor_weight
+    )
+
+  bind_rows(
+    treated_actual,
+    synthetic_values,
+    donor_real
+  )
 }
 
-# Build the full export dataset
+# Temporary long object
 scm_export_long <- bind_rows(
-  lapply(scm_results, make_treated_values, data = scm_df, vars_to_export = scm_export_vars),
-  lapply(scm_results, make_synthetic_values, data = scm_df, vars_to_export = scm_export_vars),
-  lapply(scm_results, make_donor_values, data = scm_df, vars_to_export = scm_export_vars)
-) |>
-  left_join(
-    country_names |>
-      rename(treated_country = country),
-    by = c("treated_iso3c" = "iso3c")
-  ) |>
-  select(
-    treated_iso3c,
-    treated_country,
-    unit_type,
-    iso3c,
-    country,
-    year,
-    variable,
-    value,
-    donor_iso3c,
-    donor_country,
-    donor_weight,
-    donor_weight_sum
-  ) |>
-  arrange(
-    treated_iso3c,
-    variable,
-    unit_type,
-    iso3c,
-    year
+  lapply(
+    scm_success,
+    make_export_for_country,
+    data = scm_df,
+    vars_to_export = scm_export_vars
   )
-
-# Save long-format dataset
-dir.create("data/processed", recursive = TRUE, showWarnings = FALSE)
-dir.create("output/tables", recursive = TRUE, showWarnings = FALSE)
-
-saveRDS(
-  scm_export_long,
-  "data/processed/scm_export_long.rds"
 )
 
-
-# Optional wide version: one row per treated country / unit / year,
-# with variables spread into columns.
+# Final wide export
 scm_export_wide <- scm_export_long |>
-  select(
-    treated_iso3c,
-    treated_country,
-    unit_type,
-    iso3c,
-    country,
-    year,
-    variable,
-    value,
-    donor_iso3c,
-    donor_country,
-    donor_weight
-  ) |>
   pivot_wider(
     names_from = variable,
     values_from = value
@@ -974,6 +917,7 @@ saveRDS(
   scm_export_wide,
   "data/processed/scm_export_wide.rds"
 )
+
 
 
 print("Complete")
