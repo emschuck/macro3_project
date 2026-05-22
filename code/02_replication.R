@@ -343,9 +343,9 @@ run_scm_country <- function(treated_iso3c) {
 
     dependent = "gdp_pc_current",
 
-    unit.variable = 1,
-    unit.names.variable = 2,
-    time.variable = 3,
+    unit.variable = "unit_id", #1
+    unit.names.variable = "unit_name", #2
+    time.variable = "year",#3
 
     treatment.identifier = treated_id,
     controls.identifier = control_ids,
@@ -712,5 +712,229 @@ ggsave(
   height = 10,
   dpi = 300
 )
+
+
+
+
+# =====================================================
+# Export treated, synthetic, and donor real values
+# =====================================================
+
+# Variables to export.
+# These are the outcome and SCM predictors currently used in the model.
+scm_export_vars <- c(
+  "gdp_pc_current",
+  "agriculture",
+  "industry",
+  "govt_share",
+  "invest_share",
+  "oda_share",
+  "fdi",
+  "labour",
+  "polity2"
+)
+
+# Keep the usable donor IDs used in the SCM.
+# This matches the donor pool inside run_scm_country().
+usable_control_ids <- country_ids$unit_id[
+  country_ids$iso3c %in% donor_countries &
+    !(country_ids$unit_id %in% bad_controls)
+]
+
+# Helper function to extract donor weights for one treated country.
+extract_weights_for_country <- function(result) {
+
+  if (is.null(result)) {
+    return(NULL)
+  }
+
+  result$tables$tab.w |>
+    as.data.frame() |>
+    transmute(
+      treated_iso3c = result$treated_iso3c,
+      donor_iso3c = unit.names,
+      donor_unit_id = unit.numbers,
+      donor_weight = w.weights
+    )
+}
+
+# Helper function to create synthetic values for all exported variables.
+make_synthetic_values <- function(result, data, vars_to_export) {
+
+  if (is.null(result)) {
+    return(NULL)
+  }
+
+  treated_code <- result$treated_iso3c
+  treated_name <- result$country_name
+
+  weights_i <- extract_weights_for_country(result)
+
+  # Donor data in long form
+  donor_long <- data |>
+    filter(
+      unit_id %in% weights_i$donor_unit_id,
+      year >= 1980,
+      year <= 2019
+    ) |>
+    select(
+      unit_id,
+      unit_name,
+      iso3c,
+      country,
+      year,
+      all_of(vars_to_export)
+    ) |>
+    pivot_longer(
+      cols = all_of(vars_to_export),
+      names_to = "variable",
+      values_to = "value"
+    ) |>
+    left_join(
+      weights_i,
+      by = c("unit_id" = "donor_unit_id")
+    )
+
+  # Weighted donor values collapsed to synthetic country-year-variable values
+  synthetic_long <- donor_long |>
+    group_by(treated_iso3c, year, variable) |>
+    summarise(
+      value = sum(donor_weight * value, na.rm = TRUE),
+      donor_weight_sum = sum(donor_weight[!is.na(value)], na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    mutate(
+      unit_type = "synthetic",
+      iso3c = paste0("SYN_", treated_iso3c),
+      country = paste("Synthetic", treated_name),
+      donor_iso3c = NA_character_,
+      donor_country = NA_character_,
+      donor_weight = NA_real_
+    )
+
+  synthetic_long
+}
+
+# Helper function to create actual treated values for all exported variables.
+make_treated_values <- function(result, data, vars_to_export) {
+
+  if (is.null(result)) {
+    return(NULL)
+  }
+
+  treated_code <- result$treated_iso3c
+  treated_name <- result$country_name
+
+  data |>
+    filter(
+      iso3c == treated_code,
+      year >= 1980,
+      year <= 2019
+    ) |>
+    select(
+      iso3c,
+      country,
+      year,
+      all_of(vars_to_export)
+    ) |>
+    pivot_longer(
+      cols = all_of(vars_to_export),
+      names_to = "variable",
+      values_to = "value"
+    ) |>
+    mutate(
+      treated_iso3c = treated_code,
+      unit_type = "treated_actual",
+      donor_iso3c = NA_character_,
+      donor_country = NA_character_,
+      donor_weight = NA_real_,
+      donor_weight_sum = NA_real_
+    )
+}
+
+# Helper function to create donor real values for all exported variables.
+make_donor_values <- function(result, data, vars_to_export) {
+
+  if (is.null(result)) {
+    return(NULL)
+  }
+
+  weights_i <- extract_weights_for_country(result)
+
+  data |>
+    filter(
+      unit_id %in% weights_i$donor_unit_id,
+      year >= 1980,
+      year <= 2019
+    ) |>
+    select(
+      unit_id,
+      unit_name,
+      iso3c,
+      country,
+      year,
+      all_of(vars_to_export)
+    ) |>
+    pivot_longer(
+      cols = all_of(vars_to_export),
+      names_to = "variable",
+      values_to = "value"
+    ) |>
+    left_join(
+      weights_i,
+      by = c("unit_id" = "donor_unit_id")
+    ) |>
+    transmute(
+      treated_iso3c,
+      unit_type = "donor_real",
+      iso3c,
+      country,
+      year,
+      variable,
+      value,
+      donor_iso3c = iso3c,
+      donor_country = country,
+      donor_weight,
+      donor_weight_sum = NA_real_
+    )
+}
+
+# Wide version: one row per treated country / unit / year,
+scm_export_wide <- scm_export_long |>
+  select(
+    treated_iso3c,
+    treated_country,
+    unit_type,
+    iso3c,
+    country,
+    year,
+    variable,
+    value,
+    donor_iso3c,
+    donor_country,
+    donor_weight
+  ) |>
+  pivot_wider(
+    names_from = variable,
+    values_from = value
+  ) |>
+  arrange(
+    treated_iso3c,
+    unit_type,
+    iso3c,
+    year
+  )
+
+saveRDS(
+  scm_export_wide,
+  "data/processed/scm_export_wide.rds"
+)
+
+# write.csv(
+#   scm_export_wide,
+#   "output/tables/scm_export_wide.csv",
+#   row.names = FALSE
+# )
+
 
 print("Complete")
