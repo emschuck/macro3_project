@@ -298,10 +298,6 @@ special_years <- c(1980, 1995, 2001)
 
 
 
-
-
-
-
 # =====================================================
 # Function to run SCM for one treated country
 # =====================================================
@@ -917,6 +913,576 @@ saveRDS(
   scm_export_wide,
   "data/processed/scm_export_wide.rds"
 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# =====================================================
+# In-place placebo analysis for SCM
+# =====================================================
+
+# This placebo analysis follows the in-place / in-space approach:
+# for each treated CFA country, each donor country is treated as if it
+# experienced treatment in 2002. The true treated-country gap is then
+# compared with the distribution of placebo gaps.
+
+# =====================================================
+# 1. SCM settings used for both real and placebo runs
+# =====================================================
+
+outcome_var <- "gdp_pc_current"
+
+scm_predictors <- c(
+  "agriculture",
+  "industry",
+  "govt_share",
+  "invest_share",
+  "oda_share",
+  "fdi",
+  "labour",
+  "polity2"
+)
+
+pre_period <- 1980:2001
+post_period <- 2002:2019
+plot_period <- 1980:2019
+
+special_predictor_years <- c(1980, 1995, 2001)
+
+
+# =====================================================
+# 2. Helper functions
+# =====================================================
+
+rmspe <- function(x) {
+  sqrt(mean(x^2, na.rm = TRUE))
+}
+
+safe_ratio <- function(numerator, denominator) {
+  ifelse(is.na(denominator) | denominator == 0, NA_real_, numerator / denominator)
+}
+
+extract_gap_path <- function(dataprep.out, synth.out, unit_code, unit_name, unit_type) {
+
+  actual <- as.numeric(dataprep.out$Y1plot)
+  synthetic <- as.numeric(dataprep.out$Y0plot %*% synth.out$solution.w)
+  years <- as.numeric(rownames(dataprep.out$Y1plot))
+
+  tibble(
+    unit_iso3c = unit_code,
+    unit_name = unit_name,
+    unit_type = unit_type,
+    year = years,
+    actual = actual,
+    synthetic = synthetic,
+    gap = actual - synthetic
+  )
+}
+
+make_gap_summary <- function(gap_data) {
+
+  gap_data |>
+    summarise(
+      pre_rmspe = rmspe(gap[year %in% pre_period]),
+      post_rmspe = rmspe(gap[year %in% post_period]),
+      rmspe_ratio = safe_ratio(post_rmspe, pre_rmspe),
+      avg_post_gap = mean(gap[year %in% post_period], na.rm = TRUE),
+      avg_abs_post_gap = mean(abs(gap[year %in% post_period]), na.rm = TRUE),
+      max_abs_post_gap = max(abs(gap[year %in% post_period]), na.rm = TRUE),
+      .groups = "drop"
+    )
+}
+
+run_placebo_unit <- function(placebo_iso3c, donor_pool_ids) {
+
+  placebo_id <- country_ids$unit_id[
+    country_ids$iso3c == placebo_iso3c
+  ]
+
+  placebo_controls <- donor_pool_ids[
+    donor_pool_ids != placebo_id
+  ]
+
+  placebo_name <- get_country_name(placebo_iso3c)
+
+  dataprep.out <- dataprep(
+    foo = scm_df,
+
+    predictors = scm_predictors,
+    predictors.op = "mean",
+
+    dependent = outcome_var,
+
+    unit.variable = 1,
+    unit.names.variable = 2,
+    time.variable = 3,
+
+    treatment.identifier = placebo_id,
+    controls.identifier = placebo_controls,
+
+    time.predictors.prior = pre_period,
+    time.optimize.ssr = pre_period,
+    time.plot = plot_period,
+
+    special.predictors = list(
+      list(outcome_var, special_predictor_years[1], c("mean")),
+      list(outcome_var, special_predictor_years[2], c("mean")),
+      list(outcome_var, special_predictor_years[3], c("mean"))
+    )
+  )
+
+  synth.out <- synth(
+    data.prep.obj = dataprep.out
+  )
+
+  extract_gap_path(
+    dataprep.out = dataprep.out,
+    synth.out = synth.out,
+    unit_code = placebo_iso3c,
+    unit_name = placebo_name,
+    unit_type = "placebo"
+  )
+}
+
+
+# =====================================================
+# 3. Define usable donor pool for placebo analysis
+# =====================================================
+
+usable_donor_ids <- country_ids$unit_id[
+  country_ids$iso3c %in% donor_countries &
+    !(country_ids$unit_id %in% bad_controls)
+]
+
+usable_donor_codes <- country_ids |>
+  filter(unit_id %in% usable_donor_ids) |>
+  pull(iso3c)
+
+
+
+# =====================================================
+# 4. Run placebo analysis for each treated country
+# =====================================================
+
+all_placebo_paths <- list()
+all_placebo_summaries <- list()
+all_placebo_yearly_pvalues <- list()
+all_placebo_conclusions <- list()
+
+for (treated_code in treated_countries) {
+
+  cat("\n=====================================================\n")
+  cat("PLACEBO ANALYSIS FOR", treated_code, "-", get_country_name(treated_code), "\n")
+  cat("=====================================================\n")
+
+  real_result <- scm_results[[treated_code]]
+
+  if (is.null(real_result)) {
+    cat("Skipping", treated_code, "- no successful SCM result available.\n")
+    next
+  }
+
+  # Extract true treated-country gap from already-estimated SCM result
+  real_gap <- extract_gap_path(
+    dataprep.out = real_result$dataprep,
+    synth.out = real_result$synth,
+    unit_code = treated_code,
+    unit_name = real_result$country_name,
+    unit_type = "treated"
+  )
+
+  real_summary <- make_gap_summary(real_gap) |>
+    mutate(
+      treated_iso3c = treated_code,
+      treated_country = real_result$country_name,
+      placebo_iso3c = treated_code,
+      placebo_country = real_result$country_name,
+      unit_type = "treated"
+    )
+
+  # Run placebos: each usable donor is treated as if treated in 2002
+  placebo_paths_i <- list()
+
+  for (placebo_code in usable_donor_codes) {
+
+    placebo_paths_i[[placebo_code]] <- tryCatch(
+      run_placebo_unit(
+        placebo_iso3c = placebo_code,
+        donor_pool_ids = usable_donor_ids
+      ),
+      error = function(e) {
+        message("Placebo failed for ", treated_code, " / ", placebo_code, ": ", e$message)
+        return(NULL)
+      }
+    )
+  }
+
+  placebo_paths_i <- placebo_paths_i[
+    !vapply(placebo_paths_i, is.null, logical(1))
+  ]
+
+  if (length(placebo_paths_i) == 0) {
+    cat("No successful placebo runs for", treated_code, "\n")
+    next
+  }
+
+  placebo_paths_i <- bind_rows(placebo_paths_i)
+
+  placebo_summaries_i <- placebo_paths_i |>
+    group_by(unit_iso3c, unit_name, unit_type) |>
+    group_modify(~ make_gap_summary(.x)) |>
+    ungroup() |>
+    mutate(
+      treated_iso3c = treated_code,
+      treated_country = real_result$country_name,
+      placebo_iso3c = unit_iso3c,
+      placebo_country = unit_name
+    ) |>
+    select(
+      treated_iso3c,
+      treated_country,
+      placebo_iso3c,
+      placebo_country,
+      unit_type,
+      pre_rmspe,
+      post_rmspe,
+      rmspe_ratio,
+      avg_post_gap,
+      avg_abs_post_gap,
+      max_abs_post_gap
+    )
+
+  summary_i <- bind_rows(
+    real_summary |>
+      select(
+        treated_iso3c,
+        treated_country,
+        placebo_iso3c,
+        placebo_country,
+        unit_type,
+        pre_rmspe,
+        post_rmspe,
+        rmspe_ratio,
+        avg_post_gap,
+        avg_abs_post_gap,
+        max_abs_post_gap
+      ),
+    placebo_summaries_i
+  )
+
+  # -----------------------------------------------------
+  # Rank-based p-values
+  # -----------------------------------------------------
+
+  real_ratio <- real_summary$rmspe_ratio[1]
+  real_avg_abs_gap <- real_summary$avg_abs_post_gap[1]
+  real_avg_gap <- real_summary$avg_post_gap[1]
+
+  n_units <- nrow(summary_i)
+
+  # Two-sided RMSPE-ratio p-value:
+  # share of treated + placebo units with ratio at least as large as true treated ratio.
+  p_rmspe_ratio <- mean(summary_i$rmspe_ratio >= real_ratio, na.rm = TRUE)
+
+  # Two-sided average absolute post-gap p-value.
+  p_avg_abs_gap <- mean(summary_i$avg_abs_post_gap >= real_avg_abs_gap, na.rm = TRUE)
+
+  # One-sided p-value based on direction of treated average post-gap.
+  if (real_avg_gap >= 0) {
+    p_avg_gap_directional <- mean(summary_i$avg_post_gap >= real_avg_gap, na.rm = TRUE)
+    direction_text <- "positive"
+  } else {
+    p_avg_gap_directional <- mean(summary_i$avg_post_gap <= real_avg_gap, na.rm = TRUE)
+    direction_text <- "negative"
+  }
+
+  rank_rmspe <- rank(
+    -summary_i$rmspe_ratio,
+    ties.method = "min"
+  )[summary_i$unit_type == "treated"]
+
+  rank_abs_gap <- rank(
+    -summary_i$avg_abs_post_gap,
+    ties.method = "min"
+  )[summary_i$unit_type == "treated"]
+
+  # -----------------------------------------------------
+  # Year-specific placebo p-values
+  # -----------------------------------------------------
+
+  combined_paths_i <- bind_rows(
+    real_gap,
+    placebo_paths_i
+  ) |>
+    mutate(
+      treated_iso3c = treated_code,
+      treated_country = real_result$country_name
+    )
+
+  real_yearly <- combined_paths_i |>
+    filter(unit_type == "treated") |>
+    select(year, treated_gap = gap)
+
+  placebo_yearly <- combined_paths_i |>
+    filter(unit_type == "placebo") |>
+    select(year, unit_iso3c, placebo_gap = gap)
+
+  yearly_pvalues_i <- placebo_yearly |>
+    left_join(real_yearly, by = "year") |>
+    group_by(year) |>
+    summarise(
+      treated_iso3c = treated_code,
+      treated_country = real_result$country_name,
+      treated_gap = first(treated_gap),
+
+      # Two-sided p-value using absolute gaps.
+      p_abs_gap = mean(abs(c(treated_gap[1], placebo_gap)) >= abs(treated_gap[1]), na.rm = TRUE),
+
+      # One-sided p-value using the sign of treated gap.
+      p_directional_gap = ifelse(
+        treated_gap[1] >= 0,
+        mean(c(treated_gap[1], placebo_gap) >= treated_gap[1], na.rm = TRUE),
+        mean(c(treated_gap[1], placebo_gap) <= treated_gap[1], na.rm = TRUE)
+      ),
+
+      n_placebos = sum(!is.na(placebo_gap)),
+      .groups = "drop"
+    ) |>
+    mutate(
+      significant_10pct_abs = p_abs_gap <= 0.10,
+      significant_5pct_abs = p_abs_gap <= 0.05,
+      significant_10pct_directional = p_directional_gap <= 0.10,
+      significant_5pct_directional = p_directional_gap <= 0.05
+    )
+
+  # -----------------------------------------------------
+  # Printed conclusion
+  # -----------------------------------------------------
+
+  conclusion_i <- tibble(
+    treated_iso3c = treated_code,
+    treated_country = real_result$country_name,
+    n_successful_placebos = nrow(placebo_summaries_i),
+    n_units_ranked = n_units,
+    pre_rmspe = real_summary$pre_rmspe[1],
+    post_rmspe = real_summary$post_rmspe[1],
+    rmspe_ratio = real_ratio,
+    rmspe_ratio_rank = rank_rmspe,
+    p_rmspe_ratio = p_rmspe_ratio,
+    avg_post_gap = real_avg_gap,
+    avg_abs_post_gap = real_avg_abs_gap,
+    avg_abs_gap_rank = rank_abs_gap,
+    p_avg_abs_gap = p_avg_abs_gap,
+    p_avg_gap_directional = p_avg_gap_directional,
+    avg_gap_direction = direction_text,
+    conclusion_10pct = p_rmspe_ratio <= 0.10,
+    conclusion_5pct = p_rmspe_ratio <= 0.05
+  )
+
+  cat("Successful placebo countries:", nrow(placebo_summaries_i), "\n")
+  cat("Treated pre-treatment RMSPE:", round(real_summary$pre_rmspe[1], 4), "\n")
+  cat("Treated post-treatment RMSPE:", round(real_summary$post_rmspe[1], 4), "\n")
+  cat("Treated post/pre RMSPE ratio:", round(real_ratio, 4), "\n")
+  cat("RMSPE-ratio rank:", rank_rmspe, "out of", n_units, "\n")
+  cat("RMSPE-ratio placebo p-value:", round(p_rmspe_ratio, 4), "\n")
+  cat("Average post-treatment gap:", round(real_avg_gap, 4), "\n")
+  cat("Average absolute post-treatment gap:", round(real_avg_abs_gap, 4), "\n")
+  cat("Average absolute gap placebo p-value:", round(p_avg_abs_gap, 4), "\n")
+  cat("Directional average gap p-value:", round(p_avg_gap_directional, 4), "\n")
+
+  if (p_rmspe_ratio <= 0.05) {
+    cat("Conclusion: RMSPE-ratio evidence is significant at the 5% level.\n")
+  } else if (p_rmspe_ratio <= 0.10) {
+    cat("Conclusion: RMSPE-ratio evidence is significant at the 10% level, but not the 5% level.\n")
+  } else {
+    cat("Conclusion: RMSPE-ratio evidence is not significant at the 10% level.\n")
+  }
+
+  if (real_avg_gap > 0) {
+    cat("Interpretation: the treated country is above its synthetic control on average after 2002.\n")
+  } else if (real_avg_gap < 0) {
+    cat("Interpretation: the treated country is below its synthetic control on average after 2002.\n")
+  } else {
+    cat("Interpretation: the treated country has zero average post-treatment gap.\n")
+  }
+
+  # Store results
+  all_placebo_paths[[treated_code]] <- combined_paths_i
+  all_placebo_summaries[[treated_code]] <- summary_i
+  all_placebo_yearly_pvalues[[treated_code]] <- yearly_pvalues_i
+  all_placebo_conclusions[[treated_code]] <- conclusion_i
+}
+
+
+# =====================================================
+# 5. Combine and save placebo outputs
+# =====================================================
+
+placebo_paths_all <- bind_rows(all_placebo_paths)
+placebo_summaries_all <- bind_rows(all_placebo_summaries)
+placebo_yearly_pvalues_all <- bind_rows(all_placebo_yearly_pvalues)
+placebo_conclusions_all <- bind_rows(all_placebo_conclusions)
+
+saveRDS(
+  placebo_paths_all,
+  "data/processed/scm_placebo_paths_all.rds"
+)
+
+saveRDS(
+  placebo_summaries_all,
+  "data/processed/scm_placebo_summaries_all.rds"
+)
+
+saveRDS(
+  placebo_yearly_pvalues_all,
+  "data/processed/scm_placebo_yearly_pvalues_all.rds"
+)
+
+saveRDS(
+  placebo_conclusions_all,
+  "data/processed/scm_placebo_conclusions_all.rds"
+)
+
+write.csv(
+  placebo_summaries_all,
+  "output/tables/scm_placebo_summaries_all.csv",
+  row.names = FALSE
+)
+
+write.csv(
+  placebo_yearly_pvalues_all,
+  "output/tables/scm_placebo_yearly_pvalues_all.csv",
+  row.names = FALSE
+)
+
+write.csv(
+  placebo_conclusions_all,
+  "output/tables/scm_placebo_conclusions_all.csv",
+  row.names = FALSE
+)
+
+
+# =====================================================
+# 6. Print overall conclusion table
+# =====================================================
+
+cat("\n=====================================================\n")
+cat("OVERALL PLACEBO CONCLUSIONS\n")
+cat("=====================================================\n")
+
+placebo_conclusions_all |>
+  arrange(p_rmspe_ratio) |>
+  mutate(
+    p_rmspe_ratio = round(p_rmspe_ratio, 4),
+    rmspe_ratio = round(rmspe_ratio, 4),
+    avg_post_gap = round(avg_post_gap, 4),
+    avg_abs_post_gap = round(avg_abs_post_gap, 4),
+    conclusion = case_when(
+      p_rmspe_ratio <= 0.05 ~ "Significant at 5%",
+      p_rmspe_ratio <= 0.10 ~ "Significant at 10%",
+      TRUE ~ "Not significant at 10%"
+    )
+  ) |>
+  select(
+    treated_iso3c,
+    treated_country,
+    n_successful_placebos,
+    rmspe_ratio,
+    rmspe_ratio_rank,
+    p_rmspe_ratio,
+    avg_post_gap,
+    avg_gap_direction,
+    conclusion
+  ) |>
+  print(n = Inf)
+
+
+# =====================================================
+# 7. Plot placebo gaps for each treated country
+# =====================================================
+
+for (treated_code in unique(placebo_paths_all$treated_iso3c)) {
+
+  plot_data_i <- placebo_paths_all |>
+    filter(treated_iso3c == treated_code)
+
+  treated_name_i <- unique(plot_data_i$treated_country)
+
+  p_i <- ggplot() +
+    geom_line(
+      data = plot_data_i |> filter(unit_type == "placebo"),
+      aes(x = year, y = gap, group = unit_iso3c),
+      alpha = 0.35,
+      linewidth = 0.5
+    ) +
+    geom_line(
+      data = plot_data_i |> filter(unit_type == "treated"),
+      aes(x = year, y = gap),
+      linewidth = 1.2
+    ) +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    geom_vline(xintercept = 2002, linetype = "dashed") +
+    labs(
+      title = paste0("In-place placebo gaps: ", treated_name_i, " (", treated_code, ")"),
+      subtitle = "Black line is treated country; grey lines are donor-country placebos",
+      x = NULL,
+      y = "Actual - synthetic"
+    ) +
+    theme_minimal(base_size = 11)
+
+  ggsave(
+    filename = paste0("output/figures/scm_placebo_gaps_", treated_code, ".png"),
+    plot = p_i,
+    width = 10,
+    height = 6,
+    dpi = 300
+  )
+}
+
+
+# =====================================================
+# 8. Optional combined p-value chart
+# =====================================================
+
+p_placebo_pvalues <- placebo_conclusions_all |>
+  mutate(
+    treated_country = factor(
+      treated_country,
+      levels = treated_country[order(p_rmspe_ratio)]
+    )
+  ) |>
+  ggplot(aes(x = treated_country, y = p_rmspe_ratio)) +
+  geom_col() +
+  geom_hline(yintercept = 0.10, linetype = "dashed") +
+  geom_hline(yintercept = 0.05, linetype = "dotted") +
+  coord_flip() +
+  labs(
+    title = "Placebo p-values based on post/pre RMSPE ratios",
+    subtitle = "Dashed line = 10%; dotted line = 5%",
+    x = NULL,
+    y = "Placebo p-value"
+  ) +
+  theme_minimal(base_size = 11)
+
+ggsave(
+  filename = "output/figures/scm_placebo_pvalues_rmspe_ratio.png",
+  plot = p_placebo_pvalues,
+  width = 9,
+  height = 6,
+  dpi = 300
+)
+
+cat("\nPlacebo analysis complete.\n")
 
 
 
