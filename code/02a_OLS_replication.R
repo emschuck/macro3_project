@@ -1,18 +1,12 @@
-library(pwt10)
-library(WDI)
-library(plm)
-library(ggplot2)
+#Library
 library(dplyr)
 library(stargazer)
 library(tidyr)
-library(knitr)
-library(tidyverse)
-library(readxl)
-library(countrycode)
 library(stringr)
 library(lmtest)
+library(huxtable)
 
-
+#Load the data
 df <- readRDS("data/processed/processed_panel_imputed.rds")
 
 # Country lists for treated and control
@@ -32,36 +26,10 @@ treated_countries <- c(
   "GNQ"  # Equatorial Guinea
 )
 
-donor_countries <- c(
-  "BGD", # Bangladesh
-  "BRB", # Barbados
-  "BTN", # Bhutan
-  "BOL", # Bolivia
-  "BWA", # Botswana
-  "CPV", # Cabo Verde
-  "DMA", # Dominica
-  "ECU", # Ecuador
-  "SWZ", # Eswatini
-  "GRD", # Grenada
-  "LAO", # Lao PDR
-  "LSO", # Lesotho
-  "MUS", # Mauritius
-  "MAR", # Morocco
-  "NAM", # Namibia
-  "OMN", # Oman
-  "PAN", # Panama
-  "KNA", # St. Kitts and Nevis
-  "LCA", # St. Lucia
-  "SYC"  # Seychelles
-)
-
-scm_countries <- c(treated_countries, donor_countries)
-
-#keep only the treated countries and the donors
-
+#keep only the treated countries 
 ols_df <- df |>
   filter(
-    iso3c %in% scm_countries,
+    iso3c %in% treated_countries,
     year >= 1980,
     year <= 2019
   ) |>
@@ -73,14 +41,17 @@ ols_df <- df |>
   ) |>
   distinct(iso3c, year, .keep_all = TRUE)
 
+
+#OLS Regression for each country
+
 #Benin - BEN
-df_BN <- ols_df %>%
+df_BEN <- ols_df %>%
   filter(iso3c=="BEN")
 
-ols_BN <- lm(gdp_pc_current ~ 
+ols_BEN <- lm(gdp_pc_current ~ 
                agriculture + industry + govt_share +
                invest_share + oda_share + fdi + labour, 
-             data = df_BN)
+             data = df_BEN)
 
 #Burkina Faso - BFA
 df_BFA <- ols_df %>%
@@ -189,3 +160,21 @@ ols_GNQ <- lm(gdp_pc_current ~
                 agriculture + industry + govt_share +
                 invest_share + oda_share + fdi + labour, 
               data = df_GNQ)
+
+#Summarize the results in one table
+table_ols <- huxreg(ols_BEN, ols_BFA, ols_CAF, ols_CIV, ols_CMR, ols_COG, ols_GAB, ols_GNQ, ols_MLI, ols_NER, ols_SEN,        error_format = "({p.value})",
+       error_pos = "below",
+       statistics = c(N = "nobs", "R2 adj." = "adj.r.squared"))
+
+View(table_ols)
+
+#Save the output
+cat(
+  kable(
+    table_ols,
+    format = "latex",
+    booktabs = TRUE,
+    caption = "OLS estimates of real GDP per capita parameter of CFA Franc-zone countries"
+  ),
+  file = "output/tables/table_ols_regression_gdp.tex"
+)
