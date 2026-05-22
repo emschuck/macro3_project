@@ -716,6 +716,7 @@ ggsave(
 
 
 
+
 # =====================================================
 # Export treated, synthetic, and donor real values
 # =====================================================
@@ -899,7 +900,51 @@ make_donor_values <- function(result, data, vars_to_export) {
     )
 }
 
-# Wide version: one row per treated country / unit / year,
+# Build the full export dataset
+scm_export_long <- bind_rows(
+  lapply(scm_results, make_treated_values, data = scm_df, vars_to_export = scm_export_vars),
+  lapply(scm_results, make_synthetic_values, data = scm_df, vars_to_export = scm_export_vars),
+  lapply(scm_results, make_donor_values, data = scm_df, vars_to_export = scm_export_vars)
+) |>
+  left_join(
+    country_names |>
+      rename(treated_country = country),
+    by = c("treated_iso3c" = "iso3c")
+  ) |>
+  select(
+    treated_iso3c,
+    treated_country,
+    unit_type,
+    iso3c,
+    country,
+    year,
+    variable,
+    value,
+    donor_iso3c,
+    donor_country,
+    donor_weight,
+    donor_weight_sum
+  ) |>
+  arrange(
+    treated_iso3c,
+    variable,
+    unit_type,
+    iso3c,
+    year
+  )
+
+# Save long-format dataset
+dir.create("data/processed", recursive = TRUE, showWarnings = FALSE)
+dir.create("output/tables", recursive = TRUE, showWarnings = FALSE)
+
+saveRDS(
+  scm_export_long,
+  "data/processed/scm_export_long.rds"
+)
+
+
+# Optional wide version: one row per treated country / unit / year,
+# with variables spread into columns.
 scm_export_wide <- scm_export_long |>
   select(
     treated_iso3c,
@@ -929,12 +974,6 @@ saveRDS(
   scm_export_wide,
   "data/processed/scm_export_wide.rds"
 )
-
-# write.csv(
-#   scm_export_wide,
-#   "output/tables/scm_export_wide.csv",
-#   row.names = FALSE
-# )
 
 
 print("Complete")
