@@ -273,6 +273,8 @@ pwt <- pwt10.01 |>
     emp,
     csh_g,
     csh_i,
+    csh_m,
+    csh_x,
     hc
   ) |>
   rename(
@@ -341,6 +343,8 @@ indicators <- c(
   # Net official development assistance received (% of GNI)
   oda_alt = "DT.ODA.ODAT.CD"
   # Net ODA received (current USD)
+
+  
 )
 
 

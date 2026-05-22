@@ -1,6 +1,7 @@
 # =====================================================
 # GDP source and calculation exploration
 # Downloads WDI + PWT, then tests different GDP methods
+# Produces composite regional and country-level charts
 # =====================================================
 
 library(tidyverse)
@@ -10,27 +11,26 @@ library(knitr)
 library(readr)
 library(patchwork)
 
-# Set output directory
+# =====================================================
+# 1. Output directories
+# =====================================================
 
 output_dir <- "output/gdp_exploration"
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
-table_output_dir <- "output/gdp_exploration/tables"
-dir.create(table_output_dir, recursive = TRUE, showWarnings = FALSE)
-
-
-csv_output_dir <- "output/gdp_exploration/csvs"
+csv_output_dir <- file.path(output_dir, "csvs")
 dir.create(csv_output_dir, recursive = TRUE, showWarnings = FALSE)
 
-
-chart_output_dir <- "output/gdp_exploration/charts"
+chart_output_dir <- file.path(output_dir, "charts")
 dir.create(chart_output_dir, recursive = TRUE, showWarnings = FALSE)
 
+country_chart_output_dir <- file.path(chart_output_dir, "countries")
+dir.create(country_chart_output_dir, recursive = TRUE, showWarnings = FALSE)
 
-country_output_dir <- "output/gdp_exploration/countries"
-dir.create(country_output_dir, recursive = TRUE, showWarnings = FALSE)
 
-# Country groups
+# =====================================================
+# 2. Country groups
+# =====================================================
 
 waemu_table1 <- c(
   "BEN", # Benin
@@ -80,7 +80,9 @@ gdp_exploration_countries <- c(
 )
 
 
-# Download PWT variables
+# =====================================================
+# 3. Download PWT variables
+# =====================================================
 
 data("pwt10.01")
 
@@ -114,17 +116,19 @@ pwt <- pwt10.01 |>
   )
 
 
-# Download WDI variables
+# =====================================================
+# 4. Download WDI variables
+# =====================================================
 
 wdi_indicators <- c(
-  # per capita variables
+  # Per capita variables
   wdi_gdp_pc_ppp_constant = "NY.GDP.PCAP.PP.KD", # GDP per capita, PPP, constant international $
   wdi_gdp_pc_ppp_current  = "NY.GDP.PCAP.PP.CD", # GDP per capita, PPP, current international $
   wdi_gdp_pc_constant     = "NY.GDP.PCAP.KD",    # GDP per capita, constant 2015 US$
   wdi_gdp_pc_current      = "NY.GDP.PCAP.CD",    # GDP per capita, current US$
   wdi_gdp_pc_growth       = "NY.GDP.PCAP.KD.ZG", # GDP per capita growth, annual %
 
-  # Not per capita
+  # Aggregate GDP variables
   wdi_gdp_ppp_constant    = "NY.GDP.MKTP.PP.KD", # GDP, PPP, constant international $
   wdi_gdp_ppp_current     = "NY.GDP.MKTP.PP.CD", # GDP, PPP, current international $
   wdi_gdp_constant        = "NY.GDP.MKTP.KD",    # GDP, constant 2015 US$
@@ -140,7 +144,9 @@ wdi <- WDI(
   rename(country_wdi = country)
 
 
-# Merge WDI and PWT, with pc calculations for aggregate values
+# =====================================================
+# 5. Merge WDI and PWT
+# =====================================================
 
 df <- wdi |>
   left_join(pwt, by = c("iso3c", "year")) |>
@@ -154,7 +160,8 @@ df <- wdi |>
       TRUE ~ NA_character_
     ),
 
-    # WDI aggregate GDP divided by PWT population (in millions)
+    # WDI aggregate GDP divided by PWT population.
+    # PWT population is in millions, so multiply by 1e6.
     wdi_gdp_ppp_constant_pc_pwtpop = wdi_gdp_ppp_constant / (pop * 1e6),
     wdi_gdp_ppp_current_pc_pwtpop  = wdi_gdp_ppp_current  / (pop * 1e6),
     wdi_gdp_constant_pc_pwtpop     = wdi_gdp_constant     / (pop * 1e6),
@@ -162,20 +169,24 @@ df <- wdi |>
   ) |>
   select(-country_wdi, -country_pwt)
 
-# Save the GDP exploration raw panel
-write_csv(df, file.path(csv_output_dir, "gdp_exploration_raw_panel.csv"))
+write_csv(
+  df,
+  file.path(csv_output_dir, "gdp_exploration_raw_panel.csv")
+)
 
 
-# misc helper functions
+# =====================================================
+# 6. Helper functions
+# =====================================================
 
 safe_mean <- function(x) {
   if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE)
 }
 
 make_safe_name <- function(source, variable, method) {
-  paste(source, variable, method, sep = "_") |>
-    gsub("[^A-Za-z0-9_]+", "_", x = _) |>
-    tolower()
+  out <- paste(source, variable, method, sep = "_")
+  out <- gsub("[^A-Za-z0-9_]+", "_", out)
+  tolower(out)
 }
 
 assign_country_group <- function(iso3c) {
@@ -188,35 +199,9 @@ assign_country_group <- function(iso3c) {
 }
 
 
-# Functions for different GDP calculation methods
-
-# Methods:
-#   pct_growth:
-#     100 * (GDP_t / GDP_{t-1} - 1)
-#
-#   growth_factor:
-#     GDP_t / GDP_{t-1}
-#
-#   log_growth:
-#     100 * (log(GDP_t) - log(GDP_{t-1}))
-#
-#   avg_relative_level_change:
-#     ((GDP_end - GDP_start) / GDP_start) / number_of_years
-#
-#   avg_relative_level_change_pct:
-#     100 * ((GDP_end - GDP_start) / GDP_start) / number_of_years
-#
-#   cagr_factor:
-#     (GDP_end / GDP_start)^(1 / number_of_years)
-#
-#   cagr_pct:
-#     100 * ((GDP_end / GDP_start)^(1 / number_of_years) - 1)
-#
-#   mean_index_to_period_start:
-#     Average of GDP_t / GDP_start within each period
-#
-#   direct:
-#     Uses the variable directly. This is mainly for WDI's direct growth series.
+# =====================================================
+# 7. GDP calculation function
+# =====================================================
 
 compute_gdp_measure <- function(data, gdp_var, method) {
 
@@ -322,7 +307,9 @@ compute_gdp_measure <- function(data, gdp_var, method) {
 }
 
 
-# Data completeness check function
+# =====================================================
+# 8. Completeness check function
+# =====================================================
 
 make_gdp_checks <- function(data, gdp_var) {
 
@@ -352,13 +339,12 @@ make_gdp_checks <- function(data, gdp_var) {
 }
 
 
-# Function to make combined table with vaalues
-
-# Function to make combined table with values
+# =====================================================
+# 9. Combined table function
+# =====================================================
 
 make_combined_gdp_table <- function(data) {
 
-  # Calculate full-period average: 1980-2021
   full_period_rows <- data |>
     filter(
       iso3c %in% gdp_exploration_countries,
@@ -379,7 +365,6 @@ make_combined_gdp_table <- function(data) {
       values_from = value
     )
 
-  # Calculate pre- and post-period averages
   pre_post_rows <- data |>
     filter(
       iso3c %in% gdp_exploration_countries,
@@ -405,7 +390,6 @@ make_combined_gdp_table <- function(data) {
       values_from = value
     )
 
-  # Combine full period with pre/post periods
   country_rows <- pre_post_rows |>
     left_join(
       full_period_rows,
@@ -422,12 +406,12 @@ make_combined_gdp_table <- function(data) {
       )
     ) |>
     arrange(order) |>
-    select(group, country, `1980-2021`, `1990-2001`, `2002-2021`)
+    select(group, iso3c, country, `1980-2021`, `1990-2001`, `2002-2021`)
 
-  # Group averages
   average_rows <- country_rows |>
     group_by(group) |>
     summarise(
+      iso3c = NA_character_,
       country = paste("Average", first(group)),
       `1980-2021` = safe_mean(`1980-2021`),
       `1990-2001` = safe_mean(`1990-2001`),
@@ -447,11 +431,13 @@ make_combined_gdp_table <- function(data) {
 }
 
 
-# Function to create charts
+# =====================================================
+# 10. Plot-data functions
+# =====================================================
 
-make_gdp_chart <- function(data, source, gdp_var, method, file_stub) {
+make_region_plot_data <- function(data, source, gdp_var, method, file_stub, test_order) {
 
-  plot_data <- data |>
+  data |>
     filter(
       region %in% c("WAEMU", "CAEMC", "Non-CFA comparison"),
       year >= 1990,
@@ -467,39 +453,46 @@ make_gdp_chart <- function(data, source, gdp_var, method, file_stub) {
     summarise(
       value = safe_mean(gdp_measure),
       .groups = "drop"
+    ) |>
+    mutate(
+      source = source,
+      gdp_variable = gdp_var,
+      method = method,
+      file_stub = file_stub,
+      test_order = test_order,
+      test_label = paste(source, gdp_var, method, sep = "\n")
     )
+}
 
-  p <- ggplot(plot_data, aes(x = year, y = value, color = region_plot)) +
-    geom_line(linewidth = 0.9) +
-    geom_vline(xintercept = 2002, linewidth = 1.1, color = "black") +
-    scale_x_continuous(breaks = seq(1990, 2020, 2)) +
-    labs(
-      title = paste("GDP exploration:", source, gdp_var, method),
-      x = NULL,
-      y = method,
-      color = NULL
-    ) +
-    theme_minimal(base_size = 11) +
-    theme(
-      legend.position = "bottom",
-      panel.grid.minor = element_blank()
+make_country_plot_data <- function(data, source, gdp_var, method, file_stub, test_order) {
+
+  data |>
+    filter(
+      iso3c %in% gdp_exploration_countries,
+      year >= 1990,
+      year <= 2021
+    ) |>
+    transmute(
+      iso3c,
+      country,
+      region,
+      year,
+      value = gdp_measure,
+      source = source,
+      gdp_variable = gdp_var,
+      method = method,
+      file_stub = file_stub,
+      test_order = test_order,
+      test_label = paste(source, gdp_var, method, sep = "\n")
     )
-
-  ggsave(
-    filename = file.path(chart_output_dir, paste0("chart_", file_stub, ".png")),
-    plot = p,
-    width = 12,
-    height = 4,
-    dpi = 300
-  )
-
-  p
 }
 
 
-# GDP exploration functino
+# =====================================================
+# 11. Main exploration function
+# =====================================================
 
-run_gdp_exploration <- function(data, source, gdp_var, method) {
+run_gdp_exploration <- function(data, source, gdp_var, method, test_order) {
 
   file_stub <- make_safe_name(source, gdp_var, method)
 
@@ -509,22 +502,14 @@ run_gdp_exploration <- function(data, source, gdp_var, method) {
     stop(paste("Variable", gdp_var, "not found in df."))
   }
 
-  checks <- make_gdp_checks(data, gdp_var)
-
-  write_csv(
-    checks,
-    file.path(csv_output_dir, paste0("checks_", file_stub, ".csv"))
-  )
-
-  cat(
-    kable(
-      checks,
-      format = "latex",
-      booktabs = TRUE,
-      caption = paste("GDP completeness checks:", source, gdp_var)
-    ),
-    file = file.path(table_output_dir, paste0("checks_", file_stub, ".tex"))
-  )
+  checks <- make_gdp_checks(data, gdp_var) |>
+    mutate(
+      source = source,
+      gdp_variable = gdp_var,
+      method = method,
+      file_stub = file_stub,
+      test_order = test_order
+    )
 
   incomplete_rows <- checks |>
     filter(
@@ -533,9 +518,9 @@ run_gdp_exploration <- function(data, source, gdp_var, method) {
     )
 
   if (nrow(incomplete_rows) > 0) {
-    message("WARNING: Some countries have incomplete GDP data. Check file: checks_", file_stub, ".csv")
+    message("WARNING: Some countries have incomplete GDP data for ", file_stub)
   } else {
-    message("Data check passed: no missing GDP values for 1990-2021 and all endpoint years present.")
+    message("Data check passed for ", file_stub)
   }
 
   processed <- compute_gdp_measure(
@@ -544,42 +529,52 @@ run_gdp_exploration <- function(data, source, gdp_var, method) {
     method = method
   )
 
-  table_out <- make_combined_gdp_table(processed)
+  table_out <- make_combined_gdp_table(processed) |>
+    mutate(
+      source = source,
+      gdp_variable = gdp_var,
+      method = method,
+      file_stub = file_stub,
+      test_order = test_order
+    ) |>
+    select(
+      source,
+      gdp_variable,
+      method,
+      file_stub,
+      test_order,
+      everything()
+    )
 
-  write_csv(
-    table_out,
-    file.path(csv_output_dir, paste0("table_", file_stub, ".csv"))
-  )
-
-  cat(
-    kable(
-      table_out,
-      format = "latex",
-      booktabs = TRUE,
-      caption = paste("GDP table:", source, gdp_var, method)
-    ),
-    file = file.path(table_output_dir, paste0("table_", file_stub, ".tex"))
-  )
-
-  plot_out <- make_gdp_chart(
+  region_plot_data <- make_region_plot_data(
     data = processed,
     source = source,
     gdp_var = gdp_var,
     method = method,
-    file_stub = file_stub
+    file_stub = file_stub,
+    test_order = test_order
+  )
+
+  country_plot_data <- make_country_plot_data(
+    data = processed,
+    source = source,
+    gdp_var = gdp_var,
+    method = method,
+    file_stub = file_stub,
+    test_order = test_order
   )
 
   list(
     checks = checks,
     table = table_out,
-    plot = plot_out
+    region_plot_data = region_plot_data,
+    country_plot_data = country_plot_data
   )
 }
 
 
-# Define all GDP tests to do
 # =====================================================
-# GDP variables to test
+# 12. Define all GDP tests
 # =====================================================
 
 gdp_variables <- tibble::tribble(
@@ -601,52 +596,43 @@ gdp_variables <- tibble::tribble(
   "WDI_PWTPOP",   "wdi_gdp_current_pc_pwtpop"
 )
 
-# =====================================================
-# GDP calculation methods to test
-# =====================================================
-
 gdp_methods <- tibble::tibble(
   method = c(
     "pct_growth",
     "growth_factor",
     "log_growth",
-    # "mean_index_to_period_start",
     "index_change_from_1990"
-    # "avg_relative_level_change",
-    # "avg_relative_level_change_pct",
-    # "cagr_factor",
-    # "cagr_pct"
   )
 )
 
-# Create all source-variable-method combinations
 gdp_tests <- tidyr::crossing(
   gdp_variables,
   gdp_methods
 )
 
-# Add WDI direct growth rate separately because it is already a growth rate
 gdp_tests <- bind_rows(
   gdp_tests,
   tibble::tribble(
     ~source, ~gdp_var,             ~method,
     "WDI",   "wdi_gdp_pc_growth",  "direct"
   )
-)
+) |>
+  mutate(test_order = row_number())
 
 
-
-# Run all tests
+# =====================================================
+# 13. Run all tests
+# =====================================================
 
 gdp_results <- vector("list", nrow(gdp_tests))
-
 
 for (i in seq_len(nrow(gdp_tests))) {
   gdp_results[[i]] <- run_gdp_exploration(
     data = df,
     source = gdp_tests$source[i],
     gdp_var = gdp_tests$gdp_var[i],
-    method = gdp_tests$method[i]
+    method = gdp_tests$method[i],
+    test_order = gdp_tests$test_order[i]
   )
 }
 
@@ -656,28 +642,45 @@ names(gdp_results) <- make_safe_name(
   gdp_tests$method
 )
 
-#### Saved combined chart
 
-plot_list <- lapply(gdp_results, function(x) x$plot)
+# =====================================================
+# 14. Combine outputs
+# =====================================================
 
-# Remove any NULL plots, just in case
-plot_list <- plot_list[!sapply(plot_list, is.null)]
+all_checks <- bind_rows(
+  lapply(gdp_results, function(x) x$checks)
+)
 
-combined_plot <- wrap_plots(
-  plot_list,
-  ncol = 4
-) +
-  plot_annotation(
-    title = "GDP exploration charts"
-  )
+all_tables <- bind_rows(
+  lapply(gdp_results, function(x) x$table)
+)
 
-ggsave(
-  filename = file.path(chart_output_dir, "combined_gdp_exploration_charts.png"),
-  plot = combined_plot,
-  width = 32,
-  height = 4 * ceiling(length(plot_list) / 4),
-  dpi = 300,
-  limitsize = FALSE
+all_region_plot_data <- bind_rows(
+  lapply(gdp_results, function(x) x$region_plot_data)
+)
+
+all_country_plot_data <- bind_rows(
+  lapply(gdp_results, function(x) x$country_plot_data)
+)
+
+write_csv(
+  all_checks,
+  file.path(csv_output_dir, "gdp_checks_all_tests.csv")
+)
+
+write_csv(
+  all_tables,
+  file.path(csv_output_dir, "gdp_tables_all_tests.csv")
+)
+
+write_csv(
+  all_region_plot_data,
+  file.path(csv_output_dir, "gdp_region_plot_data_all_tests.csv")
+)
+
+write_csv(
+  all_country_plot_data,
+  file.path(csv_output_dir, "gdp_country_plot_data_all_tests.csv")
 )
 
 saveRDS(
@@ -685,12 +688,133 @@ saveRDS(
   file.path(output_dir, "gdp_exploration_results.rds")
 )
 
-print("GDP exploration complete.")
 
+# =====================================================
+# 15. Composite regional multi-chart
+# =====================================================
+
+all_region_plot_data <- all_region_plot_data |>
+  mutate(
+    test_label = factor(
+      test_label,
+      levels = all_region_plot_data |>
+        arrange(test_order) |>
+        distinct(test_label) |>
+        pull(test_label)
+    )
+  )
+
+p_region_composite <- ggplot(
+  all_region_plot_data,
+  aes(x = year, y = value, color = region_plot)
+) +
+  geom_line(linewidth = 0.7) +
+  geom_vline(xintercept = 2002, linewidth = 0.7, color = "black") +
+  scale_x_continuous(breaks = seq(1990, 2020, 10)) +
+  facet_wrap(~ test_label, scales = "free_y", ncol = 4) +
+  labs(
+    title = "GDP exploration charts: regional averages",
+    subtitle = "WAEMU, CAEMC, and non-CFA comparison countries",
+    x = NULL,
+    y = NULL,
+    color = NULL
+  ) +
+  theme_minimal(base_size = 9) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(size = 7)
+  )
+
+ggsave(
+  filename = file.path(chart_output_dir, "combined_gdp_exploration_charts_regions.png"),
+  plot = p_region_composite,
+  width = 32,
+  height = 4 * ceiling(length(unique(all_region_plot_data$test_label)) / 4),
+  dpi = 300,
+  limitsize = FALSE
+)
+
+# =====================================================
+# 16. Composite country multi-charts
+# =====================================================
+
+all_country_plot_data <- all_country_plot_data |>
+  mutate(
+    test_label = factor(
+      test_label,
+      levels = all_country_plot_data |>
+        arrange(test_order) |>
+        distinct(test_label) |>
+        pull(test_label)
+    )
+  )
+
+country_list <- all_country_plot_data |>
+  distinct(iso3c, country, region) |>
+  filter(!is.na(iso3c)) |>
+  arrange(region, country)
+
+for (i in seq_len(nrow(country_list))) {
+
+  country_code_i <- country_list$iso3c[i]
+  country_name_i <- country_list$country[i]
+  region_i <- country_list$region[i]
+
+  country_data_i <- all_country_plot_data |>
+    filter(iso3c == country_code_i) |>
+    mutate(
+      value = as.numeric(value)
+    ) |>
+    filter(
+      year >= 1990,
+      year <= 2021,
+      is.finite(value)
+    )
+
+  if (nrow(country_data_i) == 0) {
+    message("Skipping empty country chart for ", country_code_i)
+    next
+  }
+
+  p_country_i <- ggplot(
+    country_data_i,
+    aes(x = year, y = value, group = test_label)
+  ) +
+    geom_line(linewidth = 0.7, na.rm = TRUE) +
+    geom_point(size = 0.6, na.rm = TRUE) +
+    geom_vline(xintercept = 2002, linewidth = 0.7, color = "black") +
+    scale_x_continuous(breaks = seq(1990, 2020, 10)) +
+    facet_wrap(~ test_label, scales = "free_y", ncol = 4) +
+    labs(
+      title = paste0("GDP exploration charts: ", country_name_i, " (", country_code_i, ")"),
+      subtitle = paste0("Country group: ", region_i),
+      x = NULL,
+      y = NULL
+    ) +
+    theme_minimal(base_size = 9) +
+    theme(
+      panel.grid.minor = element_blank(),
+      strip.text = element_text(size = 7)
+    )
+
+  ggsave(
+    filename = file.path(
+      country_chart_output_dir,
+      paste0("combined_gdp_exploration_charts_", country_code_i, ".png")
+    ),
+    plot = p_country_i,
+    width = 32,
+    height = 4 * ceiling(length(unique(country_data_i$test_label)) / 4),
+    dpi = 300,
+    limitsize = FALSE
+  )
+}
 
 
 # =====================================================
-# Country-specific method comparison table
+# 17. Optional: country-specific method table function
+# Manual use only - does not automatically output files.
 # =====================================================
 
 make_country_method_table <- function(data, tests, country_iso3c) {
@@ -719,7 +843,6 @@ make_country_method_table <- function(data, tests, country_iso3c) {
       method = method_i
     )
 
-    # Full-period average: 1980-2021
     row_all <- processed_i |>
       filter(
         iso3c == country_iso3c,
@@ -732,7 +855,6 @@ make_country_method_table <- function(data, tests, country_iso3c) {
         n_obs = sum(!is.na(gdp_measure))
       )
 
-    # Pre- and post-period averages
     row_sub <- processed_i |>
       filter(
         iso3c == country_iso3c,
@@ -787,6 +909,8 @@ make_country_method_table <- function(data, tests, country_iso3c) {
     ) |>
     select(
       country,
+      source,
+      gdp_variable,
       method,
       `1980-2021`,
       `1990-2001`,
@@ -799,38 +923,4 @@ make_country_method_table <- function(data, tests, country_iso3c) {
   table_out
 }
 
-
-# =====================================================
-# Produce country-specific comparison tables
-# =====================================================
-
-country_to_check <- "AGO"
-
-country_method_table <- make_country_method_table(
-  data = df,
-  tests = gdp_tests,
-  country_iso3c = country_to_check
-)
-
-print(country_method_table)
-
-write_csv(
-  country_method_table,
-  file.path(
-    country_output_dir,
-    paste0("country_method_table_", country_to_check, ".csv")
-  )
-)
-
-cat(
-  kable(
-    country_method_table,
-    format = "latex",
-    booktabs = TRUE,
-    caption = paste("GDP method comparison for", country_to_check)
-  ),
-  file = file.path(
-    country_output_dir,
-    paste0("country_method_table_", country_to_check, ".tex")
-  )
-)
+print("GDP exploration complete.")
