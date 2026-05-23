@@ -37,13 +37,21 @@ safe_mean <- function(x) {
 # Load processed data
 df <- readRDS("data/processed/processed_panel_imputed.rds")
 
+## SELECTED GDP VARIABLE
+gdp_var <- "pwt_rgdpo_pc"
+# gdp_var_label <- "PWT output-side real GDP per capita, chained PPPs"
+
+df <- df |>
+  mutate(
+    gdp_selected = .data[[gdp_var]]
+  )
 # Country lists for treated and control
 
 treated_countries <- c(
   "BEN", # Benin
-  "BFA", # Burkina Faso
-  "CIV", # Côte d'Ivoire
-  # "MLI", # Mali
+  # "BFA", # Burkina Faso
+  # "CIV", # Côte d'Ivoire
+  "MLI", # Mali
   # "NER", # Niger
   # "SEN", # Senegal
   # "TGO", # Togo
@@ -52,7 +60,7 @@ treated_countries <- c(
   # "TCD", # Chad
   # "COG", # Republic of Congo
   # "GAB", # Gabon
-  # "GNQ"  # Equatorial Guinea
+  "GNQ"  # Equatorial Guinea
 )
 
 donor_countries <- c(
@@ -165,7 +173,7 @@ scm_df <- df |>
   ) |>
   select(
     iso3c, country, year,
-    gdp_pc_current,
+    gdp_selected,
     agriculture, industry, govt_share, invest_share,
     oda_share, fdi, labour, polity2
   ) |>
@@ -261,7 +269,7 @@ scm_df <- scm_df |>
     year,
     iso3c,
     country,
-    gdp_pc_current,
+    gdp_selected,
     agriculture,
     industry,
     govt_share,
@@ -291,7 +299,7 @@ country_ids |>
 
 
 # Variables and years used as special predictors
-special_var <- "gdp_pc_current"
+special_var <- "gdp_selected"
 special_years <- c(1980, 1995, 2001)
 
 
@@ -335,7 +343,7 @@ run_scm_country <- function(treated_iso3c) {
 
     predictors.op = "mean",
 
-    dependent = "gdp_pc_current",
+    dependent = "gdp_selected",
 
     unit.variable = "unit_id", #1
     unit.names.variable = "unit_name", #2
@@ -350,9 +358,9 @@ run_scm_country <- function(treated_iso3c) {
     time.plot = 1980:2019,
 
     special.predictors = list(
-      list("gdp_pc_current", 1980, c("mean")),
-      list("gdp_pc_current", 1995, c("mean")),
-      list("gdp_pc_current", 2001, c("mean"))
+      list("gdp_selected", 1980, c("mean")),
+      list("gdp_selected", 1995, c("mean")),
+      list("gdp_selected", 2001, c("mean"))
     )
   )
 
@@ -640,7 +648,7 @@ scm_paths_long <- scm_paths |>
   tidyr::pivot_longer(
     cols = c(actual, synthetic),
     names_to = "series",
-    values_to = "gdp_pc_current"
+    values_to = "gdp_selected"
   ) |>
   mutate(
     series = dplyr::recode(
@@ -652,7 +660,7 @@ scm_paths_long <- scm_paths |>
 
 p_paths_all <- ggplot(
   scm_paths_long,
-  aes(x = year, y = gdp_pc_current, linetype = series)
+  aes(x = year, y = gdp_selected, linetype = series)
 ) +
   geom_line(linewidth = 0.7) +
   geom_vline(xintercept = 2002, linetype = "dashed") +
@@ -725,7 +733,7 @@ if (length(scm_success) == 0) {
 
 # Variables to export: outcome plus SCM predictors
 scm_export_vars <- c(
-  "gdp_pc_current",
+  "gdp_selected",
   "agriculture",
   "industry",
   "govt_share",
@@ -938,7 +946,7 @@ saveRDS(
 # # 1. SCM settings used for both real and placebo runs
 # # =====================================================
 
-# outcome_var <- "gdp_pc_current"
+# outcome_var <- "gdp_selected"
 
 # scm_predictors <- c(
 #   "agriculture",
@@ -1484,4 +1492,4 @@ saveRDS(
 
 
 
-# print("Complete")
+print("Complete")

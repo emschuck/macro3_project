@@ -257,7 +257,11 @@ imputation_plan <- tibble::tribble(
   "ALL", "labour", "nearest_fill", # post 2001
 
 
-  "ALL", "wdi_gdp_pc_constant", "nearest_fill", # post 2001
+  "ALL", "wdi_gdp_pc_constant", "nearest_fill", 
+  "ALL", "wdi_gdp_pc_current", "nearest_fill",
+  "ALL", "pwt_rgdpo_pc", "nearest_fill", 
+  "ALL", "pwt_cgdpo_pc_current", "nearest_fill"
+
 )
 
 # -----------------------------
