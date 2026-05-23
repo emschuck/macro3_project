@@ -248,13 +248,16 @@ imputation_plan <- tibble::tribble(
   "SYC", "labour", "nearest_fill", # pre 1992
   "KNA", "labour", "nearest_fill", # post 2001
 
-  "LAO", "gdp_wdi_current_pc", "linear", # pre-1980
+  "LAO", "wdi_gdp_pc_constant", "linear", # pre-1980
 
 
   "ALL", "industry", "nearest_fill", # post 2001
   "ALL", "oda_share", "nearest_fill", # post 2001
   "ALL", "fdi", "nearest_fill", # post 2001
-  "ALL", "labour", "nearest_fill" # post 2001
+  "ALL", "labour", "nearest_fill", # post 2001
+
+
+  "ALL", "wdi_gdp_pc_constant", "nearest_fill", # post 2001
 )
 
 # -----------------------------
@@ -293,8 +296,8 @@ pwt <- pwt10.01 |>
   ) |>
   distinct(iso3c, year, .keep_all = TRUE) |>
   mutate(
-    gdp_pc = rgdpo / pop,
-    gdp_pc_current = cgdpo / pop,
+    pwt_rgdpo_pc = rgdpo / pop,
+    pwt_cgdpo_pc_current = cgdpo / pop,
     labour = 100 * emp / pop,
     govt_share = csh_g,
     invest_share = csh_i
@@ -307,63 +310,9 @@ pwt <- pwt10.01 |>
 # either unavailable in PWT or used as alternative measures.
 # -----------------------------
 
-# View(WDIsearch("gdp"))
+# Read WDI data from saved file (faster)
 
-# WDI indicators used for variables not taken from PWT
-# Named vector: left-hand names become column names in the downloaded WDI panel;
-# right-hand strings are official World Bank indicator codes.
-indicators <- c(
-  agriculture = "NV.AGR.TOTL.ZS", # NV.AGR.TOTL.CD for levels
-  # Agriculture, forestry, and fishing, value added (% of GDP)
-  agriculture_alt = "NV.AGR.TOTL.CD", # NV.AGR.TOTL.CD for levels
-  # Agriculture, forestry, and fishing, value added (current US$)
-  ag_alt_2 = "NP.AGR.TOTL.CN",
-  ag_alt_3 = "NA.GDP.AGR.CR",
-  industry = "NV.IND.TOTL.ZS", # NV.IND.MANF.ZS for manufacturing only
-  # Industry including construction, value added (% of GDP)
-  industry_alt = "NV.IND.TOTL.CD",
-  # Industry including construction, value added (level)
-  fdi = "BX.KLT.DINV.WD.GD.ZS",
-  # Foreign direct investment, net inflows (% of GDP)
-  govt_share_alt = "NE.CON.GOVT.ZS",
-  # General government final consumption expenditure (% of GDP)
-  invest_share_alt = "NE.GDI.FTOT.ZS",
-  # Gross fixed capital formation (% of GDP)=
-  fdi_alt = "BN.KLT.DINV.CD.DRS",
-  # Foreign direct investment, net inflows (current USD)
-  alt_inflation = "FP.CPI.TOTL.ZG",
-  # Inflation, consumer prices (annual %)( not currently used)
-  inflation = "NY.GDP.DEFL.KD.ZG",
-  # Inflation, GDP deflator (annual %)
-  gdp_pc_wdi_alt = "NY.GDP.PCAP.CD",
-  # GDP per capita (current US$)
-  gdp_pc_wdi = "NY.GDP.PCAP.PP.KD", # GDP, PPP (constant 2021 international $)
-  gdp_wdi = "NY.GDP.MKTP.PP.KD", # GDP, PPP (constant 2021 international $)
-  gdp_pc_growth_wdi = "NY.GDP.PCAP.KD.ZG",
-  gdp_wdi_current = "NY.GDP.MKTP.CD",
-  # GDP growth rate, PPP (constant 2021 international $)
-  # real gdp pc
-  # gdp_pc_wdi = "NY.GDP.PCAP.PP.CD",
-  # GDP per capita, PPP (current international $)
-  oda = "DT.ODA.ODAT.GD.ZS",
-  # Net official development assistance received (% of GNI)
-  oda_alt = "DT.ODA.ODAT.CD"
-  # Net ODA received (current USD)
-
-  
-)
-
-
-# Download annual WDI data for all selected countries and years.
-# may take some time
-wdi <- WDI(
-  country = countries,
-  indicator = indicators,
-  start = 1980,
-  end = 2021
-) |>
-  select(-country) |>
-  distinct(iso3c, year, .keep_all = TRUE)
+wdi <- readRDS("data/raw/wdi.rds")
 
 # -----------------------------
 # Merge WDI and PWT
@@ -390,8 +339,11 @@ df <- wdi |>
       TRUE ~ NA_character_
     ),
     # ODA as share of GDP annually (both are current US$)
-    oda_share = 100 * oda_alt / gdp_wdi_current,
-    gdp_wdi_current_pc = gdp_wdi_current / (pop * 1000000) #
+    oda_share = 100 * oda_alt / wdi_gdp_pc_current,
+    pwt_wdi_gdp_ppp_constant_pc = wdi_gdp_ppp_constant / (pop * 1000000),
+    pwt_wdi_gdp_ppp_current_pc = wdi_gdp_ppp_current / (pop * 1000000), #
+    pwt_wdi_gdp_constant_pc = wdi_gdp_constant / (pop * 1000000), #
+    pwt_wdi_gdp_current_pc = wdi_gdp_current / (pop * 1000000) #
   )
 
 # Basic checks: verify that the country-region and 
@@ -402,13 +354,13 @@ table(df$period, useNA = "ifany") # Expect 1080 1188
 df |>
   group_by(iso3c, country) |>
   summarise(
-    missing_gdp_pc = sum(is.na(gdp_pc)),
+    missing_wdi_gdp_pc_constant = sum(is.na(wdi_gdp_pc_constant)),
     missing_labour = sum(is.na(labour)),
     missing_inflation = sum(is.na(inflation)),
     total_obs = n(),
     .groups = "drop"
   ) |>
-  arrange(desc(missing_gdp_pc), desc(missing_labour)) |>
+  arrange(desc(missing_wdi_gdp_pc_constant), desc(missing_labour)) |>
   print(n = Inf)
 
 
@@ -834,7 +786,7 @@ analysis_data <- df_imputed
 analysis_data <- analysis_data |>
   arrange(iso3c, year) |>
   group_by(iso3c) |>
-  mutate(growth = 100 * (gdp_pc / lag(gdp_pc) - 1)) |>
+  mutate(growth = 100 * (wdi_gdp_pc_constant / lag(wdi_gdp_pc_constant) - 1)) |>
   ungroup()
 
 df_growth <- analysis_data |>
@@ -846,7 +798,7 @@ df_growth <- analysis_data |>
   summarise(growth = mean(growth, na.rm = TRUE), .groups = "drop") |>
   filter(year >= 1990, year <= 2021)
 
-# Plot average annual GDP per capita growth by region.
+# Plot average annual GDP per capita growth by region. 
 # The vertical line marks 2002, the first post-treatment year
 p_gdp_growth <- ggplot(df_growth, aes(year, growth, color = region_plot)) +
   geom_line(linewidth = 0.9) +
@@ -881,25 +833,29 @@ ggsave(
 #### ============================= GDP TABLES ===============================###
 #### ========================================================================###
 
+
 # =====================================================
 # GDP per capita growth appendix tables
-# Comparison PWT GDP per capita (gdp_pc) and WDI GDP per capita (gdp_pc_wdi)
+# Compare WDI constant and current GDP per capita variables
 # =====================================================
 
+safe_mean <- function(x) {
+  if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE)
+}
 
 # Compute annual GDP per capita growth for both variables
 df_gdp_growth <- analysis_data |>
   arrange(iso3c, year) |>
   group_by(iso3c) |>
   mutate(
-    growth_gdp_pc = 100 * (gdp_pc / lag(gdp_pc) - 1),
-    growth_gdp_pc_wdi = 100 * (gdp_pc_wdi / lag(gdp_pc_wdi) - 1)
+    growth_wdi_gdp_pc_constant = 100 * (wdi_gdp_pc_constant / lag(wdi_gdp_pc_constant) - 1),
+    growth_wdi_gdp_pc_current  = 100 * (wdi_gdp_pc_current  / lag(wdi_gdp_pc_current)  - 1)
   ) |>
   ungroup()
 
 # Helper function for GDP growth tables
-# Build GDP-growth appendix tables comparing PWT and WDI per-capita GDP
 make_gdp_growth_table <- function(data, country_order, average_label) {
+
   country_rows <- data |>
     filter(
       iso3c %in% country_order,
@@ -916,31 +872,34 @@ make_gdp_growth_table <- function(data, country_order, average_label) {
     filter(!is.na(period)) |>
     group_by(iso3c, country, period) |>
     summarise(
-      gdp_pc_growth = safe_mean(growth_gdp_pc),
-      gdp_pc_wdi_growth = safe_mean(growth_gdp_pc_wdi),
+      growth_wdi_gdp_pc_constant = safe_mean(growth_wdi_gdp_pc_constant),
+      growth_wdi_gdp_pc_current  = safe_mean(growth_wdi_gdp_pc_current),
       .groups = "drop"
     ) |>
     pivot_wider(
       names_from = period,
-      values_from = c(gdp_pc_growth, gdp_pc_wdi_growth)
+      values_from = c(
+        growth_wdi_gdp_pc_constant,
+        growth_wdi_gdp_pc_current
+      )
     ) |>
     mutate(order = match(iso3c, country_order)) |>
     arrange(order) |>
     select(
       country,
-      `gdp_pc 1990-2001` = `gdp_pc_growth_1990-2001`,
-      `gdp_pc 2002-2021` = `gdp_pc_growth_2002-2021`,
-      `gdp_pc_wdi 1990-2001` = `gdp_pc_wdi_growth_1990-2001`,
-      `gdp_pc_wdi 2002-2021` = `gdp_pc_wdi_growth_2002-2021`
+      `constant GDP pc growth 1990-2001` = `growth_wdi_gdp_pc_constant_1990-2001`,
+      `constant GDP pc growth 2002-2021` = `growth_wdi_gdp_pc_constant_2002-2021`,
+      `current GDP pc growth 1990-2001`  = `growth_wdi_gdp_pc_current_1990-2001`,
+      `current GDP pc growth 2002-2021`  = `growth_wdi_gdp_pc_current_2002-2021`
     )
 
   average_row <- country_rows |>
     summarise(
       country = average_label,
-      `gdp_pc 1990-2001` = safe_mean(`gdp_pc 1990-2001`),
-      `gdp_pc 2002-2021` = safe_mean(`gdp_pc 2002-2021`),
-      `gdp_pc_wdi 1990-2001` = safe_mean(`gdp_pc_wdi 1990-2001`),
-      `gdp_pc_wdi 2002-2021` = safe_mean(`gdp_pc_wdi 2002-2021`)
+      `constant GDP pc growth 1990-2001` = safe_mean(`constant GDP pc growth 1990-2001`),
+      `constant GDP pc growth 2002-2021` = safe_mean(`constant GDP pc growth 2002-2021`),
+      `current GDP pc growth 1990-2001`  = safe_mean(`current GDP pc growth 1990-2001`),
+      `current GDP pc growth 2002-2021`  = safe_mean(`current GDP pc growth 2002-2021`)
     )
 
   bind_rows(country_rows, average_row) |>
@@ -962,14 +921,17 @@ gdp_growth_waemu_excl_gnb <- gdp_growth_waemu |>
   )) |>
   summarise(
     country = "Average without Guinea-Bissau",
-    `gdp_pc 1990-2001` = safe_mean(`gdp_pc 1990-2001`),
-    `gdp_pc 2002-2021` = safe_mean(`gdp_pc 2002-2021`),
-    `gdp_pc_wdi 1990-2001` = safe_mean(`gdp_pc_wdi 1990-2001`),
-    `gdp_pc_wdi 2002-2021` = safe_mean(`gdp_pc_wdi 2002-2021`)
+    `constant GDP pc growth 1990-2001` = safe_mean(`constant GDP pc growth 1990-2001`),
+    `constant GDP pc growth 2002-2021` = safe_mean(`constant GDP pc growth 2002-2021`),
+    `current GDP pc growth 1990-2001`  = safe_mean(`current GDP pc growth 1990-2001`),
+    `current GDP pc growth 2002-2021`  = safe_mean(`current GDP pc growth 2002-2021`)
   ) |>
-  mutate(across(where(is.numeric), ~ round(.x, 4)))
+  mutate(across(where(is.numeric), ~ round(.x, 3)))
 
-gdp_growth_waemu <- bind_rows(gdp_growth_waemu, gdp_growth_waemu_excl_gnb)
+gdp_growth_waemu <- bind_rows(
+  gdp_growth_waemu,
+  gdp_growth_waemu_excl_gnb
+)
 
 # Appendix 3, Panel B: CAEMC
 gdp_growth_caemc <- make_gdp_growth_table(
@@ -998,7 +960,7 @@ cat(
     gdp_growth_waemu,
     format = "latex",
     booktabs = TRUE,
-    caption = "WAEMU countries' mean annual GDP per capita growth: PWT and WDI GDP variables"
+    caption = "WAEMU countries' mean annual GDP per capita growth: WDI constant and current GDP per capita"
   ),
   file = "output/tables/appendix3_panelA_waemu_gdp_growth.tex"
 )
@@ -1008,7 +970,7 @@ cat(
     gdp_growth_caemc,
     format = "latex",
     booktabs = TRUE,
-    caption = "CAEMC countries' mean annual GDP per capita growth: PWT and WDI GDP variables"
+    caption = "CAEMC countries' mean annual GDP per capita growth: WDI constant and current GDP per capita"
   ),
   file = "output/tables/appendix3_panelB_caemc_gdp_growth.tex"
 )
@@ -1018,10 +980,11 @@ cat(
     gdp_growth_non_cfa,
     format = "latex",
     booktabs = TRUE,
-    caption = "Non-CFA countries' mean annual GDP per capita growth: PWT and WDI GDP variables"
+    caption = "Non-CFA countries' mean annual GDP per capita growth: WDI constant and current GDP per capita"
   ),
   file = "output/tables/appendix4_non_cfa_gdp_growth.tex"
 )
+
 
 # Print to confirm all code has run
 print("Complete")

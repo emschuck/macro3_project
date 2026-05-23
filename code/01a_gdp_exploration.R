@@ -123,16 +123,16 @@ pwt <- pwt10.01 |>
 wdi_indicators <- c(
   # Per capita variables
   wdi_gdp_pc_ppp_constant = "NY.GDP.PCAP.PP.KD", # GDP per capita, PPP, constant international $
-  wdi_gdp_pc_ppp_current  = "NY.GDP.PCAP.PP.CD", # GDP per capita, PPP, current international $
-  wdi_gdp_pc_constant     = "NY.GDP.PCAP.KD",    # GDP per capita, constant 2015 US$
-  wdi_gdp_pc_current      = "NY.GDP.PCAP.CD",    # GDP per capita, current US$
-  wdi_gdp_pc_growth       = "NY.GDP.PCAP.KD.ZG", # GDP per capita growth, annual %
+  wdi_gdp_pc_ppp_current = "NY.GDP.PCAP.PP.CD", # GDP per capita, PPP, current international $
+  wdi_gdp_pc_constant = "NY.GDP.PCAP.KD", # GDP per capita, constant 2015 US$
+  wdi_gdp_pc_current = "NY.GDP.PCAP.CD", # GDP per capita, current US$
+  wdi_gdp_pc_growth = "NY.GDP.PCAP.KD.ZG", # GDP per capita growth, annual %
 
   # Aggregate GDP variables
-  wdi_gdp_ppp_constant    = "NY.GDP.MKTP.PP.KD", # GDP, PPP, constant international $
-  wdi_gdp_ppp_current     = "NY.GDP.MKTP.PP.CD", # GDP, PPP, current international $
-  wdi_gdp_constant        = "NY.GDP.MKTP.KD",    # GDP, constant 2015 US$
-  wdi_gdp_current         = "NY.GDP.MKTP.CD"     # GDP, current US$
+  wdi_gdp_ppp_constant = "NY.GDP.MKTP.PP.KD", # GDP, PPP, constant international $
+  wdi_gdp_ppp_current = "NY.GDP.MKTP.PP.CD", # GDP, PPP, current international $
+  wdi_gdp_constant = "NY.GDP.MKTP.KD", # GDP, constant 2015 US$
+  wdi_gdp_current = "NY.GDP.MKTP.CD" # GDP, current US$
 )
 
 wdi <- WDI(
