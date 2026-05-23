@@ -493,7 +493,31 @@ twfe_split_1990 <- feols(XEU ~ waemu_post + caemc_post | iso3c + year,
 
 summary(twfe_split_1990)
 
+#Clean table of TWFE coefficeints per country : 
+library(modelsummary)
+treated_countries <- c(waemu, caemc)
 
+# Create a list of models, one per treated country
+models_by_country <- lapply(treated_countries, function(ctry) {
+  df <- dot_balanced_reg |>
+    filter(year >= 1990) |>
+    filter(iso3c %in% donor_countries | iso3c == ctry) |>
+    mutate(treated_post = iso3c == ctry & year >= 2002)
+  
+  feols(XEU ~ treated_post | iso3c + year,
+        data = df,
+        cluster = ~iso3c)
+})
+
+names(models_by_country) <- treated_countries
+modelsummary(
+  models_by_country,
+  stars    = c("*" = 0.1, "**" = 0.05, "***" = 0.01),
+  coef_rename = c("treated_postTRUE" = "Treated x Post"),
+  gof_map  = c("nobs", "adj.r.squared"),
+  title    = "TWFE estimates by treated country — EU export share (1990–2019)",
+  notes    = "Country and year fixed effects included. Standard errors clustered at country level. Donor group serves as control for each specification."
+)
 
 
 #Back to cleaning the data to merge later :
