@@ -328,7 +328,7 @@ dot_clean <- dot_raw |>
   select(iso3c, indicator, partner, year, value) |>
   mutate(year  = as.integer(year),
          value = as.numeric(value)) |>
-  filter(iso3c %in% countries_scm)
+  filter(iso3c %in% scm_countries)
 
 #Construction of a clean data set where we compute the the share of exports and imports relying on EU 
 dot_shares <- dot_clean |>
