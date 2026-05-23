@@ -492,3 +492,45 @@ twfe_split_1990 <- feols(XEU ~ waemu_post + caemc_post | iso3c + year,
                          cluster = ~iso3c)
 
 summary(twfe_split_1990)
+
+
+
+
+#Back to cleaning the data to merge later :
+summary(dot_balanced[, c("XEU", "MEU")])
+
+
+dot_balanced |>
+  group_by(iso3c) |>
+  summarise(
+    miss_XEU = sum(is.na(XEU)),
+    miss_MEU = sum(is.na(MEU)),
+    pct_miss_XEU = round(mean(is.na(XEU)) * 100, 1),
+    pct_miss_MEU = round(mean(is.na(MEU)) * 100, 1)
+  ) |>
+  filter(miss_XEU > 0 | miss_MEU > 0) |>
+  arrange(desc(pct_miss_XEU))
+
+bad_coverage <- dot_balanced |>
+  filter(year <= 2001) |>
+  group_by(iso3c) |>
+  summarise(miss_pre = sum(is.na(XEU))) |>
+  filter(miss_pre > 3) |>
+  pull(iso3c)
+
+library(zoo)
+
+dot_clean_final <- dot_balanced |>
+  group_by(iso3c) |>
+  arrange(year) |>
+  mutate(
+    XEU = na.approx(XEU, na.rm = FALSE, maxgap = 2),
+    MEU = na.approx(MEU, na.rm = FALSE, maxgap = 2)
+  ) |>
+  ungroup()
+
+dot_final <- dot_clean_final |>
+  filter(!iso3c %in% bad_coverage) |>
+  select(iso3c, year, XEU, MEU) |>
+  arrange(iso3c, year)
+
