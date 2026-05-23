@@ -65,3 +65,20 @@ avg_df<- df2 %>%
             avg_labour = mean(labour), 
             avg_institution = mean(polity2))
 View(avg_df)
+
+ordered_avg_df<-
+  avg_df[c(1,13,2,14,3,15,4,16,5,17,6,18,7,19,
+           8,20,9,21,10,22,11,23,12, 24, 26, 25),] 
+#manual ordering to have the actual country next to the synthetic country
+
+#Save the output
+cat(
+  kable(
+    ordered_avg_df,
+    format = "latex",
+    booktabs = TRUE,
+    caption = "The average of the Predictor of per-capita GDP before treatment 
+    for franc-CFA zone countries"
+  ),
+  file = "output/tables/table_averages_CFAzone.tex"
+)
