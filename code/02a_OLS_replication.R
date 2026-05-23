@@ -166,6 +166,21 @@ table_ols <- huxreg(ols_BEN, ols_BFA, ols_CAF, ols_CIV, ols_CMR, ols_COG, ols_GA
        error_pos = "below",
        statistics = c(N = "nobs", "R2 adj." = "adj.r.squared"))
 
+
+
+#Rename the columns' names
+colnames(table_ols)[colnames(table_ols) == 'model1'] <- 'Benin'
+colnames(table_ols)[colnames(table_ols) == 'model2'] <- 'Burkina Faso'
+colnames(table_ols)[colnames(table_ols) == 'model3'] <- 'Central African Republic'
+colnames(table_ols)[colnames(table_ols) == 'model4'] <- 'Ivory Coast'
+colnames(table_ols)[colnames(table_ols) == 'model5'] <- 'Cameroon'
+colnames(table_ols)[colnames(table_ols) == 'model6'] <- 'Republic of Congo'
+colnames(table_ols)[colnames(table_ols) == 'model7'] <- 'Gabon'
+colnames(table_ols)[colnames(table_ols) == 'model8'] <- 'Equatorial Guinea'
+colnames(table_ols)[colnames(table_ols) == 'model9'] <- 'Mali'
+colnames(table_ols)[colnames(table_ols) == 'model10'] <- 'Niger'
+colnames(table_ols)[colnames(table_ols) == 'model11'] <- 'Senegal'
+
 View(table_ols)
 
 #Save the output
