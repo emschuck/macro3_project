@@ -534,3 +534,8 @@ dot_final <- dot_clean_final |>
   select(iso3c, year, XEU, MEU) |>
   arrange(iso3c, year)
 
+#Saving the clean data set : 
+saveRDS(dot_final, "data/processed/trade_dots_clean.rds")
+
+#Merging ? 
+
