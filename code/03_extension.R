@@ -252,7 +252,7 @@ get_country_name <- function(code) {
 scm_countries <- c(treated_countries, donor_countries)
 
 trade_scm <- trade_raw <- WDI(
-  country = countries_scm,
+  country = scm_countries,
   indicator = c(
     trade_openness = "NE.TRD.GNFS.ZS",
     exports_gdp    = "NE.EXP.GNFS.ZS",
