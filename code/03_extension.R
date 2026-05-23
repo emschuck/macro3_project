@@ -306,5 +306,189 @@ missing_check_scm |>
 # in donor countries --> 8/9 countries with missing data, like BRB (Barbados)  
 
 
+# Changing of trade variables --> Now focusing on the share of exports goi,g to EU (IMF data) 
+
+library(readr)
+library(ggplot2)
+library(fixest)
+
+#Data set with treated and donor countries : 
+
+dot_raw <- read_csv("data/raw/imf_trade_dots.csv")
 
 
+dot_clean <- dot_raw |>
+  rename(
+    iso3c     = COUNTRY.ID,
+    indicator = INDICATOR.ID,
+    partner   = COUNTERPART_COUNTRY.ID,
+    year      = TIME_PERIOD,
+    value     = OBS_VALUE
+  ) |>
+  select(iso3c, indicator, partner, year, value) |>
+  mutate(year  = as.integer(year),
+         value = as.numeric(value)) |>
+  filter(iso3c %in% countries_scm)
+
+#Construction of a clean data set where we compute the the share of exports and imports relying on EU 
+dot_shares <- dot_clean |>
+  pivot_wider(names_from = c(indicator, partner), values_from = value) |>
+  rename(
+    exports_world = XG_FOB_USD_G001,
+    imports_world = MG_CIF_USD_G001,
+    exports_eu    = XG_FOB_USD_G163,
+    imports_eu    = MG_CIF_USD_G163
+  ) |>
+  mutate(
+    XEU = (exports_eu / exports_world) * 100,  # export share to EU (%)
+    MEU = (imports_eu / imports_world) * 100   # import share from EU (%)
+  )
+
+View(dot_shares)
+
+#The data frame is built such that when a value is missing for a year, the year does not even appear. Therefore we need to verify all years appear : 
+dot_balanced <- dot_shares |>
+  complete(iso3c, year = 1980:2019)
+
+#Function to check how many values are missing : 
+missing_check_dot <- dot_balanced |>
+  group_by(iso3c) |>
+  summarise(
+    n_years      = n(),
+    miss_XEU     = sum(is.na(XEU)),
+    miss_MEU     = sum(is.na(MEU)),
+    miss_XEU_pre = sum(is.na(XEU[year <= 2001])),
+    miss_MEU_pre = sum(is.na(MEU[year <= 2001])),
+    .groups = "drop"
+  ) |>
+  mutate(
+    group = case_when(
+      iso3c %in% waemu ~ "WAEMU",
+      iso3c %in% caemc ~ "CAEMC",
+      TRUE             ~ "Donor"
+    )
+  ) |>
+  arrange(group, desc(miss_XEU_pre))
+
+print(missing_check_dot, n = Inf)
+
+#Creation of a data frame to generate plots : 
+dot_grouped <- dot_balanced |>
+  mutate(
+    group = case_when(
+      iso3c %in% waemu ~ "WAEMU",
+      iso3c %in% caemc ~ "CAEMC",
+      TRUE             ~ "Donor"
+    )
+  ) |>
+  group_by(group, year) |>
+  summarise(
+    XEU_mean = mean(XEU, na.rm = TRUE),
+    MEU_mean = mean(MEU, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Graph on the share of imports coming from Euro area : 
+
+ggplot(dot_grouped, aes(x = year, y = MEU_mean, color = group)) +
+  geom_line(linewidth = 1) +
+  geom_vline(xintercept = 2002, linetype = "dashed", color = "gray40") +
+  annotate("text", x = 2003, y = max(dot_grouped$MEU_mean, na.rm=TRUE),
+           label = "CFA reform", hjust = 0, size = 3.5, color = "gray40") +
+  labs(
+    title    = "Import share to EU by group",
+    subtitle = "% of total imports, annual average within group",
+    x = NULL, y = "% of total imports",
+    color = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+
+#Graph on the evolution of the share of exports going to Euro area : 
+ggplot(dot_grouped, aes(x = year, y = XEU_mean, color = group)) +
+  geom_line(linewidth = 1) +
+  geom_vline(xintercept = 2002, linetype = "dashed", color = "gray40") +
+  annotate("text", x = 2003, y = max(dot_grouped$XEU_mean, na.rm=TRUE),
+           label = "CFA reform", hjust = 0, size = 3.5, color = "gray40") +
+  labs(
+    title    = "Export share to EU by group",
+    subtitle = "% of total exports, annual average within group",
+    x = NULL, y = "% of total exports",
+    color = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+
+#Evolution of the share of exports going to Euro area by groups (WAEMU/CAEMC/Donor countries) :
+ggplot(dot_balanced |> mutate(group = case_when(
+  iso3c %in% waemu ~ "WAEMU",
+  iso3c %in% caemc ~ "CAEMC",
+  TRUE             ~ "Donor")),
+  aes(x = year, y = XEU, group = iso3c, color = group)) +
+  geom_line(alpha = 0.4, linewidth = 0.6) +
+  geom_vline(xintercept = 2002, linetype = "dashed", color = "gray40") +
+  facet_wrap(~group) +
+  labs(title = "Export share to EU — individual countries",
+       x = NULL, y = "% of total exports", color = NULL) +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "none")
+
+#Regressions (DID and TWFE) : 
+
+# Treated = WAEMU + CAEMC (peg switched to euro in 2002)
+
+dot_balanced_reg <- dot_balanced |>
+  mutate(
+    treated   = iso3c %in% c(waemu, caemc),
+    post      = year >= 2002,
+    treated_post = treated * post
+  )
+
+did_simple <- lm(XEU ~ treated + post + treated_post, data = dot_balanced_reg)
+summary(did_simple)
+
+#Note on DID : Do not control for country specific or time-invariant trends and the R²=0.27 is low (lots of varaition not explained by the model) 
+
+#Two-way fixed effects : 
+
+twfe <- feols(XEU ~ treated_post | iso3c + year, 
+              data = dot_balanced_reg, 
+              cluster = ~iso3c)
+summary(twfe)
+
+#After checking for pre trends, the parallel pre trend assumption is not veriefied, especially for 1980-1990 period. 
+#Dropping these 10 years of obsevations and running TWFE : 
+
+# Restrict to post-1990
+twfe_1990 <- feols(XEU ~ i(event_time, treated, ref = -1) | iso3c + year,
+                         data = dot_balanced_reg |>
+                           filter(year >= 1990,
+                           ),
+                         cluster = ~iso3c)
+
+iplot(twfe_1990,
+      main = "Event study: 1990-2019",
+      xlab = "Years relative to treatment",
+      ylab = "Estimated effect (pp)")
+
+
+#TWFE results : 
+twfe_final <- feols(XEU ~ treated_post | iso3c + year,
+                    data = dot_balanced_reg |> filter(year >= 1990),
+                    cluster = ~iso3c)
+
+summary(twfe_final)
+
+#testing the 2 groups separately: 
+
+dot_balanced_reg <- dot_balanced_reg |>
+  mutate(
+    waemu_post = iso3c %in% waemu & year >= 2002,
+    caemc_post = iso3c %in% caemc & year >= 2002
+  )
+
+twfe_split_1990 <- feols(XEU ~ waemu_post + caemc_post | iso3c + year,
+                         data = dot_balanced_reg |> filter(year >= 1990),
+                         cluster = ~iso3c)
+
+summary(twfe_split_1990)
