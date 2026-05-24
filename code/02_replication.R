@@ -40,8 +40,11 @@ safe_mean <- function(x) {
 # Load processed data
 df <- readRDS("data/processed/processed_panel_imputed.rds")
 
-## SELECTED GDP VARIABLE
-gdp_var <- "pwt_rgdpo_pc"
+## SELECTED GDP VARIABLE: Uncomment one
+# gdp_var <- "pwt_rgdpo_pc"
+gdp_var <- "wdi_gdp_pc_constant"
+# gdp_var <- "wdi_gdp_pc_current"
+# gdp_var <- "pwt_wdi_gdp_constant_pc"
 # gdp_var_label <- "PWT output-side real GDP per capita, chained PPPs"
 
 df <- df |>
@@ -88,29 +91,44 @@ donor_countries <- c(
   "LCA", # St. Lucia
   "SYC",  # Seychelles
 
-
   # Testing with more donor countries
-  # "AGO", "Angola",
-  "BDI", "Burundi",
-  "COD", "Congo, Dem. Rep.",
-  "ETH", "Ethiopia",
-  # "GMB", "Gambia, The",
-  # "GHA", "Ghana",
-  # "GIN", "Guinea",
-  # "KEN", "Kenya",
-  "MDG", "Madagascar",
-  # "MWI", "Malawi",
-  "NGA", "Nigeria",
-  # "STP", "Sao Tome and Principe",
-  # "SLE", "Sierra Leone",
-  "SDN", "Sudan",
-  # "TZA", "Tanzania",
-  "UGA", "Uganda",
-  "ZMB", "Zambia",
-  "ZWE", "Zimbabwe"
+  "BRN", #"Brunei",
+  "MAC", #"Macao",
+  # "NPL", #"Nepal",
+  "LBY", #"Libya",
+  "TKM", #"Turkmenistan",
+  "ERI", #"Eritrea",
+  "GUY", #"Guyana"
+
+  "IRQ", # Iraq
+  "QAT", # Qatar
+  "DJI", # Djibouti
+  "SLV"  # El Salvador
 )
 
 scm_countries <- c(treated_countries, donor_countries)
+
+# =====================================================
+# Check whether selected countries exist in processed data
+# =====================================================
+
+missing_from_data <- setdiff(scm_countries, unique(df$iso3c))
+
+if (length(missing_from_data) > 0) {
+  warning(
+    "These selected country codes are not present in df$iso3c: ",
+    paste(missing_from_data, collapse = ", ")
+  )
+}
+
+missing_from_country_names <- setdiff(scm_countries, country_names$iso3c)
+
+if (length(missing_from_country_names) > 0) {
+  warning(
+    "These selected country codes are not present in country_names: ",
+    paste(missing_from_country_names, collapse = ", ")
+  )
+}
 
 
 
@@ -171,7 +189,22 @@ country_names <- tibble::tribble(
   "TZA", "Tanzania",
   "UGA", "Uganda",
   "ZMB", "Zambia",
-  "ZWE", "Zimbabwe"
+  "ZWE", "Zimbabwe",
+
+  "BRN", "Brunei",
+  "MAC", "Macao",
+  "NPL", "Nepal",
+  "LBY", "Libya",
+  "TKM", "Turkmenistan",
+  "ERI", "Eritrea",
+  "GUY", "Guyana",
+
+  "IRQ", "Iraq",
+  "QAT", "Qatar",
+  "DJI", "Djibouti",
+  "SLV", "El Salvador"
+
+  
 )
 
 # Function to get country name form list
@@ -198,8 +231,14 @@ scm_df <- df |>
   select(
     iso3c, country, year,
     gdp_selected,
-    agriculture, industry, govt_share, invest_share,
-    oda_share, fdi, labour, polity2
+    agriculture,
+    # industry,
+    govt_share,
+    invest_share,
+    oda_share, 
+    fdi, 
+    labour, 
+    polity2
   ) |>
   distinct(iso3c, year, .keep_all = TRUE)
 
@@ -249,7 +288,7 @@ bad_controls <- scm_df |>
   group_by(unit_id, iso3c, unit_name) |>
   summarise(
     bad_agriculture = all(is.na(agriculture)),
-    bad_industry    = all(is.na(industry)),
+    # bad_industry    = all(is.na(industry)),
     bad_govt        = all(is.na(govt_share)),
     bad_invest      = all(is.na(invest_share)),
     bad_oda         = all(is.na(oda_share)),
@@ -259,7 +298,7 @@ bad_controls <- scm_df |>
     .groups = "drop"
   ) |>
   filter(
-    bad_agriculture | bad_industry | bad_govt | bad_invest |
+    bad_agriculture  | bad_govt | bad_invest |
       bad_oda | bad_fdi | bad_labour | bad_polity
   ) |>
   pull(unit_id)
@@ -274,7 +313,7 @@ bad_controls <- scm_df |>
 # country_name_treated <- get_country_name(treated_iso3c)
 
 
-treated_id <- country_ids$unit_id[country_ids$iso3c == treated_iso3c]
+# treated_id <- country_ids$unit_id[country_ids$iso3c == treated_iso3c]
 
 control_ids <- country_ids$unit_id[
   country_ids$iso3c %in% donor_countries &
@@ -295,7 +334,7 @@ scm_df <- scm_df |>
     country,
     gdp_selected,
     agriculture,
-    industry,
+    # industry,
     govt_share,
     invest_share,
     oda_share,
@@ -324,7 +363,7 @@ country_ids |>
 
 # Variables and years used as special predictors
 special_var <- "gdp_selected"
-special_years <- c(1980, 1985, 1990, 1995, 2001)
+special_years <- c(1980, 1990, 1995, 2001)
 
 
 # =====================================================
@@ -355,7 +394,7 @@ run_scm_country <- function(treated_iso3c) {
 
     predictors = c(
       "agriculture",
-      "industry",
+      # "industry",
       "govt_share",
       "invest_share",
       "oda_share",
@@ -382,7 +421,7 @@ run_scm_country <- function(treated_iso3c) {
 
     special.predictors = list(
       list("gdp_selected", 1980, c("mean")),
-      list("gdp_selected", 1985, c("mean")),
+      # list("gdp_selected", 1985, c("mean")),
       list("gdp_selected", 1990, c("mean")),
       list("gdp_selected", 1995, c("mean")),
       list("gdp_selected", 2001, c("mean"))
@@ -405,12 +444,12 @@ run_scm_country <- function(treated_iso3c) {
     synth.res = synth.out
   )
 
-  # Save path plot
-  png(
-    paste0("output/figures/scm_path_", treated_iso3c, ".png"),
-    width = 900,
-    height = 600
-  )
+  # # Save path plot
+  # png(
+  #   paste0("output/figures/scm_path_", treated_iso3c, ".png"),
+  #   width = 900,
+  #   height = 600
+  # )
 
   path.plot(
     synth.res = synth.out,
@@ -427,12 +466,12 @@ run_scm_country <- function(treated_iso3c) {
 
   dev.off()
 
-  # Save gap plot
-  png(
-    paste0("output/figures/scm_gap_", treated_iso3c, ".png"),
-    width = 900,
-    height = 600
-  )
+  # # Save gap plot
+  # png(
+  #   paste0("output/figures/scm_gap_", treated_iso3c, ".png"),
+  #   width = 900,
+  #   height = 600
+  # )
 
   gaps.plot(
     synth.res = synth.out,
@@ -515,10 +554,9 @@ for (country_code in treated_countries) {
 treated_labels <- country_names |>
   filter(iso3c %in% treated_countries) |>
   mutate(
-    unit.names = iso3c,
-    donor_label = country
+    treated_label = country
   ) |>
-  select(unit.names, donor_label)
+  select(iso3c, treated_label)
 
 # Optional: donor labels for rows
 donor_labels <- country_names |>
@@ -752,7 +790,7 @@ if (length(scm_success) == 0) {
 scm_export_vars <- c(
   "gdp_selected",
   "agriculture",
-  "industry",
+  # "industry",
   "govt_share",
   "invest_share",
   "oda_share",
@@ -966,7 +1004,7 @@ if (skip_placebo_analysis) {
 
 scm_predictors <- c(
   "agriculture",
-  "industry",
+  # "industry",
   "govt_share",
   "invest_share",
   "oda_share",

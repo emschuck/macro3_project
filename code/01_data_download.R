@@ -115,31 +115,47 @@ donor_countries <- c(
   "MUS", # Mauritius
   "MAR", # Morocco
   "NAM", # Namibia
-  "OMN", # Oman
+  "OMN", # Oman*
   "PAN", # Panama
   "KNA", # St. Kitts and Nevis
   "LCA", # St. Lucia
   "SYC", # Seychelles
 
+  "AGO", #"Angola",
+  "BDI", #"Burundi",
+  "COD", #"Congo, Dem. Rep.",
+  "ETH", #"Ethiopia",
+  "GMB", #"Gambia, The",
+  "GHA", #"Ghana",
+  "GIN", #"Guinea",
+  "KEN", #"Kenya",
+  "MDG", #"Madagascar",
+  "MWI", #"Malawi",
+  "NGA", #"Nigeria",
+  "STP", #"Sao Tome and Principe",
+  "SLE", #"Sierra Leone",
+  "SDN", #"Sudan",
+  "TZA", #"Tanzania",
+  "UGA", #"Uganda",
+  "ZMB", #"Zambia",
+  "ZWE", #"Zimbabwe",
 
-  "AGO", "Angola",
-  "BDI", "Burundi",
-  "COD", "Congo, Dem. Rep.",
-  "ETH", "Ethiopia",
-  "GMB", "Gambia, The",
-  "GHA", "Ghana",
-  "GIN", "Guinea",
-  "KEN", "Kenya",
-  "MDG", "Madagascar",
-  "MWI", "Malawi",
-  "NGA", "Nigeria",
-  "STP", "Sao Tome and Principe",
-  "SLE", "Sierra Leone",
-  "SDN", "Sudan",
-  "TZA", "Tanzania",
-  "UGA", "Uganda",
-  "ZMB", "Zambia",
-  "ZWE", "Zimbabwe"
+  "BRN", #"Brunei",*
+  "MAC", #"Macao",*
+  "NPL", #"Nepal",
+  "LBY", #"Libya",*
+  "TKM", #"Turkmenistan",
+  "ERI", #"Eritrea",
+  "GUY", #"Guyana",
+  
+  "IRQ", # Iraq
+  "QAT", # Qatar *
+  "DJI", # Djibout
+  "JOR", # Jordan
+  "BZD",  # Belize
+  "SLV"  # El Salvador
+
+
 )
 
 # Table 2 non-CFA comparison countries
@@ -161,7 +177,7 @@ non_cfa_comparison_countries <- c(
   "TZA", # Tanzania
   "UGA", # Uganda
   "ZMB", # Zambia
-  "ZWE" # Zimbabwe
+  "ZWE" #"Zimbabwe",
 )
 
 # Full country list for data download.
@@ -228,7 +244,20 @@ country_names <- tibble::tribble(
   "TZA", "Tanzania",
   "UGA", "Uganda",
   "ZMB", "Zambia",
-  "ZWE", "Zimbabwe"
+  "ZWE", "Zimbabwe",
+  "BRN", "Brunei",
+  "MAC", "Macao",
+  "NPL", "Nepal",
+  "LBY", "Libya",
+  "TKM", "Turkmenistan",
+  "ERI", "Eritrea",
+  "GUY", "Guyana",
+  "JOD", "Jordan",
+  "IRQ", "Iraq",
+  "QAT", "Qatar",
+  "DJI", "Djibouti",
+  "SLV", "El Salvador",
+  "BZD",  "Belize"
 )
 
 
@@ -280,7 +309,8 @@ imputation_plan <- tibble::tribble(
   "ALL", "wdi_gdp_pc_constant", "nearest_fill", 
   "ALL", "wdi_gdp_pc_current", "nearest_fill",
   "ALL", "pwt_rgdpo_pc", "nearest_fill", 
-  "ALL", "pwt_cgdpo_pc_current", "nearest_fill"
+  "ALL", "pwt_cgdpo_pc_current", "nearest_fill",
+  "ALL", "pwt_wdi_gdp_constant_pc", "nearest_fill"
 
 )
 

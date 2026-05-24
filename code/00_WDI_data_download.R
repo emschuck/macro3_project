@@ -67,7 +67,20 @@ countries <- c(
     "TZA", # Tanzania
     "UGA", # Uganda
     "ZMB", # Zambia
-    "ZWE" # Zimbabwe
+    "ZWE", # Zimbabwe
+    "BRN", #"Brunei",
+    "MAC", #"Macao",
+    "NPL", #"Nepal",
+    "LBY", #"Libya",
+    "TKM", #"Turkmenistan",
+    "ERI", #"Eritrea",
+    "GUY", #"Guyana",
+    "IRQ", # Iraq
+    "QAT", # Qatar
+    "DJI", # Djibouti
+    "SLV",  # El Salvador
+    "JOR", # Jordan
+    "BZD"  # Belize
 )
 
 indicators <- c(
@@ -139,3 +152,5 @@ wdi <- WDI(
   distinct(iso3c, year, .keep_all = TRUE)
 
 saveRDS(wdi, "data/raw/wdi.rds")
+
+print("Complete")
