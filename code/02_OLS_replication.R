@@ -1,32 +1,65 @@
-#Library
+# OLS regression table for CFA franc-zone countries
+
+# =====================================================
+# Load packages
+# =====================================================
+
 library(dplyr)
 library(stargazer)
 library(tidyr)
 library(stringr)
 library(lmtest)
 library(huxtable)
+library(knitr)
 
-#Load the data
-df <- readRDS("data/processed/processed_panel_imputed.rds")
+# =====================================================
+# Load shared constants
+# =====================================================
 
-# Country lists for treated and control
-treated_countries <- c(
-  "BEN", # Benin
-  "BFA", # Burkina Faso
-  "CIV", # Côte d'Ivoire
-  "MLI", # Mali
-  "NER", # Niger
-  "SEN", # Senegal
-  "TGO", # Togo
-  "CMR", # Cameroon
-  "CAF", # Central African Republic
-  "TCD", # Chad
-  "COG", # Republic of Congo
-  "GAB", # Gabon
-  "GNQ"  # Equatorial Guinea
+constants_file <- "code/00_constants.R"
+
+if (!file.exists(constants_file)) {
+  stop("Constants file not found: ", constants_file)
+}
+
+source(constants_file)
+
+required_constants <- c(
+  "treated_countries",
+  "country_names"
 )
 
-#keep only the treated countries 
+missing_constants <- required_constants[
+  !vapply(required_constants, exists, logical(1))
+]
+
+if (length(missing_constants) > 0) {
+  stop(
+    "These required objects are missing from the constants file: ",
+    paste(missing_constants, collapse = ", ")
+  )
+}
+
+
+# =====================================================
+# Load data
+# =====================================================
+
+df <- readRDS("data/processed/processed_panel_imputed.rds")
+
+if (!(gdp_var %in% names(df))) {
+  stop("The selected GDP variable is not present in df: ", gdp_var)
+}
+
+df <- df |>
+  mutate(
+    gdp_selected = .data[[gdp_var]]
+  )
+
+# =====================================================
+# Prepare OLS dataset
+# =====================================================
+
 ols_df <- df |>
   filter(
     iso3c %in% treated_countries,
@@ -34,162 +67,79 @@ ols_df <- df |>
     year <= 2019
   ) |>
   select(
-    iso3c, country, year,
-    gdp_pc_current,
-    agriculture, industry, govt_share, invest_share,
-    oda_share, fdi, labour, polity2
+    iso3c,
+    country,
+    year,
+    gdp_selected,
+    agriculture,
+    # industry,
+    govt_share,
+    invest_share,
+    oda_share,
+    fdi,
+    labour,
+    polity2
   ) |>
   distinct(iso3c, year, .keep_all = TRUE)
 
+# =====================================================
+# Estimate one OLS regression for each treated country
+# =====================================================
 
-#OLS Regression for each country
+ols_formula <- gdp_selected ~
+  agriculture  + govt_share +
+  invest_share + oda_share + fdi + labour
 
-#Benin - BEN
-df_BEN <- ols_df %>%
-  filter(iso3c=="BEN")
+ols_models <- lapply(treated_countries, function(country_code) {
+  country_data <- ols_df |>
+    filter(iso3c == country_code)
 
-ols_BEN <- lm(gdp_pc_current ~ 
-               agriculture + industry + govt_share +
-               invest_share + oda_share + fdi + labour, 
-             data = df_BEN)
+  lm(ols_formula, data = country_data)
+})
 
-#Burkina Faso - BFA
-df_BFA <- ols_df %>%
-  filter(iso3c=="BFA")
+model_names <- vapply(
+  treated_countries,
+  get_country_name,
+  character(1)
+)
 
-ols_BFA <- lm(gdp_pc_current ~ 
-               agriculture + industry + govt_share +
-               invest_share + oda_share + fdi + labour, 
-             data = df_BFA)
+names(ols_models) <- model_names
 
-#Ivory Coast - CIV
-df_CIV <- ols_df %>%
-  filter(iso3c=="CIV")
+# =====================================================
+# Summarise the results in one table
+# =====================================================
 
-ols_CIV <- lm(gdp_pc_current ~ 
-                agriculture + industry + govt_share +
-                invest_share + oda_share + fdi + labour, 
-              data = df_CIV)
+table_ols <- do.call(
+  huxtable::huxreg,
+  c(
+    unname(ols_models),
+    list(
+      error_format = "({p.value})",
+      error_pos = "below",
+      statistics = c(
+        N = "nobs",
+        "R2 adj." = "adj.r.squared"
+      )
+    )
+  )
+)
 
-#Mali - MLI
-df_MLI <- ols_df %>%
-  filter(iso3c=="MLI")
-
-ols_MLI <- lm(gdp_pc_current ~ 
-                agriculture + industry + govt_share +
-                invest_share + oda_share + fdi + labour, 
-              data = df_MLI)
-
-#Niger - NER
-df_NER <- ols_df %>%
-  filter(iso3c=="NER")
-
-ols_NER <- lm(gdp_pc_current ~ 
-                agriculture + industry + govt_share +
-                invest_share + oda_share + fdi + labour, 
-              data = df_NER)
-
-#Senegal - SEN
-df_SEN <- ols_df %>%
-  filter(iso3c=="SEN")
-
-ols_SEN <- lm(gdp_pc_current ~ 
-                agriculture + industry + govt_share +
-                invest_share + oda_share + fdi + labour, 
-              data = df_SEN)
-
-#Togo - TGO
-df_TGO <- ols_df %>%
-  filter(iso3c=="TGO")
-
-ols_TGO <- lm(gdp_pc_current ~ 
-                agriculture + industry + govt_share +
-                invest_share + oda_share + fdi + labour, 
-              data = df_TGO)
-
-#Cameroon - CMR
-df_CMR <- ols_df %>%
-  filter(iso3c=="CMR")
-
-ols_CMR <- lm(gdp_pc_current ~ 
-                agriculture + industry + govt_share +
-                invest_share + oda_share + fdi + labour, 
-              data = df_CMR)
-
-#Central African Republic
-df_CAF <- ols_df %>%
-  filter(iso3c=="CAF")
-
-ols_CAF <- lm(gdp_pc_current ~ 
-                agriculture + industry + govt_share +
-                invest_share + oda_share + fdi + labour, 
-              data = df_CAF)
-
-#Chad - TCD
-df_TCD <- ols_df %>%
-  filter(iso3c=="TCD")
-
-ols_TCD <- lm(gdp_pc_current ~ 
-                agriculture + industry + govt_share +
-                invest_share + oda_share + fdi + labour, 
-              data = df_TCD)
-
-#Republic of Congo - COG
-df_COG <- ols_df %>%
-  filter(iso3c=="COG")
-
-ols_COG <- lm(gdp_pc_current ~ 
-                agriculture + industry + govt_share +
-                invest_share + oda_share + fdi + labour, 
-              data = df_COG)
-
-#Gabon - GAB
-df_GAB <- ols_df %>%
-  filter(iso3c=="GAB")
-
-ols_GAB <- lm(gdp_pc_current ~ 
-                agriculture + industry + govt_share +
-                invest_share + oda_share + fdi + labour, 
-              data = df_GAB)
-
-#Equatorial Guinea - GNQ
-df_GNQ <- ols_df %>%
-  filter(iso3c=="GNQ")
-
-ols_GNQ <- lm(gdp_pc_current ~ 
-                agriculture + industry + govt_share +
-                invest_share + oda_share + fdi + labour, 
-              data = df_GNQ)
-
-#Summarize the results in one table
-table_ols <- huxreg(ols_BEN, ols_BFA, ols_CAF, ols_CIV, ols_CMR, ols_COG, ols_GAB, ols_GNQ, ols_MLI, ols_NER, ols_SEN,        error_format = "({p.value})",
-       error_pos = "below",
-       statistics = c(N = "nobs", "R2 adj." = "adj.r.squared"))
-
-
-
-#Rename the columns' names
-colnames(table_ols)[colnames(table_ols) == 'model1'] <- 'Benin'
-colnames(table_ols)[colnames(table_ols) == 'model2'] <- 'Burkina Faso'
-colnames(table_ols)[colnames(table_ols) == 'model3'] <- 'Central African Republic'
-colnames(table_ols)[colnames(table_ols) == 'model4'] <- 'Ivory Coast'
-colnames(table_ols)[colnames(table_ols) == 'model5'] <- 'Cameroon'
-colnames(table_ols)[colnames(table_ols) == 'model6'] <- 'Republic of Congo'
-colnames(table_ols)[colnames(table_ols) == 'model7'] <- 'Gabon'
-colnames(table_ols)[colnames(table_ols) == 'model8'] <- 'Equatorial Guinea'
-colnames(table_ols)[colnames(table_ols) == 'model9'] <- 'Mali'
-colnames(table_ols)[colnames(table_ols) == 'model10'] <- 'Niger'
-colnames(table_ols)[colnames(table_ols) == 'model11'] <- 'Senegal'
+# Rename model columns after creating the huxtable.
+# The first column contains coefficient/statistic names, 
+# so only rename model columns.
+colnames(table_ols)[2:ncol(table_ols)] <- model_names
 
 View(table_ols)
 
-#Save the output
+# =====================================================
+# Save the output
+# =====================================================
+
+dir.create("output/tables", recursive = TRUE, showWarnings = FALSE)
+
 cat(
-  kable(
-    table_ols,
-    format = "latex",
-    booktabs = TRUE,
-    caption = "OLS estimates of real GDP per capita parameter of CFA Franc-zone countries"
-  ),
+  huxtable::to_latex(table_ols),
   file = "output/tables/table_ols_regression_gdp.tex"
 )
+
+print("Complete")

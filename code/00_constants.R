@@ -3,10 +3,11 @@
 # =====================================================
 
 # GDP outcome used across scripts
-gdp_var <- "pwt_rgdpo_pc"
+gdp_var <- "wdi_gdp_pc_current"
 gdp_selected_var <- "gdp_selected"
-gdp_var_label <- "PWT output-side real GDP per capita"
-gdp_var_file_stub <- gsub("[^A-Za-z0-9]+", "_", gdp_var)
+gdp_var_label <- "WDI GDP per capita (current USD)"
+
+# gdp_var_file_stub <- gsub("[^A-Za-z0-9]+", "_", gdp_var)
 
 # Main sample periods
 pre_period <- 1980:2001
