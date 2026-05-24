@@ -300,13 +300,16 @@ imputation_plan <- tibble::tribble(
   "LAO", "wdi_gdp_pc_constant", "linear", # pre-1980
 
 
-  "ALL", "industry", "nearest_fill", # post 2001
-  "ALL", "oda_share", "nearest_fill", # post 2001
-  "ALL", "fdi", "nearest_fill", # post 2001
-  "ALL", "labour", "nearest_fill", # post 2001
+  "ALL", "agriculture", "nearest_fill",
+  "ALL", "industry", "nearest_fill",
+  "ALL", "oda_share", "nearest_fill",
+  "ALL", "fdi", "nearest_fill",
+  "ALL", "labour", "nearest_fill",
+  "ALL", "govt_share", "nearest_fill",
+  "ALL", "invest_share", "nearest_fill",
 
 
-  "ALL", "wdi_gdp_pc_constant", "nearest_fill", 
+  "ALL", "wdi_gdp_pc_constant", "nearest_fill",
   "ALL", "wdi_gdp_pc_current", "nearest_fill",
   "ALL", "pwt_rgdpo_pc", "nearest_fill", 
   "ALL", "pwt_cgdpo_pc_current", "nearest_fill",

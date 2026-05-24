@@ -15,7 +15,7 @@
 # ))
 
 # Bool var to skip placebo analysis during testing
-skip_placebo_analysis <- TRUE
+skip_placebo_analysis <- FALSE
 
 library(pwt10)
 library(WDI)
@@ -42,8 +42,8 @@ df <- readRDS("data/processed/processed_panel_imputed.rds")
 
 ## SELECTED GDP VARIABLE: Uncomment one
 # gdp_var <- "pwt_rgdpo_pc"
-gdp_var <- "wdi_gdp_pc_constant"
-# gdp_var <- "wdi_gdp_pc_current"
+# gdp_var <- "wdi_gdp_pc_constant"
+gdp_var <- "wdi_gdp_pc_current"
 # gdp_var <- "pwt_wdi_gdp_constant_pc"
 # gdp_var_label <- "PWT output-side real GDP per capita, chained PPPs"
 
@@ -85,25 +85,25 @@ donor_countries <- c(
   "MUS", # Mauritius
   "MAR", # Morocco
   "NAM", # Namibia
-  "OMN", # Oman
-  "PAN", # Panama
+  # "OMN", # Oman
+  # "PAN", # Panama
   "KNA", # St. Kitts and Nevis
   "LCA", # St. Lucia
   "SYC",  # Seychelles
 
   # Testing with more donor countries
-  "BRN", #"Brunei",
-  "MAC", #"Macao",
+  # "BRN", #"Brunei",
+  # "MAC", #"Macao",
   # "NPL", #"Nepal",
-  "LBY", #"Libya",
+  # "LBY", #"Libya",
   "TKM", #"Turkmenistan",
-  "ERI", #"Eritrea",
+  # "ERI", #"Eritrea",
   "GUY", #"Guyana"
 
-  "IRQ", # Iraq
-  "QAT", # Qatar
-  "DJI", # Djibouti
-  "SLV"  # El Salvador
+  "IRQ" # Iraq
+  # "QAT", # Qatar
+  # "DJI", # Djibouti
+  # "SLV"  # El Salvador
 )
 
 scm_countries <- c(treated_countries, donor_countries)
