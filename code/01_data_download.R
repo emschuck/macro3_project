@@ -4,24 +4,25 @@
 # Authors       : Elizabeth Schuck, Callista Lodzinski, Mathilde Muller
 # Date          : April 2026
 
-# This script carries out the data acquisition, cleaning and preprocessing
-#   1. Loading packages, verifying file structure
-#   2. Read and inspect data from project files (Polity, ...),
-#            WDI API, Penn World Tables
-#   3. Data cleaning
-#   4. Preliminary data exploration
-#   6.
-
+# This script carries out the data acquisition, cleaning, preprocessing, and
+# descriptive-output construction for the CFA franc replication project.
+# Main steps:
+#   1. Load packages and shared constants
+#   2. Load WDI, Penn World Tables, Polity, and FAOSTAT data
+#   3. Merge and clean the country-year panel
+#   4. Apply documented imputations
+#   5. Save imputed and unimputed processed panels
+#   6. Produce inflation and GDP-growth descriptive outputs
 
 #### ========================================================================###
 #### ======================== 1. PROJECT SETUP ==============================###
 #### ========================================================================###
 
-#  Setup code copied from tutorial 1 R file (Author: Juan Pablo Ugarte Checura)
+# Setup code copied from tutorial 1 R file (Author: Juan Pablo Ugarte Checura)
 
 # install.packages(c(
 #   "pwt10",        # Penn World Tables
-#   "WDI",          # World Bank Development Indicators (for income groups)
+#   "WDI",          # World Bank Development Indicators
 #   "plm",          # Panel data models
 #   "ggplot2",      # Plotting
 #   "dplyr",        # Data manipulation
@@ -29,9 +30,7 @@
 #   "zoo"           # Interpolation used by fill_linear()
 # ))
 
-# Load the packages required for data download, cleaning, analysis, and output.
-# Note: tidyverse already includes dplyr, ggplot2, tidyr, readr, etc., but the
-# individual library calls are left explicit so readers can see core dependencies.
+# Load packages required for data download, cleaning, analysis, and output.
 library(pwt10)
 library(WDI)
 library(plm)
@@ -40,235 +39,44 @@ library(dplyr)
 library(stargazer)
 library(tidyr)
 library(knitr)
-
 library(tidyverse)
 library(readxl)
 library(countrycode)
-library(zoo) # Used for linear interpolation/extrapolation in fill_linear().
+library(zoo)
+
+# Load shared project constants.
+# This file should define country lists, country labels, donor-pool choices,
+# GDP variable settings, and the imputation plan.
+constants_file <- "code/00_constants.R"
+
+if (!file.exists(constants_file)) {
+  stop("Constants file not found: ", constants_file)
+}
+
+source(constants_file)
 
 # Create output directories before saving tables, figures, and processed data.
-# recursive = TRUE allows nested folders to be created in one call.
-# showWarnings = FALSE avoids warnings if the folders already exist.
-# Create output directories
 dir.create("./output/tables", recursive = TRUE, showWarnings = FALSE)
 dir.create("./output/figures", recursive = TRUE, showWarnings = FALSE)
 dir.create("data/processed", recursive = TRUE, showWarnings = FALSE)
 
-## Safe mean function with NAs
-# mean(x, na.rm = TRUE) returns NaN when all values are missing.
-# This helper returns a clean NA_real_ instead, which is safer for tables.
-safe_mean <- function(x) {
-  if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE)
+# Safe mean function with NAs.
+# mean(x, na.rm = TRUE) returns NaN when all values are missing. This helper
+# returns a clean NA_real_ instead, which is safer for tables.
+if (!exists("safe_mean")) {
+  safe_mean <- function(x) {
+    if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE)
+  }
 }
-
-#### ======================================================================###
-#### ======================= 2. LOAD DATA =================================###
-#### ======================================================================###
-
-# WAEMU countries used in the main synthetic-control analysis
-waemu <- c(
-  "BEN", # Benin
-  "BFA", # Burkina Faso
-  "CIV", # Côte d'Ivoire
-  "MLI", # Mali
-  "NER", # Niger
-  "SEN", # Senegal
-  "TGO" # Togo
-)
-
-# Guinea-Bissau not in main analysis, but in table 1
-waemu_table1 <- c(
-  "BEN", # Benin
-  "BFA", # Burkina Faso
-  "CIV", # Côte d'Ivoire
-  "GNB", # Guinea-Bissau
-  "MLI", # Mali
-  "NER", # Niger
-  "SEN", # Senegal
-  "TGO" # Togo
-)
-
-# CAEMC countries
-caemc <- c(
-  "CMR", # Cameroon
-  "CAF", # Central African Republic
-  "TCD", # Chad
-  "COG", # Republic of Congo
-  "GNQ", # Equatorial Guinea
-  "GAB" # Gabon
-)
-
-# Table 3 donor/control countries
-donor_countries <- c(
-  "BGD", # Bangladesh
-  "BRB", # Barbados
-  "BTN", # Bhutan
-  "BOL", # Bolivia
-  "BWA", # Botswana
-  "CPV", # Cabo Verde
-  "DMA", # Dominica
-  "ECU", # Ecuador
-  "SWZ", # Eswatini
-  "GRD", # Grenada
-  "LAO", # Lao PDR
-  "LSO", # Lesotho
-  "MUS", # Mauritius
-  "MAR", # Morocco
-  "NAM", # Namibia
-  "OMN", # Oman*
-  "PAN", # Panama
-  "KNA", # St. Kitts and Nevis
-  "LCA", # St. Lucia
-  "SYC", # Seychelles
-
-  "AGO", #"Angola",
-  "BDI", #"Burundi",
-  "COD", #"Congo, Dem. Rep.",
-  "ETH", #"Ethiopia",
-  "GMB", #"Gambia, The",
-  "GHA", #"Ghana",
-  "GIN", #"Guinea",
-  "KEN", #"Kenya",
-  "MDG", #"Madagascar",
-  "MWI", #"Malawi",
-  "NGA", #"Nigeria",
-  "STP", #"Sao Tome and Principe",
-  "SLE", #"Sierra Leone",
-  "SDN", #"Sudan",
-  "TZA", #"Tanzania",
-  "UGA", #"Uganda",
-  "ZMB", #"Zambia",
-  "ZWE", #"Zimbabwe",
-
-  "BRN", #"Brunei",*
-  "MAC", #"Macao",*
-  "NPL", #"Nepal",
-  "LBY", #"Libya",*
-  "TKM", #"Turkmenistan",
-  "ERI", #"Eritrea",
-  "GUY", #"Guyana",
-  
-  "IRQ", # Iraq
-  "QAT", # Qatar *
-  "DJI", # Djibout
-  "JOR", # Jordan
-  "BZD",  # Belize
-  "SLV"  # El Salvador
-
-
-)
-
-# Table 2 non-CFA comparison countries
-non_cfa_comparison_countries <- c(
-  "AGO", # Angola
-  "BDI", # Burundi
-  "COD", # Congo, Dem. Rep.
-  "ETH", # Ethiopia
-  "GMB", # Gambia, The
-  "GHA", # Ghana
-  "GIN", # Guinea
-  "KEN", # Kenya
-  "MDG", # Madagascar
-  "MWI", # Malawi
-  "NGA", # Nigeria
-  "STP", # Sao Tome and Principe
-  "SLE", # Sierra Leone
-  "SDN", # Sudan
-  "TZA", # Tanzania
-  "UGA", # Uganda
-  "ZMB", # Zambia
-  "ZWE" #"Zimbabwe",
-)
-
-# Full country list for data download.
-# unique() removes duplicates across WAEMU, CAEMC, donor, and comparison groups.
-countries <- unique(c(
-  waemu_table1,
-  caemc,
-  donor_countries,
-  non_cfa_comparison_countries
-))
-
-# Override country names to avoid inconsistent labels across WDI/PWT/countrycode.
-# This table is also used later for human-readable tables and plots.
-country_names <- tibble::tribble(
-  ~iso3c, ~country,
-  "BEN", "Benin",
-  "BFA", "Burkina Faso",
-  "CIV", "Côte d'Ivoire",
-  "GNB", "Guinea-Bissau",
-  "MLI", "Mali",
-  "NER", "Niger",
-  "SEN", "Senegal",
-  "TGO", "Togo",
-  "CMR", "Cameroon",
-  "CAF", "Central African Republic",
-  "TCD", "Chad",
-  "COG", "Republic of Congo",
-  "GNQ", "Equatorial Guinea",
-  "GAB", "Gabon",
-  "BGD", "Bangladesh",
-  "BRB", "Barbados",
-  "BTN", "Bhutan",
-  "BOL", "Bolivia",
-  "BWA", "Botswana",
-  "CPV", "Cabo Verde",
-  "DMA", "Dominica",
-  "ECU", "Ecuador",
-  "SWZ", "Eswatini",
-  "GRD", "Grenada",
-  "LAO", "Lao PDR",
-  "LSO", "Lesotho",
-  "MUS", "Mauritius",
-  "MAR", "Morocco",
-  "NAM", "Namibia",
-  "OMN", "Oman",
-  "PAN", "Panama",
-  "KNA", "St. Kitts and Nevis",
-  "LCA", "St. Lucia",
-  "SYC", "Seychelles",
-  "AGO", "Angola",
-  "BDI", "Burundi",
-  "COD", "Congo, Dem. Rep.",
-  "ETH", "Ethiopia",
-  "GMB", "Gambia, The",
-  "GHA", "Ghana",
-  "GIN", "Guinea",
-  "KEN", "Kenya",
-  "MDG", "Madagascar",
-  "MWI", "Malawi",
-  "NGA", "Nigeria",
-  "STP", "Sao Tome and Principe",
-  "SLE", "Sierra Leone",
-  "SDN", "Sudan",
-  "TZA", "Tanzania",
-  "UGA", "Uganda",
-  "ZMB", "Zambia",
-  "ZWE", "Zimbabwe",
-  "BRN", "Brunei",
-  "MAC", "Macao",
-  "NPL", "Nepal",
-  "LBY", "Libya",
-  "TKM", "Turkmenistan",
-  "ERI", "Eritrea",
-  "GUY", "Guyana",
-  "JOD", "Jordan",
-  "IRQ", "Iraq",
-  "QAT", "Qatar",
-  "DJI", "Djibouti",
-  "SLV", "El Salvador",
-  "BZD",  "Belize"
-)
-
 
 ### IMPUTATION PLAN
 # Each row below specifies one variable-country imputation rule.
 # The code later loops over this table and applies the specified method.
 
 # method options:
-#   "zero"          : replace missing values with 0
-#   "linear"        : linear interpolation + linear extrapolation at endpoints
-#   "nearest_fill"  : fill endpoint/interior gaps using nearest observed value
+#   "zero"         : replace missing values with 0
+#   "linear"       : linear interpolation + linear extrapolation at endpoints
+#   "nearest_fill" : fill endpoint/interior gaps using nearest observed value
 #
 # Use country = "ALL" to apply a rule to all countries.
 
@@ -287,18 +95,17 @@ imputation_plan <- tibble::tribble(
   "SYC", "oda_share", "nearest_fill", # 2018
   "KNA", "oda_share", "nearest_fill", # 2013 onwards
 
-  "GNQ", "fdi", "zero", # 1980 (near zero after)
-  "BTN", "fdi", "zero", # pre 2001 (near zero after)
-  "LAO", "fdi", "zero", # pre-1984 (near zero after)
-  "NAM", "fdi", "zero", # pre 1985 (near zero after)
+  "GNQ", "fdi", "zero", # 1980, near zero after
+  "BTN", "fdi", "zero", # pre-2001, near zero after
+  "LAO", "fdi", "zero", # pre-1984, near zero after
+  "NAM", "fdi", "zero", # pre-1985, near zero after
 
-  "DMA", "labour", "nearest_fill", # Most
-  "GRD", "labour", "nearest_fill", # pre 1988
-  "SYC", "labour", "nearest_fill", # pre 1992
-  "KNA", "labour", "nearest_fill", # post 2001
+  "DMA", "labour", "nearest_fill", # Most years
+  "GRD", "labour", "nearest_fill", # pre-1988
+  "SYC", "labour", "nearest_fill", # pre-1992
+  "KNA", "labour", "nearest_fill", # post-2001
 
   "LAO", "wdi_gdp_pc_constant", "linear", # pre-1980
-
 
   "ALL", "agriculture", "nearest_fill",
   "ALL", "industry", "nearest_fill",
@@ -308,27 +115,76 @@ imputation_plan <- tibble::tribble(
   "ALL", "govt_share", "nearest_fill",
   "ALL", "invest_share", "nearest_fill",
 
-
   "ALL", "wdi_gdp_pc_constant", "nearest_fill",
   "ALL", "wdi_gdp_pc_current", "nearest_fill",
-  "ALL", "pwt_rgdpo_pc", "nearest_fill", 
+  "ALL", "pwt_rgdpo_pc", "nearest_fill",
   "ALL", "pwt_cgdpo_pc_current", "nearest_fill",
   "ALL", "pwt_wdi_gdp_constant_pc", "nearest_fill"
-
 )
 
-# -----------------------------
-#  Download Penn World Tables
-# -----------------------------
-# PWT provides internationally comparable real GDP, expenditure-side output,
-# employment, population, and expenditure-share variables.
+#### ======================================================================###
+#### ======================= 2. LOAD SHARED CONSTANTS ======================###
+#### ======================================================================###
 
+# The following objects are expected to come from code/00_constants.R.
+required_constants <- c(
+  "waemu",
+  "waemu_table1",
+  "caemc",
+  "donor_countries",
+  "non_cfa_comparison_countries",
+  "country_names"
+)
 
-# Load the packaged PWT 10.01 dataset into memory.
+missing_constants <- required_constants[!vapply(required_constants, exists, logical(1))]
+
+if (length(missing_constants) > 0) {
+  stop(
+    "The constants file is missing these required objects: ",
+    paste(missing_constants, collapse = ", ")
+  )
+}
+
+# For the data-download script, include all countries that may be needed by the
+# baseline donor pool, updated donor pool, CFA groups, and non-CFA comparison
+# tables. This avoids having to rebuild the panel every time the SCM donor-pool
+# choice is changed in the constants file.
+all_donor_countries_for_download <- unique(c(
+  if (exists("donor_countries_original")) donor_countries_original else character(0),
+  if (exists("donor_countries_updated")) donor_countries_updated else character(0),
+  donor_countries
+))
+
+countries <- unique(c(
+  waemu_table1,
+  caemc,
+  all_donor_countries_for_download,
+  non_cfa_comparison_countries
+))
+
+# Check that every requested country has a label in country_names.
+missing_country_labels <- setdiff(countries, country_names$iso3c)
+
+if (length(missing_country_labels) > 0) {
+  warning(
+    "These countries are in the sample but missing from country_names: ",
+    paste(missing_country_labels, collapse = ", ")
+  )
+}
+
+# Common mistake check: Jordan should use ISO3 code JOR, not JOD.
+if ("JOD" %in% country_names$iso3c && !("JOR" %in% country_names$iso3c)) {
+  warning("country_names contains JOD for Jordan. Use JOR as the ISO3 country code.")
+}
+
+#### ======================================================================###
+#### ======================= 3. PENN WORLD TABLES ==========================###
+#### ======================================================================###
+
+# PWT provides internationally comparable GDP, employment, population, and
+# expenditure-share variables. The pwt10 package stores the dataset locally.
 data("pwt10.01")
 
-# Keep only variables needed for this project, restrict to project countries,
-# and construct PWT-based controls/outcomes.
 pwt <- pwt10.01 |>
   select(
     isocode,
@@ -360,25 +216,29 @@ pwt <- pwt10.01 |>
     invest_share = csh_i
   )
 
+#### ======================================================================###
+#### ======================= 4. WORLD BANK WDI =============================###
+#### ======================================================================###
 
-# -----------------------------
-# Download World Development Indicator data
-# WDI supplies sectoral shares, inflation, ODA, FDI, and GDP variables that are
-# either unavailable in PWT or used as alternative measures.
-# -----------------------------
-
-# Read WDI data from saved file (faster)
-
+# WDI supplies sectoral shares, inflation, ODA, FDI, and alternative GDP
+# variables. This script reads a saved WDI extract for speed and reproducibility.
 wdi <- readRDS("data/raw/wdi.rds")
 
-# -----------------------------
-# Merge WDI and PWT
-# -----------------------------
+# Keep the same country-year scope as the PWT data.
+wdi <- wdi |>
+  filter(
+    iso3c %in% countries,
+    year >= 1980,
+    year <= 2021
+  ) |>
+  distinct(iso3c, year, .keep_all = TRUE)
 
-# Merge datasets and add country names.
-# left_join keeps the WDI panel as the master 
-# dataset and adds matching PWT/country-name rows.
-# Main country-year panel used throughout the script.
+#### ======================================================================###
+#### ======================= 5. MERGE WDI AND PWT ==========================###
+#### ======================================================================###
+
+# Merge WDI, PWT, and canonical country names. WDI is the master panel because it
+# contains most controls and inflation variables used for descriptive tables.
 df <- wdi |>
   left_join(pwt, by = c("iso3c", "year")) |>
   left_join(country_names, by = "iso3c") |>
@@ -386,7 +246,7 @@ df <- wdi |>
     region = case_when(
       iso3c %in% waemu_table1 ~ "WAEMU",
       iso3c %in% caemc ~ "CAEMC",
-      iso3c %in% donor_countries ~ "Donor pool",
+      iso3c %in% all_donor_countries_for_download ~ "Donor pool",
       iso3c %in% non_cfa_comparison_countries ~ "Non-CFA comparison",
       TRUE ~ NA_character_
     ),
@@ -395,18 +255,20 @@ df <- wdi |>
       year >= 2002 & year <= 2021 ~ "post",
       TRUE ~ NA_character_
     ),
-    # ODA as share of GDP annually (both are current US$)
+    # ODA share. This preserves the original script's denominator. If oda_alt is
+    # current US dollars, the preferred denominator is an aggregate current-GDP
+    # variable, not GDP per capita. Check the WDI construction script before
+    # using this variable in final analysis.
     oda_share = 100 * oda_alt / wdi_gdp_pc_current,
     pwt_wdi_gdp_ppp_constant_pc = wdi_gdp_ppp_constant / (pop * 1000000),
-    pwt_wdi_gdp_ppp_current_pc = wdi_gdp_ppp_current / (pop * 1000000), #
-    pwt_wdi_gdp_constant_pc = wdi_gdp_constant / (pop * 1000000), #
-    pwt_wdi_gdp_current_pc = wdi_gdp_current / (pop * 1000000) #
+    pwt_wdi_gdp_ppp_current_pc = wdi_gdp_ppp_current / (pop * 1000000),
+    pwt_wdi_gdp_constant_pc = wdi_gdp_constant / (pop * 1000000),
+    pwt_wdi_gdp_current_pc = wdi_gdp_current / (pop * 1000000)
   )
 
-# Basic checks: verify that the country-region and 
-# pre/post-period counts match expectations.
-table(df$region, useNA = "ifany") # Expect 252 840 756 336
-table(df$period, useNA = "ifany") # Expect 1080 1188
+# Basic checks: verify country-region and pre/post-period counts.
+print(table(df$region, useNA = "ifany"))
+print(table(df$period, useNA = "ifany"))
 
 df |>
   group_by(iso3c, country) |>
@@ -420,21 +282,14 @@ df |>
   arrange(desc(missing_wdi_gdp_pc_constant), desc(missing_labour)) |>
   print(n = Inf)
 
+#### ======================================================================###
+#### ======================= 6. POLITY DATA ================================###
+#### ======================================================================###
 
-# =====================================================
-# Load Polity data (institutions)
-# Polity2 is used as an institutional/political-regime 
-# control in the replication.
-# =====================================================
-
-# Polity score:
-# -10 = full autocracy
-# +10 = full democracy
-
-# Read local Polity data. This file must exist in data/raw/polity5/.
+# Polity2 is used as an institutional/political-regime control.
+# Polity score: -10 = full autocracy; +10 = full democracy.
 polity <- read_excel("./data/raw/polity5/p5v2018.xlsx")
 
-# Standardise country identifiers to ISO3, restrict the sample, and retain polity2 only.
 polity_clean <- polity |>
   select(country, year, polity2) |>
   mutate(
@@ -451,27 +306,19 @@ polity_clean <- polity |>
   ) |>
   select(iso3c, year, polity2)
 
-# =====================================================
-# Merge Polity data with WDI dataset
-# =====================================================
-
 df <- df |>
   left_join(polity_clean, by = c("iso3c", "year"))
 
-# Check polity values
 summary(df$polity2)
 
+#### ======================================================================###
+#### ======================= 7. FAOSTAT AGRICULTURE DATA ===================###
+#### ======================================================================###
 
-# =====================================================
-# FAOSTAT Ag data
-# This is used as a fallback source for agriculture value-
-# added observations missing in WDI.
-# =====================================================
-
-# Read local FAOSTAT extract. This file must exist in data/raw/.
+# FAOSTAT is used as a fallback source for agriculture value-added observations
+# missing in WDI.
 ag_extra <- read_csv("data/raw/FAOSTAT_data_en_5-20-2026.csv")
 
-#Clean up - update column name, check data types, select years
 ag_extra_clean <- ag_extra |>
   transmute(
     iso3c = `Area Code (ISO3)`,
@@ -484,8 +331,7 @@ ag_extra_clean <- ag_extra |>
   ) |>
   distinct(iso3c, year, .keep_all = TRUE)
 
-# Add agriculture data where missing.
-# coalesce() keeps the WDI value when available and uses FAOSTAT as fallback
+# Add agriculture data only where the WDI agriculture value is missing.
 df <- df |>
   left_join(ag_extra_clean, by = c("iso3c", "year")) |>
   mutate(
@@ -495,22 +341,17 @@ df <- df |>
   ) |>
   select(-agriculture_extra)
 
-
-# =====================================================
-# Data imputation functions
-# ====================================================
+#### ======================================================================###
+#### ======================= 8. IMPUTATION FUNCTIONS =======================###
+#### ======================================================================###
 
 # Replace missing values with zero.
 fill_zero <- function(x) {
   ifelse(is.na(x), 0, x)
 }
 
-# Fill missing values by linear inter/extrapolation using the year variable.
-# Requires at least two observed values to define a line.
+# Fill missing values by linear interpolation/extrapolation using year.
 fill_linear <- function(x, year) {
-  # Linear interpolation and extrapolation.
-  # rule = 2 means values outside observed range are extended linearly
-  # from the nearest available segment.
   if (sum(!is.na(x)) < 2) {
     return(x)
   }
@@ -525,29 +366,20 @@ fill_linear <- function(x, year) {
 }
 
 # Fill missing values by carrying observed values forward, then backward.
-# Down-up fill, acceptable for slowly moving controls.
+# If the whole series is missing, fill with zero.
 fill_nearest <- function(x) {
-  # Fill missing values using nearest available observed value.
-  # If the whole series is missing, fill with zero.
-
-  # If all are na, fill with zeros
   if (all(is.na(x))) {
     return(rep(0, length(x)))
   }
 
-  out <- tidyr::fill(
+  tidyr::fill(
     tibble(value = x),
     value,
     .direction = "downup"
   )$value
-
-  out
 }
 
 # Apply one row of the imputation plan to the panel.
-# country_i can be a specific ISO3 code or "ALL";
-# variable_i is the column to update;
-# method_i chooses which fill function to use.
 apply_one_imputation <- function(data, country_i, variable_i, method_i) {
   if (!(variable_i %in% names(data))) {
     warning(paste("Variable not found:", variable_i))
@@ -564,50 +396,56 @@ apply_one_imputation <- function(data, country_i, variable_i, method_i) {
     arrange(year, .by_group = TRUE) |>
     mutate(
       "{variable_i}" := case_when(
-        country_i == "ALL" & method_i == "zero" ~
-          fill_zero(.data[[variable_i]]),
-        country_i == iso3c & method_i == "zero" ~
-          fill_zero(.data[[variable_i]]),
-        country_i == "ALL" & method_i == "linear" ~
-          fill_linear(.data[[variable_i]], year),
-        country_i == iso3c & method_i == "linear" ~
-          fill_linear(.data[[variable_i]], year),
-        country_i == "ALL" & method_i == "nearest_fill" ~
-          fill_nearest(.data[[variable_i]]),
-        country_i == iso3c & method_i == "nearest_fill" ~
-          fill_nearest(.data[[variable_i]]),
+        country_i == "ALL" & method_i == "zero" ~ fill_zero(.data[[variable_i]]),
+        country_i == iso3c & method_i == "zero" ~ fill_zero(.data[[variable_i]]),
+        country_i == "ALL" & method_i == "linear" ~ fill_linear(.data[[variable_i]], year),
+        country_i == iso3c & method_i == "linear" ~ fill_linear(.data[[variable_i]], year),
+        country_i == "ALL" & method_i == "nearest_fill" ~ fill_nearest(.data[[variable_i]]),
+        country_i == iso3c & method_i == "nearest_fill" ~ fill_nearest(.data[[variable_i]]),
         TRUE ~ .data[[variable_i]]
       )
     ) |>
     ungroup()
 }
 
+#### ======================================================================###
+#### ======================= 9. APPLY IMPUTATION ===========================###
+#### ======================================================================###
 
-# =====================================================
-# Apply imputation and check changes
-# =====================================================
-
-# Preserve an unimputed copy so imputation effects can be checked
+# Preserve an unimputed copy so imputation effects can be checked.
 df_before_imputation <- df
 
 df_imputed <- df
 
-# Sequentially apply every imputation rule. Later rules can overwrite values
-# produced by earlier rules if they target the same country-variable pair.
-for (i in seq_len(nrow(imputation_plan))) {
-  df_imputed <- apply_one_imputation(
-    data = df_imputed,
-    country_i = imputation_plan$country[i],
-    variable_i = imputation_plan$variable[i],
-    method_i = imputation_plan$method[i]
+# Validate imputation plan before applying it.
+missing_imputation_variables <- setdiff(unique(imputation_plan$variable), names(df_imputed))
+
+if (length(missing_imputation_variables) > 0) {
+  warning(
+    "These imputation-plan variables are not in df and will be skipped: ",
+    paste(missing_imputation_variables, collapse = ", ")
   )
 }
 
+imputation_plan_to_apply <- imputation_plan |>
+  filter(variable %in% names(df_imputed))
 
-# CHECK DIFFERENCES
+# Sequentially apply every imputation rule. Later rules can overwrite values
+# produced by earlier rules if they target the same country-variable pair.
+for (i in seq_len(nrow(imputation_plan_to_apply))) {
+  df_imputed <- apply_one_imputation(
+    data = df_imputed,
+    country_i = imputation_plan_to_apply$country[i],
+    variable_i = imputation_plan_to_apply$variable[i],
+    method_i = imputation_plan_to_apply$method[i]
+  )
+}
+
+#### ======================================================================###
+#### ======================= 10. IMPUTATION CHECKS =========================###
+#### ======================================================================###
 
 # Summarise missingness by country and variable before/after imputation.
-# diagnostic table
 make_missing_check <- function(data, variables_to_check) {
   data |>
     select(iso3c, country, year, all_of(variables_to_check)) |>
@@ -635,7 +473,7 @@ make_missing_check <- function(data, variables_to_check) {
     arrange(variable, iso3c)
 }
 
-variables_imputed <- unique(imputation_plan$variable)
+variables_imputed <- unique(imputation_plan_to_apply$variable)
 
 missing_before <- make_missing_check(
   df_before_imputation,
@@ -668,26 +506,19 @@ imputation_check <- missing_before |>
 
 print(imputation_check, n = Inf)
 
+#### ======================================================================###
+#### ======================= 11. SAVE PROCESSED DATA =======================###
+#### ======================================================================###
 
-# =====================================================
-# Save processed data
-# =====================================================
-# Save processed panels for reproducibility and for later scripts.
 saveRDS(df_imputed, "data/processed/processed_panel_imputed.rds")
 saveRDS(df_before_imputation, "data/processed/processed_panel_unimputed.rds")
 
-# View(df)
-
-
 #### ========================================================================###
-#### ==================== == INFLATION TABLES ===============================###
+#### ======================== 12. INFLATION TABLES ==========================###
 #### ========================================================================###
 
-# Helper function to replicate inflation Tables 1 and 2
-# Build an inflation table for a supplied country list.
-
-# The function creates country-level pre/post averages and then
-# appends a group average
+# Build an inflation table for a supplied country list. The function creates
+# country-level pre/post averages and appends a group average.
 make_inflation_table <- function(
   data,
   country_order,
@@ -731,15 +562,14 @@ make_inflation_table <- function(
     mutate(across(where(is.numeric), ~ round(.x, 4)))
 }
 
-# Table 1, Panel A: WAEMU
+# Table 1, Panel A: WAEMU.
 table1_waemu <- make_inflation_table(
   df_imputed,
   country_order = waemu_table1,
   average_label = "Average inflation for the WAEMU zone"
 )
 
-# Additional WAEMU average excluding Guinea-Bissau
-# Compute a second WAEMU average excluding Guinea-Bissau, because it joined WAEMU later.
+# Additional WAEMU average excluding Guinea-Bissau, because it joined WAEMU later.
 waemu_avg_excl_gnb <- table1_waemu |>
   filter(!country %in% c(
     "Guinea-Bissau",
@@ -754,27 +584,20 @@ waemu_avg_excl_gnb <- table1_waemu |>
 
 table1_waemu <- bind_rows(table1_waemu, waemu_avg_excl_gnb)
 
-# Table 1, Panel B: CAEMC
+# Table 1, Panel B: CAEMC.
 table1_caemc <- make_inflation_table(
   df_imputed,
   country_order = caemc,
   average_label = "Average inflation for the CAEMC zone"
 )
 
-# Table 2: Non-CFA comparison countries
+# Table 2: Non-CFA comparison countries.
 table2_non_cfa_inflation <- make_inflation_table(
   df_imputed,
   country_order = non_cfa_comparison_countries,
   average_label = "Average inflation"
 )
 
-# Print tables
-# View(table1_waemu)
-# View(table1_caemc)
-# View(table2_non_cfa_inflation)
-
-# Save LaTeX outputs
-# Export the WAEMU inflation table as a LaTeX fragment for inclusion in the report.
 cat(
   kable(
     table1_waemu,
@@ -805,11 +628,7 @@ cat(
   file = "output/tables/table2_non_cfa_inflation.tex"
 )
 
-
-# -----------------------------
-# Regional inflation summary
-# -----------------------------
-
+# Regional inflation summary for quick diagnostics.
 inflation_region <- df_imputed |>
   filter(region %in% c("WAEMU", "CAEMC", "Donor pool", "Non-CFA comparison")) |>
   group_by(region, period) |>
@@ -827,17 +646,12 @@ inflation_region <- df_imputed |>
     post = round(post, 2)
   )
 
-# View(inflation_region)
-
 #### ========================================================================###
-#### ====================== GDP GROWTH GRAPH ================================###
+#### ======================== 13. GDP GROWTH GRAPH ==========================###
 #### ========================================================================###
 
-# GDP per capita growth graph: WAEMU, CAEMC, non-CFA countries
-
-# Use the imputed panel for descriptive outputs so that the generated 
-# figures/tables are consistent with the saved processed panel.
-
+# Use the imputed panel for descriptive outputs so generated figures/tables are
+# consistent with the saved processed panel.
 analysis_data <- df_imputed
 
 analysis_data <- analysis_data |>
@@ -848,15 +662,16 @@ analysis_data <- analysis_data |>
 
 df_growth <- analysis_data |>
   filter(region %in% c("WAEMU", "CAEMC", "Non-CFA comparison")) |>
-  mutate(region_plot = recode(region,
+  mutate(region_plot = recode(
+    region,
     "Non-CFA comparison" = "Non-CFA countries"
   )) |>
   group_by(region_plot, year) |>
   summarise(growth = mean(growth, na.rm = TRUE), .groups = "drop") |>
   filter(year >= 1990, year <= 2021)
 
-# Plot average annual GDP per capita growth by region. 
-# The vertical line marks 2002, the first post-treatment year
+# Plot average annual GDP per capita growth by region. The vertical line marks
+# 2002, the first post-treatment year.
 p_gdp_growth <- ggplot(df_growth, aes(year, growth, color = region_plot)) +
   geom_line(linewidth = 0.9) +
   geom_vline(xintercept = 2002, linewidth = 1.1, color = "black") +
@@ -874,9 +689,6 @@ p_gdp_growth <- ggplot(df_growth, aes(year, growth, color = region_plot)) +
     panel.grid.minor = element_blank()
   )
 
-# print(p_gdp_growth)
-
-# Save the plot 
 ggsave(
   "output/figures/gdp_pc_growth_regions.png",
   p_gdp_growth,
@@ -885,34 +697,23 @@ ggsave(
   dpi = 300
 )
 
-
 #### ========================================================================###
-#### ============================= GDP TABLES ===============================###
+#### ======================== 14. GDP GROWTH TABLES =========================###
 #### ========================================================================###
 
-
-# =====================================================
-# GDP per capita growth appendix tables
-# Compare WDI constant and current GDP per capita variables
-# =====================================================
-
-safe_mean <- function(x) {
-  if (all(is.na(x))) NA_real_ else mean(x, na.rm = TRUE)
-}
-
-# Compute annual GDP per capita growth for both variables
+# Compute annual GDP per capita growth for WDI constant and current per-capita
+# GDP variables. These are descriptive appendix tables, not the SCM outcome.
 df_gdp_growth <- analysis_data |>
   arrange(iso3c, year) |>
   group_by(iso3c) |>
   mutate(
     growth_wdi_gdp_pc_constant = 100 * (wdi_gdp_pc_constant / lag(wdi_gdp_pc_constant) - 1),
-    growth_wdi_gdp_pc_current  = 100 * (wdi_gdp_pc_current  / lag(wdi_gdp_pc_current)  - 1)
+    growth_wdi_gdp_pc_current = 100 * (wdi_gdp_pc_current / lag(wdi_gdp_pc_current) - 1)
   ) |>
   ungroup()
 
-# Helper function for GDP growth tables
+# Helper function for GDP growth appendix tables.
 make_gdp_growth_table <- function(data, country_order, average_label) {
-
   country_rows <- data |>
     filter(
       iso3c %in% country_order,
@@ -920,21 +721,21 @@ make_gdp_growth_table <- function(data, country_order, average_label) {
       year <= 2021
     ) |>
     mutate(
-      period = case_when(
+      table_period = case_when(
         year >= 1990 & year <= 2001 ~ "1990-2001",
         year >= 2002 & year <= 2021 ~ "2002-2021",
         TRUE ~ NA_character_
       )
     ) |>
-    filter(!is.na(period)) |>
-    group_by(iso3c, country, period) |>
+    filter(!is.na(table_period)) |>
+    group_by(iso3c, country, table_period) |>
     summarise(
       growth_wdi_gdp_pc_constant = safe_mean(growth_wdi_gdp_pc_constant),
-      growth_wdi_gdp_pc_current  = safe_mean(growth_wdi_gdp_pc_current),
+      growth_wdi_gdp_pc_current = safe_mean(growth_wdi_gdp_pc_current),
       .groups = "drop"
     ) |>
     pivot_wider(
-      names_from = period,
+      names_from = table_period,
       values_from = c(
         growth_wdi_gdp_pc_constant,
         growth_wdi_gdp_pc_current
@@ -946,8 +747,8 @@ make_gdp_growth_table <- function(data, country_order, average_label) {
       country,
       `constant GDP pc growth 1990-2001` = `growth_wdi_gdp_pc_constant_1990-2001`,
       `constant GDP pc growth 2002-2021` = `growth_wdi_gdp_pc_constant_2002-2021`,
-      `current GDP pc growth 1990-2001`  = `growth_wdi_gdp_pc_current_1990-2001`,
-      `current GDP pc growth 2002-2021`  = `growth_wdi_gdp_pc_current_2002-2021`
+      `current GDP pc growth 1990-2001` = `growth_wdi_gdp_pc_current_1990-2001`,
+      `current GDP pc growth 2002-2021` = `growth_wdi_gdp_pc_current_2002-2021`
     )
 
   average_row <- country_rows |>
@@ -955,22 +756,22 @@ make_gdp_growth_table <- function(data, country_order, average_label) {
       country = average_label,
       `constant GDP pc growth 1990-2001` = safe_mean(`constant GDP pc growth 1990-2001`),
       `constant GDP pc growth 2002-2021` = safe_mean(`constant GDP pc growth 2002-2021`),
-      `current GDP pc growth 1990-2001`  = safe_mean(`current GDP pc growth 1990-2001`),
-      `current GDP pc growth 2002-2021`  = safe_mean(`current GDP pc growth 2002-2021`)
+      `current GDP pc growth 1990-2001` = safe_mean(`current GDP pc growth 1990-2001`),
+      `current GDP pc growth 2002-2021` = safe_mean(`current GDP pc growth 2002-2021`)
     )
 
   bind_rows(country_rows, average_row) |>
     mutate(across(where(is.numeric), ~ round(.x, 3)))
 }
 
-# Appendix 3, Panel A: WAEMU
+# Appendix 3, Panel A: WAEMU.
 gdp_growth_waemu <- make_gdp_growth_table(
   df_gdp_growth,
   country_order = waemu_table1,
   average_label = "Average for the WAEMU area"
 )
 
-# Additional WAEMU average excluding Guinea-Bissau
+# Additional WAEMU average excluding Guinea-Bissau.
 gdp_growth_waemu_excl_gnb <- gdp_growth_waemu |>
   filter(!country %in% c(
     "Guinea-Bissau",
@@ -980,8 +781,8 @@ gdp_growth_waemu_excl_gnb <- gdp_growth_waemu |>
     country = "Average without Guinea-Bissau",
     `constant GDP pc growth 1990-2001` = safe_mean(`constant GDP pc growth 1990-2001`),
     `constant GDP pc growth 2002-2021` = safe_mean(`constant GDP pc growth 2002-2021`),
-    `current GDP pc growth 1990-2001`  = safe_mean(`current GDP pc growth 1990-2001`),
-    `current GDP pc growth 2002-2021`  = safe_mean(`current GDP pc growth 2002-2021`)
+    `current GDP pc growth 1990-2001` = safe_mean(`current GDP pc growth 1990-2001`),
+    `current GDP pc growth 2002-2021` = safe_mean(`current GDP pc growth 2002-2021`)
   ) |>
   mutate(across(where(is.numeric), ~ round(.x, 3)))
 
@@ -990,27 +791,23 @@ gdp_growth_waemu <- bind_rows(
   gdp_growth_waemu_excl_gnb
 )
 
-# Appendix 3, Panel B: CAEMC
+# Appendix 3, Panel B: CAEMC.
 gdp_growth_caemc <- make_gdp_growth_table(
   df_gdp_growth,
   country_order = caemc,
   average_label = "Average for the CAEMC zone"
 )
 
-# Appendix 4: Non-CFA comparison countries
+# Appendix 4: Non-CFA comparison countries.
 gdp_growth_non_cfa <- make_gdp_growth_table(
   df_gdp_growth,
   country_order = non_cfa_comparison_countries,
   average_label = "Average"
 )
 
-# Print tables
 print(gdp_growth_waemu)
 print(gdp_growth_caemc)
 print(gdp_growth_non_cfa)
-
-# Save LaTeX outputs
-dir.create("output/tables", recursive = TRUE, showWarnings = FALSE)
 
 cat(
   kable(
@@ -1042,6 +839,4 @@ cat(
   file = "output/tables/appendix4_non_cfa_gdp_growth.tex"
 )
 
-
-# Print to confirm all code has run
 print("Complete")
