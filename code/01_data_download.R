@@ -119,7 +119,27 @@ donor_countries <- c(
   "PAN", # Panama
   "KNA", # St. Kitts and Nevis
   "LCA", # St. Lucia
-  "SYC" # Seychelles
+  "SYC", # Seychelles
+
+
+  "AGO", "Angola",
+  "BDI", "Burundi",
+  "COD", "Congo, Dem. Rep.",
+  "ETH", "Ethiopia",
+  "GMB", "Gambia, The",
+  "GHA", "Ghana",
+  "GIN", "Guinea",
+  "KEN", "Kenya",
+  "MDG", "Madagascar",
+  "MWI", "Malawi",
+  "NGA", "Nigeria",
+  "STP", "Sao Tome and Principe",
+  "SLE", "Sierra Leone",
+  "SDN", "Sudan",
+  "TZA", "Tanzania",
+  "UGA", "Uganda",
+  "ZMB", "Zambia",
+  "ZWE", "Zimbabwe"
 )
 
 # Table 2 non-CFA comparison countries
