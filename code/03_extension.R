@@ -11,6 +11,7 @@ trade_indicators <- c(
 
 waemu <- c("BEN", "BFA", "CIV", "MLI", "NER", "SEN", "TGO")
 caemc <- c("CMR", "CAF", "TCD", "COG", "GNQ", "GAB")
+
 non_cfa_comparison_countries <- c(
   "AGO", # Angola
   "BDI", # Burundi
