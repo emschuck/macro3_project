@@ -313,6 +313,37 @@ library(readr)
 library(ggplot2)
 library(fixest)
 
+
+
+waemu <- c("BEN", "BFA", "CIV", "MLI", "NER", "SEN", "TGO")
+caemc <- c("CMR", "CAF", "TCD", "COG", "GNQ", "GAB")
+
+
+donor_countries <- c(
+  "BGD", # Bangladesh
+  "BRB", # Barbados
+  "BTN", # Bhutan
+  "BOL", # Bolivia
+  "BWA", # Botswana
+  "CPV", # Cabo Verde
+  "DMA", # Dominica
+  "ECU", # Ecuador
+  "SWZ", # Eswatini
+  "GRD", # Grenada
+  "LAO", # Lao PDR
+  "LSO", # Lesotho
+  "MUS", # Mauritius
+  "MAR", # Morocco
+  "NAM", # Namibia
+  "OMN", # Oman
+  "PAN", # Panama
+  "KNA", # St. Kitts and Nevis
+  "LCA", # St. Lucia
+  "SYC"  # Seychelles
+)
+treated_countries <- c(waemu, caemc)
+scm_countries <- c(waemu, caemc, donor_countries)
+
 #Data set with treated and donor countries : 
 
 dot_raw <- read_csv("data/raw/imf_trade_dots.csv")
@@ -460,6 +491,9 @@ summary(twfe)
 #After checking for pre trends, the parallel pre trend assumption is not veriefied, especially for 1980-1990 period. 
 #Dropping these 10 years of obsevations and running TWFE : 
 
+dot_balanced_reg <- dot_balanced_reg |>
+  mutate(event_time = year - 2002)
+
 # Restrict to post-1990
 twfe_1990 <- feols(XEU ~ i(event_time, treated, ref = -1) | iso3c + year,
                          data = dot_balanced_reg |>
@@ -496,7 +530,6 @@ summary(twfe_split_1990)
 
 #Clean table of TWFE coefficeints per country : 
 library(modelsummary)
-treated_countries <- c(waemu, caemc)
 
 # Create a list of models, one per treated country
 models_by_country <- lapply(treated_countries, function(ctry) {
