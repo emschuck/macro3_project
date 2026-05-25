@@ -282,6 +282,7 @@ df |>
   arrange(desc(missing_wdi_gdp_pc_constant), desc(missing_labour)) |>
   print(n = Inf)
 
+
 #### ======================================================================###
 #### ======================= 6. POLITY DATA ================================###
 #### ======================================================================###
@@ -340,6 +341,278 @@ df <- df |>
     agriculture_filled_from_extra = is.na(agriculture_original) & !is.na(agriculture_extra)
   ) |>
   select(-agriculture_extra)
+
+
+#### ======================================================================###
+#### ======================= 11. EXTENSION DATA =======================###
+#### ======================================================================###
+
+# This block constructs two extension variables:
+#   XEU = exports to EU as % of total exports
+#   MEU = imports from EU as % of total imports
+#
+# The raw IMF DOTS file should be saved at:
+#   data/raw/imf_trade_dots.csv
+
+dots_file <- "data/raw/imf_trade_dots.csv"
+
+if (!file.exists(dots_file)) {
+  stop("DOTS raw file not found: ", dots_file)
+}
+
+# Countries needed for the extension.
+# This includes treated countries, SCM donors, and non-CFA comparison countries
+# used in descriptive extension charts.
+extension_countries <- unique(c(
+  treated_countries,
+  donor_countries,
+  non_cfa_comparison_countries
+))
+
+# Read raw IMF DOTS data.
+dot_raw <- readr::read_csv(
+  dots_file,
+  show_col_types = FALSE
+)
+
+# Keep only the columns needed and standardise names.
+dot_clean <- dot_raw |>
+  dplyr::rename(
+    iso3c = COUNTRY.ID,
+    indicator = INDICATOR.ID,
+    partner = COUNTERPART_COUNTRY.ID,
+    year = TIME_PERIOD,
+    value = OBS_VALUE
+  ) |>
+  dplyr::select(
+    iso3c,
+    indicator,
+    partner,
+    year,
+    value
+  ) |>
+  dplyr::mutate(
+    year = as.integer(year),
+    value = as.numeric(value)
+  ) |>
+  dplyr::filter(
+    iso3c %in% extension_countries,
+    year %in% extension_plot_period
+  )
+
+# Convert DOTS data from long to wide format.
+# The expected DOTS codes are:
+#   XG_FOB_USD + G001 = exports to world
+#   MG_CIF_USD + G001 = imports from world
+#   XG_FOB_USD + G163 = exports to EU
+#   MG_CIF_USD + G163 = imports from EU
+dot_shares <- dot_clean |>
+  tidyr::pivot_wider(
+    names_from = c(indicator, partner),
+    values_from = value
+  )
+
+# Check that the columns needed for XEU and MEU exist.
+required_dots_columns <- c(
+  "XG_FOB_USD_G001",
+  "MG_CIF_USD_G001",
+  "XG_FOB_USD_G163",
+  "MG_CIF_USD_G163"
+)
+
+missing_dots_columns <- setdiff(required_dots_columns, names(dot_shares))
+
+if (length(missing_dots_columns) > 0) {
+  stop(
+    "These required DOTS columns are missing after pivot_wider(): ",
+    paste(missing_dots_columns, collapse = ", ")
+  )
+}
+
+# Construct EU export and import shares.
+dot_shares <- dot_shares |>
+  dplyr::rename(
+    exports_world = XG_FOB_USD_G001,
+    imports_world = MG_CIF_USD_G001,
+    exports_eu = XG_FOB_USD_G163,
+    imports_eu = MG_CIF_USD_G163
+  ) |>
+  dplyr::mutate(
+    XEU = ifelse(
+      is.na(exports_world) | exports_world == 0,
+      NA_real_,
+      100 * exports_eu / exports_world
+    ),
+    MEU = ifelse(
+      is.na(imports_world) | imports_world == 0,
+      NA_real_,
+      100 * imports_eu / imports_world
+    )
+  ) |>
+  dplyr::select(
+    iso3c,
+    year,
+    XEU,
+    MEU
+  )
+
+# DOTS omits missing country-years, so explicitly create a balanced country-year panel.
+dot_balanced <- dot_shares |>
+  tidyr::complete(
+    iso3c = extension_countries,
+    year = extension_plot_period
+  ) |>
+  dplyr::arrange(
+    iso3c,
+    year
+  )
+
+# Check DOTS missingness before interpolation.
+dots_missing_check <- dot_balanced |>
+  dplyr::group_by(iso3c) |>
+  dplyr::summarise(
+    n_years = dplyr::n(),
+    miss_XEU = sum(is.na(XEU)),
+    miss_MEU = sum(is.na(MEU)),
+    miss_XEU_pre = sum(is.na(XEU[year %in% extension_pre_period])),
+    miss_MEU_pre = sum(is.na(MEU[year %in% extension_pre_period])),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(
+    dplyr::desc(miss_XEU_pre),
+    dplyr::desc(miss_MEU_pre),
+    iso3c
+  )
+
+print(dots_missing_check, n = Inf)
+
+dir.create("output/extension_trade/tables", recursive = TRUE, showWarnings = FALSE)
+
+write.csv(
+  dots_missing_check,
+  "output/extension_trade/tables/dots_missing_check_before_interpolation.csv",
+  row.names = FALSE
+)
+
+# Drop countries with very poor pre-treatment DOTS coverage.
+# A country is dropped if either XEU or MEU has more than three missing
+# observations in the extension pre-treatment period.
+bad_dots_coverage <- dot_balanced |>
+  dplyr::filter(year %in% extension_pre_period) |>
+  dplyr::group_by(iso3c) |>
+  dplyr::summarise(
+    miss_XEU_pre = sum(is.na(XEU)),
+    miss_MEU_pre = sum(is.na(MEU)),
+    .groups = "drop"
+  ) |>
+  dplyr::filter(
+    miss_XEU_pre > 3 |
+      miss_MEU_pre > 3
+  ) |>
+  dplyr::pull(iso3c)
+
+# Fill short gaps of up to two years using linear interpolation.
+# Longer gaps remain missing.
+dot_clean_final <- dot_balanced |>
+  dplyr::group_by(iso3c) |>
+  dplyr::arrange(year, .by_group = TRUE) |>
+  dplyr::mutate(
+    XEU = zoo::na.approx(XEU, na.rm = FALSE, maxgap = 2),
+    MEU = zoo::na.approx(MEU, na.rm = FALSE, maxgap = 2)
+  ) |>
+  dplyr::ungroup()
+
+# Final DOTS extension panel.
+trade_dots_clean <- dot_clean_final |>
+  dplyr::filter(!iso3c %in% bad_dots_coverage) |>
+  dplyr::select(
+    iso3c,
+    year,
+    XEU,
+    MEU
+  ) |>
+  dplyr::arrange(
+    iso3c,
+    year
+  )
+
+dir.create("data/processed", recursive = TRUE, showWarnings = FALSE)
+
+saveRDS(
+  trade_dots_clean,
+  "data/processed/trade_dots_clean.rds"
+)
+
+
+# =====================================================
+# Extension analysis: merge DOTS variables into panel
+# =====================================================
+
+# At this point, the WDI trade variables should already be in df because
+# df was built from the WDI file earlier in the data-loading script.
+missing_wdi_trade_before_dots_merge <- setdiff(
+  c("trade_openness", "exports_gdp", "imports_gdp"),
+  names(df)
+)
+
+if (length(missing_wdi_trade_before_dots_merge) > 0) {
+  stop(
+    "These WDI trade variables are missing before the DOTS merge: ",
+    paste(missing_wdi_trade_before_dots_merge, collapse = ", ")
+  )
+}
+
+# Load cleaned IMF DOTS EU trade-share variables.
+dots_trade <- readRDS("data/processed/trade_dots_clean.rds") |>
+  dplyr::select(
+    iso3c,
+    year,
+    XEU,
+    MEU
+  ) |>
+  dplyr::distinct(
+    iso3c,
+    year,
+    .keep_all = TRUE
+  )
+
+# Check that the DOTS variables exist before merging.
+missing_dots_vars <- setdiff(
+  c("XEU", "MEU"),
+  names(dots_trade)
+)
+
+if (length(missing_dots_vars) > 0) {
+  stop(
+    "These DOTS variables are missing from trade_dots_clean.rds: ",
+    paste(missing_dots_vars, collapse = ", ")
+  )
+}
+
+# Merge only the DOTS variables into the existing main panel.
+# Do not merge WDI trade variables again, because they are already in df.
+df <- df |>
+  dplyr::left_join(
+    dots_trade,
+    by = c("iso3c", "year")
+  )
+
+# Confirm that all extension variables are present after merging.
+missing_extension_vars <- setdiff(
+  extension_trade_outcomes,
+  names(df)
+)
+
+if (length(missing_extension_vars) > 0) {
+  stop(
+    "These extension variables are missing after merging: ",
+    paste(missing_extension_vars, collapse = ", ")
+  )
+}
+
+# cat("\nAll extension variables are present after DOTS merge.\n")
+
+
 
 #### ======================================================================###
 #### ======================= 8. IMPUTATION FUNCTIONS =======================###
@@ -506,15 +779,16 @@ imputation_check <- missing_before |>
 
 print(imputation_check, n = Inf)
 
+
 #### ======================================================================###
-#### ======================= 11. SAVE PROCESSED DATA =======================###
+#### ======================= 12. SAVE PROCESSED DATA =======================###
 #### ======================================================================###
 
 saveRDS(df_imputed, "data/processed/processed_panel_imputed.rds")
 saveRDS(df_before_imputation, "data/processed/processed_panel_unimputed.rds")
 
 #### ========================================================================###
-#### ======================== 12. INFLATION TABLES ==========================###
+#### ======================== 13. INFLATION TABLES ==========================###
 #### ========================================================================###
 
 # Build an inflation table for a supplied country list. The function creates

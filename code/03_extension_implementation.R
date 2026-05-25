@@ -51,7 +51,7 @@ required_constants <- c(
   "extension_scm_predictors",
   "extension_output_dir",
   "extension_processed_dir",
-  extension_special_years
+  "extension_special_years"
 )
 
 missing_constants <- required_constants[
@@ -716,16 +716,16 @@ write.csv(
 
 
 #### ========================================================================###
-#### ======================== 9. COMBINED SCM CHARTS ========================###
+#### ======================== 9. SCM CHARTS BY OUTCOME ======================###
 #### ========================================================================###
 
-# Add labels for chart facets.
+# Add readable outcome labels for chart titles.
 scm_paths_plot <- scm_paths_all |>
   mutate(
     outcome_label = extension_trade_outcome_labels[outcome]
   )
 
-# Convert actual/synthetic series to long format for plotting.
+# Convert actual/synthetic series to long format for path plots.
 scm_paths_long <- scm_paths_plot |>
   pivot_longer(
     cols = c(actual, synthetic),
@@ -740,66 +740,105 @@ scm_paths_long <- scm_paths_plot |>
     )
   )
 
-# Combined actual-vs-synthetic chart.
-p_paths_combined <- ggplot(
-  scm_paths_long,
-  aes(x = year, y = value, linetype = series)
-) +
-  geom_line(linewidth = 0.6) +
-  geom_vline(xintercept = treatment_year, linetype = "dashed") +
-  facet_grid(outcome_label ~ treated_country, scales = "free_y") +
-  labs(
-    title = "Extension SCM: actual and synthetic trade outcomes",
-    subtitle = paste0("Dashed line = ", treatment_year),
-    x = NULL,
-    y = NULL,
-    linetype = NULL
-  ) +
-  theme_minimal(base_size = 8) +
-  theme(
-    legend.position = "bottom",
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    panel.grid.minor = element_blank()
+# Get the list of outcomes that actually produced successful SCM results.
+successful_outcomes <- unique(scm_paths_plot$outcome)
+
+# Create one actual-vs-synthetic chart and one gap chart for each outcome.
+for (outcome_var in successful_outcomes) {
+
+  # Get readable label for this outcome.
+  outcome_label_i <- extension_trade_outcome_labels[outcome_var]
+
+  # Create a safe filename stub.
+  outcome_file_stub <- gsub(
+    "[^A-Za-z0-9]+",
+    "_",
+    outcome_var
   )
 
-ggsave(
-  filename = file.path(extension_output_dir, "figures", "extension_trade_scm_paths_combined.png"),
-  plot = p_paths_combined,
-  width = 20,
-  height = 14,
-  dpi = 300
-)
+  # Keep only this outcome for the path chart.
+  paths_i <- scm_paths_long |>
+    filter(outcome == outcome_var)
 
-# Combined actual-minus-synthetic gap chart.
-p_gaps_combined <- ggplot(
-  scm_paths_plot,
-  aes(x = year, y = gap)
-) +
-  geom_line(linewidth = 0.6) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_vline(xintercept = treatment_year, linetype = "dashed") +
-  facet_grid(outcome_label ~ treated_country, scales = "free_y") +
-  labs(
-    title = "Extension SCM: actual minus synthetic gaps",
-    subtitle = paste0("Dashed line = ", treatment_year),
-    x = NULL,
-    y = "Actual - synthetic"
+  # Keep only this outcome for the gap chart.
+  gaps_i <- scm_paths_plot |>
+    filter(outcome == outcome_var)
+
+  # -----------------------------------------------------
+  # Actual-vs-synthetic path chart for this outcome
+  # -----------------------------------------------------
+
+  p_paths_i <- ggplot(
+    paths_i,
+    aes(x = year, y = value, linetype = series)
   ) +
-  theme_minimal(base_size = 8) +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    panel.grid.minor = element_blank()
+    geom_line(linewidth = 0.6) +
+    geom_vline(xintercept = treatment_year, linetype = "dashed") +
+    facet_wrap(~ treated_country, scales = "free_y", ncol = 4) +
+    labs(
+      title = paste0("Extension SCM: actual and synthetic — ", outcome_label_i),
+      subtitle = paste0("Dashed line = ", treatment_year),
+      x = NULL,
+      y = NULL,
+      linetype = NULL
+    ) +
+    theme_minimal(base_size = 9) +
+    theme(
+      legend.position = "bottom",
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      panel.grid.minor = element_blank()
+    )
+
+  ggsave(
+    filename = file.path(
+      extension_output_dir,
+      "figures",
+      paste0("extension_trade_scm_paths_", outcome_file_stub, ".png")
+    ),
+    plot = p_paths_i,
+    width = 18,
+    height = 12,
+    dpi = 300
   )
 
-ggsave(
-  filename = file.path(extension_output_dir, "figures", "extension_trade_scm_gaps_combined.png"),
-  plot = p_gaps_combined,
-  width = 20,
-  height = 14,
-  dpi = 300
-)
+  # -----------------------------------------------------
+  # Actual-minus-synthetic gap chart for this outcome
+  # -----------------------------------------------------
 
+  p_gaps_i <- ggplot(
+    gaps_i,
+    aes(x = year, y = gap)
+  ) +
+    geom_line(linewidth = 0.6) +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    geom_vline(xintercept = treatment_year, linetype = "dashed") +
+    facet_wrap(~ treated_country, scales = "free_y", ncol = 4) +
+    labs(
+      title = paste0("Extension SCM: actual minus synthetic — ", outcome_label_i),
+      subtitle = paste0("Dashed line = ", treatment_year),
+      x = NULL,
+      y = "Actual - synthetic"
+    ) +
+    theme_minimal(base_size = 9) +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      panel.grid.minor = element_blank()
+    )
 
+  ggsave(
+    filename = file.path(
+      extension_output_dir,
+      "figures",
+      paste0("extension_trade_scm_gaps_", outcome_file_stub, ".png")
+    ),
+    plot = p_gaps_i,
+    width = 18,
+    height = 12,
+    dpi = 300
+  )
+
+  message("Saved SCM charts for outcome: ", outcome_var)
+}
 #### ========================================================================###
 #### ======================== 10. SUMMARY TABLE =============================###
 #### ========================================================================###

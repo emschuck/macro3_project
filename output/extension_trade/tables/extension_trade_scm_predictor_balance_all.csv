@@ -1,313 +1,745 @@
 "outcome","treated_iso3c","treated_country","predictor","Treated","Synthetic","Sample Mean"
-"trade_openness","BEN","Benin","agriculture",32.824,30.368,15.611
-"trade_openness","BEN","Benin","govt_share",0.178,0.226,0.232
-"trade_openness","BEN","Benin","invest_share",0.13,0.263,0.225
-"trade_openness","BEN","Benin","oda_share",56491880.228,195604761.772,41506751.028
-"trade_openness","BEN","Benin","fdi",-0.089,0.078,3.143
-"trade_openness","BEN","Benin","labour",35.427,35.192,34.528
-"trade_openness","BEN","Benin","polity2",-0.227,-5.721,-0.539
-"trade_openness","BEN","Benin","special.outcome_selected.1980.2001",53.134,52.512,62.308
-"trade_openness","BFA","Burkina Faso","agriculture",29.903,12.219,15.611
-"trade_openness","BFA","Burkina Faso","govt_share",0.116,0.143,0.232
-"trade_openness","BFA","Burkina Faso","invest_share",0.152,0.152,0.225
-"trade_openness","BFA","Burkina Faso","oda_share",123350626.528,123617434.287,41506751.028
-"trade_openness","BFA","Burkina Faso","fdi",0.226,1.191,3.143
-"trade_openness","BFA","Burkina Faso","labour",44.327,36.415,34.528
-"trade_openness","BFA","Burkina Faso","polity2",-5.591,0.231,-0.539
-"trade_openness","BFA","Burkina Faso","special.outcome_selected.1980.2001",36.935,36.419,62.308
-"trade_openness","CIV","Côte d'Ivoire","agriculture",24.791,13.524,15.611
-"trade_openness","CIV","Côte d'Ivoire","govt_share",0.193,0.197,0.232
-"trade_openness","CIV","Côte d'Ivoire","invest_share",0.073,0.184,0.225
-"trade_openness","CIV","Côte d'Ivoire","oda_share",59958720.001,59952766.702,41506751.028
-"trade_openness","CIV","Côte d'Ivoire","fdi",1.077,1.255,3.143
-"trade_openness","CIV","Côte d'Ivoire","labour",32.956,31.398,34.528
-"trade_openness","CIV","Côte d'Ivoire","polity2",-6.364,-6.3,-0.539
-"trade_openness","CIV","Côte d'Ivoire","special.outcome_selected.1980.2001",64.19,63.76,62.308
-"trade_openness","MLI","Mali","agriculture",35.642,20.569,15.611
-"trade_openness","MLI","Mali","govt_share",0.269,0.267,0.232
-"trade_openness","MLI","Mali","invest_share",0.102,0.155,0.225
-"trade_openness","MLI","Mali","oda_share",126030515.075,128101474.192,41506751.028
-"trade_openness","MLI","Mali","fdi",0.713,2.862,3.143
-"trade_openness","MLI","Mali","labour",30.686,30.856,34.528
-"trade_openness","MLI","Mali","polity2",-1.5,-2.137,-0.539
-"trade_openness","MLI","Mali","special.outcome_selected.1980.2001",40.241,39.705,62.308
-"trade_openness","NER","Niger","agriculture",35.744,16.891,15.611
-"trade_openness","NER","Niger","govt_share",0.246,0.24,0.232
-"trade_openness","NER","Niger","invest_share",0.135,0.147,0.225
-"trade_openness","NER","Niger","oda_share",104870761.053,117710036.041,41506751.028
-"trade_openness","NER","Niger","fdi",0.337,1.922,3.143
-"trade_openness","NER","Niger","labour",41.993,32.175,34.528
-"trade_openness","NER","Niger","polity2",-2.045,-2.017,-0.539
-"trade_openness","NER","Niger","special.outcome_selected.1980.2001",40.58,40.841,62.308
-"trade_openness","SEN","Senegal","agriculture",18.972,16.093,15.611
-"trade_openness","SEN","Senegal","govt_share",0.203,0.256,0.232
-"trade_openness","SEN","Senegal","invest_share",0.061,0.122,0.225
-"trade_openness","SEN","Senegal","oda_share",69291797.314,71810654.649,41506751.028
-"trade_openness","SEN","Senegal","fdi",0.603,3.706,3.143
-"trade_openness","SEN","Senegal","labour",32.449,33.228,34.528
-"trade_openness","SEN","Senegal","polity2",-0.227,0.217,-0.539
-"trade_openness","SEN","Senegal","special.outcome_selected.1980.2001",49.584,49.396,62.308
-"trade_openness","TGO","Togo","agriculture",23.502,23.578,15.611
-"trade_openness","TGO","Togo","govt_share",0.163,0.22,0.232
-"trade_openness","TGO","Togo","invest_share",0.202,0.251,0.225
-"trade_openness","TGO","Togo","oda_share",30124870.364,59038126.476,41506751.028
-"trade_openness","TGO","Togo","fdi",0.64,0.872,3.143
-"trade_openness","TGO","Togo","labour",39.99,37.166,34.528
-"trade_openness","TGO","Togo","polity2",-4.773,-4.639,-0.539
-"trade_openness","TGO","Togo","special.outcome_selected.1980.2001",74.689,74.062,62.308
-"trade_openness","CMR","Cameroon","agriculture",22.16,11.869,15.611
-"trade_openness","CMR","Cameroon","govt_share",0.168,0.186,0.232
-"trade_openness","CMR","Cameroon","invest_share",0.133,0.171,0.225
-"trade_openness","CMR","Cameroon","oda_share",43689462.961,58424259.049,41506751.028
-"trade_openness","CMR","Cameroon","fdi",0.762,1.087,3.143
-"trade_openness","CMR","Cameroon","labour",40.447,31.76,34.528
-"trade_openness","CMR","Cameroon","polity2",-6.091,-5.959,-0.539
-"trade_openness","CMR","Cameroon","special.outcome_selected.1980.2001",45.174,44.664,62.308
-"trade_openness","CAF","Central African Republic","agriculture",37.667,16.639,15.611
-"trade_openness","CAF","Central African Republic","govt_share",0.227,0.214,0.232
-"trade_openness","CAF","Central African Republic","invest_share",0.119,0.152,0.225
-"trade_openness","CAF","Central African Republic","oda_share",41172932.389,131552725.848,41506751.028
-"trade_openness","CAF","Central African Republic","fdi",0.385,1.444,3.143
-"trade_openness","CAF","Central African Republic","labour",39.567,31.8,34.528
-"trade_openness","CAF","Central African Republic","polity2",-2,-1.943,-0.539
-"trade_openness","CAF","Central African Republic","special.outcome_selected.1980.2001",49.479,49.304,62.308
-"trade_openness","TCD","Chad","agriculture",36.301,24.305,15.611
-"trade_openness","TCD","Chad","govt_share",0.061,0.141,0.232
-"trade_openness","TCD","Chad","invest_share",0.074,0.134,0.225
-"trade_openness","TCD","Chad","oda_share",85396874.614,355741447.282,41506751.028
-"trade_openness","TCD","Chad","fdi",2.757,0.264,3.143
-"trade_openness","TCD","Chad","labour",38.938,32.165,34.528
-"trade_openness","TCD","Chad","polity2",-2.545,2.471,-0.539
-"trade_openness","TCD","Chad","special.outcome_selected.1980.2001",45.146,44.605,62.308
-"trade_openness","COG","Republic of Congo","agriculture",9.839,13.995,15.611
-"trade_openness","COG","Republic of Congo","govt_share",0.435,0.217,0.232
-"trade_openness","COG","Republic of Congo","invest_share",0.176,0.241,0.225
-"trade_openness","COG","Republic of Congo","oda_share",15393431.347,54087160.706,41506751.028
-"trade_openness","COG","Republic of Congo","fdi",0.578,1.695,3.143
-"trade_openness","COG","Republic of Congo","labour",32.097,32.118,34.528
-"trade_openness","COG","Republic of Congo","polity2",-4.227,-4.093,-0.539
-"trade_openness","COG","Republic of Congo","special.outcome_selected.1980.2001",108.092,107.878,62.308
-"trade_openness","GAB","Gabon","agriculture",7.597,13.011,15.611
-"trade_openness","GAB","Gabon","govt_share",0.148,0.194,0.232
-"trade_openness","GAB","Gabon","invest_share",0.118,0.203,0.225
-"trade_openness","GAB","Gabon","oda_share",1858416.877,55024445.589,41506751.028
-"trade_openness","GAB","Gabon","fdi",0.602,1.568,3.143
-"trade_openness","GAB","Gabon","labour",30.619,31.527,34.528
-"trade_openness","GAB","Gabon","polity2",-6.364,-4.973,-0.539
-"trade_openness","GAB","Gabon","special.outcome_selected.1980.2001",93.544,92.975,62.308
-"trade_openness","GNQ","Equatorial Guinea","agriculture",10.922,12.111,15.611
-"trade_openness","GNQ","Equatorial Guinea","govt_share",0.396,0.191,0.232
-"trade_openness","GNQ","Equatorial Guinea","invest_share",0.1,0.213,0.225
-"trade_openness","GNQ","Equatorial Guinea","oda_share",12950017.857,28295035.177,41506751.028
-"trade_openness","GNQ","Equatorial Guinea","fdi",24.862,2.385,3.143
-"trade_openness","GNQ","Equatorial Guinea","labour",32.282,32.829,34.528
-"trade_openness","GNQ","Equatorial Guinea","polity2",-6.455,-2.106,-0.539
-"trade_openness","GNQ","Equatorial Guinea","special.outcome_selected.1980.2001",131.024,130.693,62.308
-"exports_gdp","BEN","Benin","agriculture",32.824,23.587,15.611
-"exports_gdp","BEN","Benin","govt_share",0.178,0.25,0.232
-"exports_gdp","BEN","Benin","invest_share",0.13,0.149,0.225
-"exports_gdp","BEN","Benin","oda_share",56491880.228,57735186.937,41506751.028
-"exports_gdp","BEN","Benin","fdi",-0.089,3.367,3.143
-"exports_gdp","BEN","Benin","labour",35.427,35.844,34.528
-"exports_gdp","BEN","Benin","polity2",-0.227,-2.656,-0.539
-"exports_gdp","BEN","Benin","special.outcome_selected.1980.2001",20.527,20.522,25.576
-"exports_gdp","BFA","Burkina Faso","agriculture",29.903,5.135,15.611
-"exports_gdp","BFA","Burkina Faso","govt_share",0.116,0.134,0.232
-"exports_gdp","BFA","Burkina Faso","invest_share",0.152,0.115,0.225
-"exports_gdp","BFA","Burkina Faso","oda_share",123350626.528,530788.336,41506751.028
-"exports_gdp","BFA","Burkina Faso","fdi",0.226,1.409,3.143
-"exports_gdp","BFA","Burkina Faso","labour",44.327,39.59,34.528
-"exports_gdp","BFA","Burkina Faso","polity2",-5.591,1.531,-0.539
-"exports_gdp","BFA","Burkina Faso","special.outcome_selected.1980.2001",10.149,9.978,25.576
-"exports_gdp","CIV","Côte d'Ivoire","agriculture",24.791,14.108,15.611
-"exports_gdp","CIV","Côte d'Ivoire","govt_share",0.193,0.234,0.232
-"exports_gdp","CIV","Côte d'Ivoire","invest_share",0.073,0.13,0.225
-"exports_gdp","CIV","Côte d'Ivoire","oda_share",59958720.001,23016072.912,41506751.028
-"exports_gdp","CIV","Côte d'Ivoire","fdi",1.077,4.019,3.143
-"exports_gdp","CIV","Côte d'Ivoire","labour",32.956,30.792,34.528
-"exports_gdp","CIV","Côte d'Ivoire","polity2",-6.364,-1.557,-0.539
-"exports_gdp","CIV","Côte d'Ivoire","special.outcome_selected.1980.2001",33.811,33.55,25.576
-"exports_gdp","MLI","Mali","agriculture",35.642,21.478,15.611
-"exports_gdp","MLI","Mali","govt_share",0.269,0.194,0.232
-"exports_gdp","MLI","Mali","invest_share",0.102,0.151,0.225
-"exports_gdp","MLI","Mali","oda_share",126030515.075,246323061.819,41506751.028
-"exports_gdp","MLI","Mali","fdi",0.713,1.038,3.143
-"exports_gdp","MLI","Mali","labour",30.686,31.348,34.528
-"exports_gdp","MLI","Mali","polity2",-1.5,-1.455,-0.539
-"exports_gdp","MLI","Mali","special.outcome_selected.1980.2001",14.178,14.204,25.576
-"exports_gdp","NER","Niger","agriculture",35.744,18.287,15.611
-"exports_gdp","NER","Niger","govt_share",0.246,0.233,0.232
-"exports_gdp","NER","Niger","invest_share",0.135,0.141,0.225
-"exports_gdp","NER","Niger","oda_share",104870761.053,100460025.496,41506751.028
-"exports_gdp","NER","Niger","fdi",0.337,2.412,3.143
-"exports_gdp","NER","Niger","labour",41.993,39.433,34.528
-"exports_gdp","NER","Niger","polity2",-2.045,3.212,-0.539
-"exports_gdp","NER","Niger","special.outcome_selected.1980.2001",16.843,16.858,25.576
-"exports_gdp","SEN","Senegal","agriculture",18.972,17.373,15.611
-"exports_gdp","SEN","Senegal","govt_share",0.203,0.239,0.232
-"exports_gdp","SEN","Senegal","invest_share",0.061,0.119,0.225
-"exports_gdp","SEN","Senegal","oda_share",69291797.314,82679852.34,41506751.028
-"exports_gdp","SEN","Senegal","fdi",0.603,3.065,3.143
-"exports_gdp","SEN","Senegal","labour",32.449,38.985,34.528
-"exports_gdp","SEN","Senegal","polity2",-0.227,3.684,-0.539
-"exports_gdp","SEN","Senegal","special.outcome_selected.1980.2001",18.054,18.054,25.576
-"exports_gdp","TGO","Togo","agriculture",23.502,15.655,15.611
-"exports_gdp","TGO","Togo","govt_share",0.163,0.212,0.232
-"exports_gdp","TGO","Togo","invest_share",0.202,0.203,0.225
-"exports_gdp","TGO","Togo","oda_share",30124870.364,45697803.08,41506751.028
-"exports_gdp","TGO","Togo","fdi",0.64,0.985,3.143
-"exports_gdp","TGO","Togo","labour",39.99,32.706,34.528
-"exports_gdp","TGO","Togo","polity2",-4.773,-4.662,-0.539
-"exports_gdp","TGO","Togo","special.outcome_selected.1980.2001",32.728,32.151,25.576
-"exports_gdp","CMR","Cameroon","agriculture",22.16,11.449,15.611
-"exports_gdp","CMR","Cameroon","govt_share",0.168,0.188,0.232
-"exports_gdp","CMR","Cameroon","invest_share",0.133,0.149,0.225
-"exports_gdp","CMR","Cameroon","oda_share",43689462.961,40388704.841,41506751.028
-"exports_gdp","CMR","Cameroon","fdi",0.762,2.321,3.143
-"exports_gdp","CMR","Cameroon","labour",40.447,30.179,34.528
-"exports_gdp","CMR","Cameroon","polity2",-6.091,-5.44,-0.539
-"exports_gdp","CMR","Cameroon","special.outcome_selected.1980.2001",23.621,23.553,25.576
-"exports_gdp","CAF","Central African Republic","agriculture",37.667,12.78,15.611
-"exports_gdp","CAF","Central African Republic","govt_share",0.227,0.229,0.232
-"exports_gdp","CAF","Central African Republic","invest_share",0.119,0.123,0.225
-"exports_gdp","CAF","Central African Republic","oda_share",41172932.389,41426925.183,41506751.028
-"exports_gdp","CAF","Central African Republic","fdi",0.385,3.457,3.143
-"exports_gdp","CAF","Central African Republic","labour",39.567,32.208,34.528
-"exports_gdp","CAF","Central African Republic","polity2",-2,-1.982,-0.539
-"exports_gdp","CAF","Central African Republic","special.outcome_selected.1980.2001",20.792,20.734,25.576
-"exports_gdp","TCD","Chad","agriculture",36.301,15.904,15.611
-"exports_gdp","TCD","Chad","govt_share",0.061,0.188,0.232
-"exports_gdp","TCD","Chad","invest_share",0.074,0.132,0.225
-"exports_gdp","TCD","Chad","oda_share",85396874.614,94119828.227,41506751.028
-"exports_gdp","TCD","Chad","fdi",2.757,2.484,3.143
-"exports_gdp","TCD","Chad","labour",38.938,34.25,34.528
-"exports_gdp","TCD","Chad","polity2",-2.545,-2.215,-0.539
-"exports_gdp","TCD","Chad","special.outcome_selected.1980.2001",15.224,15.192,25.576
-"exports_gdp","COG","Republic of Congo","agriculture",9.839,15.887,15.611
-"exports_gdp","COG","Republic of Congo","govt_share",0.435,0.22,0.232
-"exports_gdp","COG","Republic of Congo","invest_share",0.176,0.23,0.225
-"exports_gdp","COG","Republic of Congo","oda_share",15393431.347,52239413.883,41506751.028
-"exports_gdp","COG","Republic of Congo","fdi",0.578,2.802,3.143
-"exports_gdp","COG","Republic of Congo","labour",32.097,29.419,34.528
-"exports_gdp","COG","Republic of Congo","polity2",-4.227,-0.894,-0.539
-"exports_gdp","COG","Republic of Congo","special.outcome_selected.1980.2001",57.767,55.312,25.576
-"exports_gdp","GAB","Gabon","agriculture",7.597,14.883,15.611
-"exports_gdp","GAB","Gabon","govt_share",0.148,0.257,0.232
-"exports_gdp","GAB","Gabon","invest_share",0.118,0.252,0.225
-"exports_gdp","GAB","Gabon","oda_share",1858416.877,31622589.321,41506751.028
-"exports_gdp","GAB","Gabon","fdi",0.602,2.285,3.143
-"exports_gdp","GAB","Gabon","labour",30.619,33.055,34.528
-"exports_gdp","GAB","Gabon","polity2",-6.364,-0.844,-0.539
-"exports_gdp","GAB","Gabon","special.outcome_selected.1980.2001",54.391,52.574,25.576
-"exports_gdp","GNQ","Equatorial Guinea","agriculture",10.922,21.326,15.611
-"exports_gdp","GNQ","Equatorial Guinea","govt_share",0.396,0.208,0.232
-"exports_gdp","GNQ","Equatorial Guinea","invest_share",0.1,0.228,0.225
-"exports_gdp","GNQ","Equatorial Guinea","oda_share",12950017.857,8025486.904,41506751.028
-"exports_gdp","GNQ","Equatorial Guinea","fdi",24.862,4.862,3.143
-"exports_gdp","GNQ","Equatorial Guinea","labour",32.282,32.233,34.528
-"exports_gdp","GNQ","Equatorial Guinea","polity2",-6.455,1.845,-0.539
-"exports_gdp","GNQ","Equatorial Guinea","special.outcome_selected.1980.2001",87.417,72.268,25.576
-"imports_gdp","BEN","Benin","agriculture",32.824,30.805,15.611
-"imports_gdp","BEN","Benin","govt_share",0.178,0.223,0.232
-"imports_gdp","BEN","Benin","invest_share",0.13,0.258,0.225
-"imports_gdp","BEN","Benin","oda_share",56491880.228,198612934.922,41506751.028
-"imports_gdp","BEN","Benin","fdi",-0.089,0.136,3.143
-"imports_gdp","BEN","Benin","labour",35.427,35.441,34.528
-"imports_gdp","BEN","Benin","polity2",-0.227,-5.649,-0.539
-"imports_gdp","BEN","Benin","special.outcome_selected.1980.2001",32.607,32.769,36.732
-"imports_gdp","BFA","Burkina Faso","agriculture",29.903,12.938,15.611
-"imports_gdp","BFA","Burkina Faso","govt_share",0.116,0.143,0.232
-"imports_gdp","BFA","Burkina Faso","invest_share",0.152,0.144,0.225
-"imports_gdp","BFA","Burkina Faso","oda_share",123350626.528,146104724.941,41506751.028
-"imports_gdp","BFA","Burkina Faso","fdi",0.226,1.129,3.143
-"imports_gdp","BFA","Burkina Faso","labour",44.327,35.755,34.528
-"imports_gdp","BFA","Burkina Faso","polity2",-5.591,-0.712,-0.539
-"imports_gdp","BFA","Burkina Faso","special.outcome_selected.1980.2001",26.786,25.703,36.732
-"imports_gdp","CIV","Côte d'Ivoire","agriculture",24.791,13.068,15.611
-"imports_gdp","CIV","Côte d'Ivoire","govt_share",0.193,0.193,0.232
-"imports_gdp","CIV","Côte d'Ivoire","invest_share",0.073,0.175,0.225
-"imports_gdp","CIV","Côte d'Ivoire","oda_share",59958720.001,60525387.055,41506751.028
-"imports_gdp","CIV","Côte d'Ivoire","fdi",1.077,1.147,3.143
-"imports_gdp","CIV","Côte d'Ivoire","labour",32.956,31.714,34.528
-"imports_gdp","CIV","Côte d'Ivoire","polity2",-6.364,-6.322,-0.539
-"imports_gdp","CIV","Côte d'Ivoire","special.outcome_selected.1980.2001",30.38,30.285,36.732
-"imports_gdp","MLI","Mali","agriculture",35.642,21.694,15.611
-"imports_gdp","MLI","Mali","govt_share",0.269,0.267,0.232
-"imports_gdp","MLI","Mali","invest_share",0.102,0.15,0.225
-"imports_gdp","MLI","Mali","oda_share",126030515.075,184669609.567,41506751.028
-"imports_gdp","MLI","Mali","fdi",0.713,2.563,3.143
-"imports_gdp","MLI","Mali","labour",30.686,32.87,34.528
-"imports_gdp","MLI","Mali","polity2",-1.5,-1.439,-0.539
-"imports_gdp","MLI","Mali","special.outcome_selected.1980.2001",26.062,25.78,36.732
-"imports_gdp","NER","Niger","agriculture",35.744,13.491,15.611
-"imports_gdp","NER","Niger","govt_share",0.246,0.165,0.232
-"imports_gdp","NER","Niger","invest_share",0.135,0.152,0.225
-"imports_gdp","NER","Niger","oda_share",104870761.053,120868473.501,41506751.028
-"imports_gdp","NER","Niger","fdi",0.337,0.858,3.143
-"imports_gdp","NER","Niger","labour",41.993,32.84,34.528
-"imports_gdp","NER","Niger","polity2",-2.045,-1.973,-0.539
-"imports_gdp","NER","Niger","special.outcome_selected.1980.2001",23.737,23.656,36.732
-"imports_gdp","SEN","Senegal","agriculture",18.972,14.547,15.611
-"imports_gdp","SEN","Senegal","govt_share",0.203,0.167,0.232
-"imports_gdp","SEN","Senegal","invest_share",0.061,0.153,0.225
-"imports_gdp","SEN","Senegal","oda_share",69291797.314,129332161.767,41506751.028
-"imports_gdp","SEN","Senegal","fdi",0.603,0.768,3.143
-"imports_gdp","SEN","Senegal","labour",32.449,32.432,34.528
-"imports_gdp","SEN","Senegal","polity2",-0.227,-0.21,-0.539
-"imports_gdp","SEN","Senegal","special.outcome_selected.1980.2001",31.53,31.292,36.732
-"imports_gdp","TGO","Togo","agriculture",23.502,9.481,15.611
-"imports_gdp","TGO","Togo","govt_share",0.163,0.164,0.232
-"imports_gdp","TGO","Togo","invest_share",0.202,0.202,0.225
-"imports_gdp","TGO","Togo","oda_share",30124870.364,30407446.166,41506751.028
-"imports_gdp","TGO","Togo","fdi",0.64,1.42,3.143
-"imports_gdp","TGO","Togo","labour",39.99,35.423,34.528
-"imports_gdp","TGO","Togo","polity2",-4.773,-1.99,-0.539
-"imports_gdp","TGO","Togo","special.outcome_selected.1980.2001",41.961,41.921,36.732
-"imports_gdp","CMR","Cameroon","agriculture",22.16,11.298,15.611
-"imports_gdp","CMR","Cameroon","govt_share",0.168,0.181,0.232
-"imports_gdp","CMR","Cameroon","invest_share",0.133,0.168,0.225
-"imports_gdp","CMR","Cameroon","oda_share",43689462.961,59758564.113,41506751.028
-"imports_gdp","CMR","Cameroon","fdi",0.762,1.036,3.143
-"imports_gdp","CMR","Cameroon","labour",40.447,31.812,34.528
-"imports_gdp","CMR","Cameroon","polity2",-6.091,-5.759,-0.539
-"imports_gdp","CMR","Cameroon","special.outcome_selected.1980.2001",21.553,21.684,36.732
-"imports_gdp","CAF","Central African Republic","agriculture",37.667,18.648,15.611
-"imports_gdp","CAF","Central African Republic","govt_share",0.227,0.171,0.232
-"imports_gdp","CAF","Central African Republic","invest_share",0.119,0.157,0.225
-"imports_gdp","CAF","Central African Republic","oda_share",41172932.389,202396918.616,41506751.028
-"imports_gdp","CAF","Central African Republic","fdi",0.385,0.647,3.143
-"imports_gdp","CAF","Central African Republic","labour",39.567,31.285,34.528
-"imports_gdp","CAF","Central African Republic","polity2",-2,-1.971,-0.539
-"imports_gdp","CAF","Central African Republic","special.outcome_selected.1980.2001",28.687,28.528,36.732
-"imports_gdp","TCD","Chad","agriculture",36.301,20.335,15.611
-"imports_gdp","TCD","Chad","govt_share",0.061,0.235,0.232
-"imports_gdp","TCD","Chad","invest_share",0.074,0.151,0.225
-"imports_gdp","TCD","Chad","oda_share",85396874.614,85275851.912,41506751.028
-"imports_gdp","TCD","Chad","fdi",2.757,2.756,3.143
-"imports_gdp","TCD","Chad","labour",38.938,35.826,34.528
-"imports_gdp","TCD","Chad","polity2",-2.545,-2.494,-0.539
-"imports_gdp","TCD","Chad","special.outcome_selected.1980.2001",29.922,29.726,36.732
-"imports_gdp","COG","Republic of Congo","agriculture",9.839,13.547,15.611
-"imports_gdp","COG","Republic of Congo","govt_share",0.435,0.247,0.232
-"imports_gdp","COG","Republic of Congo","invest_share",0.176,0.251,0.225
-"imports_gdp","COG","Republic of Congo","oda_share",15393431.347,53592832.667,41506751.028
-"imports_gdp","COG","Republic of Congo","fdi",0.578,1.541,3.143
-"imports_gdp","COG","Republic of Congo","labour",32.097,31.702,34.528
-"imports_gdp","COG","Republic of Congo","polity2",-4.227,-2.911,-0.539
-"imports_gdp","COG","Republic of Congo","special.outcome_selected.1980.2001",50.324,50.184,36.732
-"imports_gdp","GAB","Gabon","agriculture",7.597,19.487,15.611
-"imports_gdp","GAB","Gabon","govt_share",0.148,0.224,0.232
-"imports_gdp","GAB","Gabon","invest_share",0.118,0.248,0.225
-"imports_gdp","GAB","Gabon","oda_share",1858416.877,20511884.644,41506751.028
-"imports_gdp","GAB","Gabon","fdi",0.602,0.803,3.143
-"imports_gdp","GAB","Gabon","labour",30.619,36.658,34.528
-"imports_gdp","GAB","Gabon","polity2",-6.364,-6.284,-0.539
-"imports_gdp","GAB","Gabon","special.outcome_selected.1980.2001",39.153,39.052,36.732
-"imports_gdp","GNQ","Equatorial Guinea","agriculture",10.922,12.303,15.611
-"imports_gdp","GNQ","Equatorial Guinea","govt_share",0.396,0.231,0.232
-"imports_gdp","GNQ","Equatorial Guinea","invest_share",0.1,0.158,0.225
-"imports_gdp","GNQ","Equatorial Guinea","oda_share",12950017.857,5449328.713,41506751.028
-"imports_gdp","GNQ","Equatorial Guinea","fdi",24.862,4.762,3.143
-"imports_gdp","GNQ","Equatorial Guinea","labour",32.282,25.463,34.528
-"imports_gdp","GNQ","Equatorial Guinea","polity2",-6.455,-6.421,-0.539
-"imports_gdp","GNQ","Equatorial Guinea","special.outcome_selected.1980.2001",43.607,43.549,36.732
+"XEU","BEN","Benin","agriculture",32.7,11.014,16.216
+"XEU","BEN","Benin","govt_share",0.173,0.276,0.218
+"XEU","BEN","Benin","invest_share",0.132,0.205,0.186
+"XEU","BEN","Benin","oda_share",58008396.331,19498826.772,58333238.385
+"XEU","BEN","Benin","fdi",-0.108,4.354,2.815
+"XEU","BEN","Benin","labour",35.415,32.666,35.676
+"XEU","BEN","Benin","polity2",0.095,0.053,1.403
+"XEU","BEN","Benin","special.outcome_selected.1981.2001",34.258,32.632,23.535
+"XEU","BEN","Benin","special.outcome_selected.1981",44.41,36.127,21.981
+"XEU","BEN","Benin","special.outcome_selected.1990",22.636,35.817,26.29
+"XEU","BEN","Benin","special.outcome_selected.1995",30.009,29.25,24.262
+"XEU","BEN","Benin","special.outcome_selected.2001",5.656,24.484,23.594
+"XEU","BFA","Burkina Faso","agriculture",29.972,9.146,16.216
+"XEU","BFA","Burkina Faso","govt_share",0.116,0.165,0.218
+"XEU","BFA","Burkina Faso","invest_share",0.152,0.146,0.186
+"XEU","BFA","Burkina Faso","oda_share",125622814.421,32913787.263,58333238.385
+"XEU","BFA","Burkina Faso","fdi",0.236,1.225,2.815
+"XEU","BFA","Burkina Faso","labour",44.33,35.311,35.676
+"XEU","BFA","Burkina Faso","polity2",-5.524,-3.927,1.403
+"XEU","BFA","Burkina Faso","special.outcome_selected.1981.2001",31.543,31.782,23.535
+"XEU","BFA","Burkina Faso","special.outcome_selected.1981",25.128,30.805,21.981
+"XEU","BFA","Burkina Faso","special.outcome_selected.1990",38.753,31.331,26.29
+"XEU","BFA","Burkina Faso","special.outcome_selected.1995",28.018,30.908,24.262
+"XEU","BFA","Burkina Faso","special.outcome_selected.2001",31.082,35.924,23.594
+"XEU","CIV","Côte d'Ivoire","agriculture",24.739,12.913,16.216
+"XEU","CIV","Côte d'Ivoire","govt_share",0.19,0.189,0.218
+"XEU","CIV","Côte d'Ivoire","invest_share",0.069,0.169,0.186
+"XEU","CIV","Côte d'Ivoire","oda_share",62006783.003,47957478.662,58333238.385
+"XEU","CIV","Côte d'Ivoire","fdi",1.084,1.07,2.815
+"XEU","CIV","Côte d'Ivoire","labour",32.908,32.104,35.676
+"XEU","CIV","Côte d'Ivoire","polity2",-6.238,-2.738,1.403
+"XEU","CIV","Côte d'Ivoire","special.outcome_selected.1981.2001",52.137,51.237,23.535
+"XEU","CIV","Côte d'Ivoire","special.outcome_selected.1981",54.937,48.368,21.981
+"XEU","CIV","Côte d'Ivoire","special.outcome_selected.1990",49.793,53.037,26.29
+"XEU","CIV","Côte d'Ivoire","special.outcome_selected.1995",58.146,49.728,24.262
+"XEU","CIV","Côte d'Ivoire","special.outcome_selected.2001",44.203,55.683,23.594
+"XEU","MLI","Mali","agriculture",35.121,14.813,16.216
+"XEU","MLI","Mali","govt_share",0.276,0.225,0.218
+"XEU","MLI","Mali","invest_share",0.103,0.144,0.186
+"XEU","MLI","Mali","oda_share",128499263.951,56737061.608,58333238.385
+"XEU","MLI","Mali","fdi",0.743,2.349,2.815
+"XEU","MLI","Mali","labour",30.635,36.783,35.676
+"XEU","MLI","Mali","polity2",-1.238,0.812,1.403
+"XEU","MLI","Mali","special.outcome_selected.1981.2001",34.579,33.399,23.535
+"XEU","MLI","Mali","special.outcome_selected.1981",38.013,34.167,21.981
+"XEU","MLI","Mali","special.outcome_selected.1990",35.015,35.622,26.29
+"XEU","MLI","Mali","special.outcome_selected.1995",31.702,32.598,24.262
+"XEU","MLI","Mali","special.outcome_selected.2001",12.733,32.461,23.594
+"XEU","NER","Niger","agriculture",35.395,13.343,16.216
+"XEU","NER","Niger","govt_share",0.246,0.193,0.218
+"XEU","NER","Niger","invest_share",0.126,0.175,0.186
+"XEU","NER","Niger","oda_share",107937703.746,54098166.847,58333238.385
+"XEU","NER","Niger","fdi",0.26,1.077,2.815
+"XEU","NER","Niger","labour",41.966,31.37,35.676
+"XEU","NER","Niger","polity2",-1.81,-5.035,1.403
+"XEU","NER","Niger","special.outcome_selected.1981.2001",55.528,54.066,23.535
+"XEU","NER","Niger","special.outcome_selected.1981",45.662,51.217,21.981
+"XEU","NER","Niger","special.outcome_selected.1990",64.36,55.24,26.29
+"XEU","NER","Niger","special.outcome_selected.1995",57.715,52.238,24.262
+"XEU","NER","Niger","special.outcome_selected.2001",38.125,59.907,23.594
+"XEU","SEN","Senegal","agriculture",18.993,12.746,16.216
+"XEU","SEN","Senegal","govt_share",0.196,0.228,0.218
+"XEU","SEN","Senegal","invest_share",0.062,0.149,0.186
+"XEU","SEN","Senegal","oda_share",70979836.861,29037439.088,58333238.385
+"XEU","SEN","Senegal","fdi",0.617,1.914,2.815
+"XEU","SEN","Senegal","labour",32.619,33.13,35.676
+"XEU","SEN","Senegal","polity2",-0.143,0.19,1.403
+"XEU","SEN","Senegal","special.outcome_selected.1981.2001",40.656,40.604,23.535
+"XEU","SEN","Senegal","special.outcome_selected.1981",33.447,37.2,21.981
+"XEU","SEN","Senegal","special.outcome_selected.1990",46.673,43.164,26.29
+"XEU","SEN","Senegal","special.outcome_selected.1995",32.208,40.106,24.262
+"XEU","SEN","Senegal","special.outcome_selected.2001",39.583,43.224,23.594
+"XEU","TGO","Togo","agriculture",23.36,11.551,16.216
+"XEU","TGO","Togo","govt_share",0.162,0.272,0.218
+"XEU","TGO","Togo","invest_share",0.19,0.202,0.186
+"XEU","TGO","Togo","oda_share",30775463.654,25957081.706,58333238.385
+"XEU","TGO","Togo","fdi",0.543,4.143,2.815
+"XEU","TGO","Togo","labour",40.022,32.706,35.676
+"XEU","TGO","Togo","polity2",-4.667,-0.865,1.403
+"XEU","TGO","Togo","special.outcome_selected.1981.2001",33.595,34.094,23.535
+"XEU","TGO","Togo","special.outcome_selected.1981",56.804,37.287,21.981
+"XEU","TGO","Togo","special.outcome_selected.1990",38.614,36.919,26.29
+"XEU","TGO","Togo","special.outcome_selected.1995",24.14,30.825,24.262
+"XEU","TGO","Togo","special.outcome_selected.2001",8.928,27.282,23.594
+"XEU","CMR","Cameroon","agriculture",21.849,13.727,16.216
+"XEU","CMR","Cameroon","govt_share",0.165,0.192,0.218
+"XEU","CMR","Cameroon","invest_share",0.127,0.252,0.186
+"XEU","CMR","Cameroon","oda_share",44162037.211,50204145.162,58333238.385
+"XEU","CMR","Cameroon","fdi",0.706,1.226,2.815
+"XEU","CMR","Cameroon","labour",40.356,31.239,35.676
+"XEU","CMR","Cameroon","polity2",-6,-5.066,1.403
+"XEU","CMR","Cameroon","special.outcome_selected.1981.2001",68.488,58.732,23.535
+"XEU","CMR","Cameroon","special.outcome_selected.1981",47.432,60.493,21.981
+"XEU","CMR","Cameroon","special.outcome_selected.1990",67.502,62.926,26.29
+"XEU","CMR","Cameroon","special.outcome_selected.1995",74.712,56.522,24.262
+"XEU","CMR","Cameroon","special.outcome_selected.2001",67.258,67.608,23.594
+"XEU","CAF","Central African Republic","agriculture",37.869,13.74,16.216
+"XEU","CAF","Central African Republic","govt_share",0.223,0.193,0.218
+"XEU","CAF","Central African Republic","invest_share",0.12,0.244,0.186
+"XEU","CAF","Central African Republic","oda_share",41521332.154,51394523.93,58333238.385
+"XEU","CAF","Central African Republic","fdi",0.371,1.212,2.815
+"XEU","CAF","Central African Republic","labour",39.547,31.185,35.676
+"XEU","CAF","Central African Republic","polity2",-1.762,-5.307,1.403
+"XEU","CAF","Central African Republic","special.outcome_selected.1981.2001",74.813,58.517,23.535
+"XEU","CAF","Central African Republic","special.outcome_selected.1981",65.835,59.802,21.981
+"XEU","CAF","Central African Republic","special.outcome_selected.1990",35.056,62.322,26.29
+"XEU","CAF","Central African Republic","special.outcome_selected.1995",56.212,56.313,24.262
+"XEU","CAF","Central African Republic","special.outcome_selected.2001",83.367,67.21,23.594
+"XEU","TCD","Chad","agriculture",35.852,13.829,16.216
+"XEU","TCD","Chad","govt_share",0.062,0.196,0.218
+"XEU","TCD","Chad","invest_share",0.072,0.191,0.186
+"XEU","TCD","Chad","oda_share",88735068.384,59803062.311,58333238.385
+"XEU","TCD","Chad","fdi",2.89,1.112,2.815
+"XEU","TCD","Chad","labour",38.914,30.806,35.676
+"XEU","TCD","Chad","polity2",-2.667,-7.012,1.403
+"XEU","TCD","Chad","special.outcome_selected.1981.2001",67.175,57.002,23.535
+"XEU","TCD","Chad","special.outcome_selected.1981",58.969,54.922,21.981
+"XEU","TCD","Chad","special.outcome_selected.1990",73.137,58.051,26.29
+"XEU","TCD","Chad","special.outcome_selected.1995",76.564,54.839,24.262
+"XEU","TCD","Chad","special.outcome_selected.2001",67.354,64.394,23.594
+"XEU","COG","Republic of Congo","agriculture",9.751,9.942,16.216
+"XEU","COG","Republic of Congo","govt_share",0.432,0.229,0.218
+"XEU","COG","Republic of Congo","invest_share",0.175,0.184,0.186
+"XEU","COG","Republic of Congo","oda_share",15661058.487,6821654.056,58333238.385
+"XEU","COG","Republic of Congo","fdi",0.493,2.972,2.815
+"XEU","COG","Republic of Congo","labour",32.101,33.251,35.676
+"XEU","COG","Republic of Congo","polity2",-4.048,4.262,1.403
+"XEU","COG","Republic of Congo","special.outcome_selected.1981.2001",37.848,35.856,23.535
+"XEU","COG","Republic of Congo","special.outcome_selected.1981",54.167,36.458,21.981
+"XEU","COG","Republic of Congo","special.outcome_selected.1990",53.524,40.217,26.29
+"XEU","COG","Republic of Congo","special.outcome_selected.1995",48.145,33.7,24.262
+"XEU","COG","Republic of Congo","special.outcome_selected.2001",9.761,29.621,23.594
+"XEU","GAB","Gabon","agriculture",7.637,10.549,16.216
+"XEU","GAB","Gabon","govt_share",0.151,0.282,0.218
+"XEU","GAB","Gabon","invest_share",0.118,0.222,0.186
+"XEU","GAB","Gabon","oda_share",1900630.118,17785868.185,58333238.385
+"XEU","GAB","Gabon","fdi",0.595,4.531,2.815
+"XEU","GAB","Gabon","labour",30.527,31.017,35.676
+"XEU","GAB","Gabon","polity2",-6.238,-2.071,1.403
+"XEU","GAB","Gabon","special.outcome_selected.1981.2001",36.828,36.41,23.535
+"XEU","GAB","Gabon","special.outcome_selected.1981",49.284,39.966,21.981
+"XEU","GAB","Gabon","special.outcome_selected.1990",45.606,39.25,26.29
+"XEU","GAB","Gabon","special.outcome_selected.1995",19.489,32.328,24.262
+"XEU","GAB","Gabon","special.outcome_selected.2001",18.866,28.69,23.594
+"XEU","GNQ","Equatorial Guinea","agriculture",10.769,13.846,16.216
+"XEU","GNQ","Equatorial Guinea","govt_share",0.392,0.197,0.218
+"XEU","GNQ","Equatorial Guinea","invest_share",0.103,0.181,0.186
+"XEU","GNQ","Equatorial Guinea","oda_share",13316174.537,61386311.488,58333238.385
+"XEU","GNQ","Equatorial Guinea","fdi",26.046,1.094,2.815
+"XEU","GNQ","Equatorial Guinea","labour",32.469,30.734,35.676
+"XEU","GNQ","Equatorial Guinea","polity2",-6.429,-7.333,1.403
+"XEU","GNQ","Equatorial Guinea","special.outcome_selected.1981.2001",69.749,56.717,23.535
+"XEU","GNQ","Equatorial Guinea","special.outcome_selected.1981",97.718,54.003,21.981
+"XEU","GNQ","Equatorial Guinea","special.outcome_selected.1990",93.266,57.247,26.29
+"XEU","GNQ","Equatorial Guinea","special.outcome_selected.1995",26.445,54.562,24.262
+"XEU","GNQ","Equatorial Guinea","special.outcome_selected.2001",39.196,63.864,23.594
+"MEU","BEN","Benin","agriculture",32.7,16.503,15.232
+"MEU","BEN","Benin","govt_share",0.173,0.199,0.232
+"MEU","BEN","Benin","invest_share",0.132,0.283,0.209
+"MEU","BEN","Benin","oda_share",58008396.331,54561613.336,53508604.243
+"MEU","BEN","Benin","fdi",-0.108,1.874,3.111
+"MEU","BEN","Benin","labour",35.415,35.194,36.628
+"MEU","BEN","Benin","polity2",0.095,0.249,1.286
+"MEU","BEN","Benin","special.outcome_selected.1981.2001",42.486,42.38,19.488
+"MEU","BEN","Benin","special.outcome_selected.1981",43.658,43.806,19.662
+"MEU","BEN","Benin","special.outcome_selected.1990",29.3,43.094,20.298
+"MEU","BEN","Benin","special.outcome_selected.1995",45.978,44.907,19.303
+"MEU","BEN","Benin","special.outcome_selected.2001",40.318,45.419,18.66
+"MEU","BFA","Burkina Faso","agriculture",29.972,17.588,15.232
+"MEU","BFA","Burkina Faso","govt_share",0.116,0.199,0.232
+"MEU","BFA","Burkina Faso","invest_share",0.152,0.229,0.209
+"MEU","BFA","Burkina Faso","oda_share",125622814.421,50489885.086,53508604.243
+"MEU","BFA","Burkina Faso","fdi",0.236,1.549,3.111
+"MEU","BFA","Burkina Faso","labour",44.33,34.209,36.628
+"MEU","BFA","Burkina Faso","polity2",-5.524,-4.036,1.286
+"MEU","BFA","Burkina Faso","special.outcome_selected.1981.2001",41.503,41.284,19.488
+"MEU","BFA","Burkina Faso","special.outcome_selected.1981",48.246,42.397,19.662
+"MEU","BFA","Burkina Faso","special.outcome_selected.1990",42.729,40.226,20.298
+"MEU","BFA","Burkina Faso","special.outcome_selected.1995",42.513,40.738,19.303
+"MEU","BFA","Burkina Faso","special.outcome_selected.2001",34.458,42.076,18.66
+"MEU","CIV","Côte d'Ivoire","agriculture",24.739,14.608,15.232
+"MEU","CIV","Côte d'Ivoire","govt_share",0.19,0.2,0.232
+"MEU","CIV","Côte d'Ivoire","invest_share",0.069,0.265,0.209
+"MEU","CIV","Côte d'Ivoire","oda_share",62006783.003,39661777.75,53508604.243
+"MEU","CIV","Côte d'Ivoire","fdi",1.084,1.29,3.111
+"MEU","CIV","Côte d'Ivoire","labour",32.908,31.694,36.628
+"MEU","CIV","Côte d'Ivoire","polity2",-6.238,-1.979,1.286
+"MEU","CIV","Côte d'Ivoire","special.outcome_selected.1981.2001",48.336,47.249,19.488
+"MEU","CIV","Côte d'Ivoire","special.outcome_selected.1981",48.24,46.737,19.662
+"MEU","CIV","Côte d'Ivoire","special.outcome_selected.1990",47.254,47.153,20.298
+"MEU","CIV","Côte d'Ivoire","special.outcome_selected.1995",50.123,47.223,19.303
+"MEU","CIV","Côte d'Ivoire","special.outcome_selected.2001",40.032,49.11,18.66
+"MEU","MLI","Mali","agriculture",35.121,16.772,15.232
+"MEU","MLI","Mali","govt_share",0.276,0.219,0.232
+"MEU","MLI","Mali","invest_share",0.103,0.287,0.209
+"MEU","MLI","Mali","oda_share",128499263.951,15280028.365,53508604.243
+"MEU","MLI","Mali","fdi",0.743,1.409,3.111
+"MEU","MLI","Mali","labour",30.635,32.648,36.628
+"MEU","MLI","Mali","polity2",-1.238,5.164,1.286
+"MEU","MLI","Mali","special.outcome_selected.1981.2001",36.416,35.263,19.488
+"MEU","MLI","Mali","special.outcome_selected.1981",44.455,35.131,19.662
+"MEU","MLI","Mali","special.outcome_selected.1990",38.382,38.246,20.298
+"MEU","MLI","Mali","special.outcome_selected.1995",29.276,35.19,19.303
+"MEU","MLI","Mali","special.outcome_selected.2001",32.94,35.022,18.66
+"MEU","NER","Niger","agriculture",35.395,16.126,15.232
+"MEU","NER","Niger","govt_share",0.246,0.216,0.232
+"MEU","NER","Niger","invest_share",0.126,0.222,0.209
+"MEU","NER","Niger","oda_share",107937703.746,32775146.557,53508604.243
+"MEU","NER","Niger","fdi",0.26,1.262,3.111
+"MEU","NER","Niger","labour",41.966,31.914,36.628
+"MEU","NER","Niger","polity2",-1.81,0.871,1.286
+"MEU","NER","Niger","special.outcome_selected.1981.2001",36.99,35.742,19.488
+"MEU","NER","Niger","special.outcome_selected.1981",43.846,34.976,19.662
+"MEU","NER","Niger","special.outcome_selected.1990",39.994,36.575,20.298
+"MEU","NER","Niger","special.outcome_selected.1995",35.098,33.741,19.303
+"MEU","NER","Niger","special.outcome_selected.2001",26.252,34.031,18.66
+"MEU","SEN","Senegal","agriculture",18.993,12.768,15.232
+"MEU","SEN","Senegal","govt_share",0.196,0.182,0.232
+"MEU","SEN","Senegal","invest_share",0.062,0.276,0.209
+"MEU","SEN","Senegal","oda_share",70979836.861,31704417.381,53508604.243
+"MEU","SEN","Senegal","fdi",0.617,1.239,3.111
+"MEU","SEN","Senegal","labour",32.619,32.537,36.628
+"MEU","SEN","Senegal","polity2",-0.143,-0.142,1.286
+"MEU","SEN","Senegal","special.outcome_selected.1981.2001",49.314,49.106,19.488
+"MEU","SEN","Senegal","special.outcome_selected.1981",46.37,47.739,19.662
+"MEU","SEN","Senegal","special.outcome_selected.1990",51.894,49.849,20.298
+"MEU","SEN","Senegal","special.outcome_selected.1995",49.596,50.725,19.303
+"MEU","SEN","Senegal","special.outcome_selected.2001",49.137,52.671,18.66
+"MEU","TGO","Togo","agriculture",23.36,17.757,15.232
+"MEU","TGO","Togo","govt_share",0.162,0.189,0.232
+"MEU","TGO","Togo","invest_share",0.19,0.289,0.209
+"MEU","TGO","Togo","oda_share",30775463.654,42944018.004,53508604.243
+"MEU","TGO","Togo","fdi",0.543,1.407,3.111
+"MEU","TGO","Togo","labour",40.022,33.598,36.628
+"MEU","TGO","Togo","polity2",-4.667,-4.001,1.286
+"MEU","TGO","Togo","special.outcome_selected.1981.2001",48.376,47.729,19.488
+"MEU","TGO","Togo","special.outcome_selected.1981",53.061,49.154,19.662
+"MEU","TGO","Togo","special.outcome_selected.1990",52.068,47.293,20.298
+"MEU","TGO","Togo","special.outcome_selected.1995",49.512,48.4,19.303
+"MEU","TGO","Togo","special.outcome_selected.2001",39.335,50.901,18.66
+"MEU","CMR","Cameroon","agriculture",21.849,13.621,15.232
+"MEU","CMR","Cameroon","govt_share",0.165,0.188,0.232
+"MEU","CMR","Cameroon","invest_share",0.127,0.315,0.209
+"MEU","CMR","Cameroon","oda_share",44162037.211,40209373.645,53508604.243
+"MEU","CMR","Cameroon","fdi",0.706,1.344,3.111
+"MEU","CMR","Cameroon","labour",40.356,31.69,36.628
+"MEU","CMR","Cameroon","polity2",-6,-3.039,1.286
+"MEU","CMR","Cameroon","special.outcome_selected.1981.2001",57.076,55.954,19.488
+"MEU","CMR","Cameroon","special.outcome_selected.1981",58.874,55.794,19.662
+"MEU","CMR","Cameroon","special.outcome_selected.1990",63.514,55.716,20.298
+"MEU","CMR","Cameroon","special.outcome_selected.1995",49.166,57.924,19.303
+"MEU","CMR","Cameroon","special.outcome_selected.2001",44.678,60.926,18.66
+"MEU","CAF","Central African Republic","agriculture",37.869,13.522,15.232
+"MEU","CAF","Central African Republic","govt_share",0.223,0.184,0.232
+"MEU","CAF","Central African Republic","invest_share",0.12,0.374,0.209
+"MEU","CAF","Central African Republic","oda_share",41521332.154,30873036.894,53508604.243
+"MEU","CAF","Central African Republic","fdi",0.371,1.454,3.111
+"MEU","CAF","Central African Republic","labour",39.547,32.112,36.628
+"MEU","CAF","Central African Republic","polity2",-1.762,-1.145,1.286
+"MEU","CAF","Central African Republic","special.outcome_selected.1981.2001",60.988,59.735,19.488
+"MEU","CAF","Central African Republic","special.outcome_selected.1981",67.391,60.098,19.662
+"MEU","CAF","Central African Republic","special.outcome_selected.1990",61.623,60.624,20.298
+"MEU","CAF","Central African Republic","special.outcome_selected.1995",48.21,63.721,19.303
+"MEU","CAF","Central African Republic","special.outcome_selected.2001",57.768,66.983,18.66
+"MEU","TCD","Chad","agriculture",35.852,13.564,15.232
+"MEU","TCD","Chad","govt_share",0.062,0.186,0.232
+"MEU","TCD","Chad","invest_share",0.072,0.349,0.209
+"MEU","TCD","Chad","oda_share",88735068.384,34860606.43,53508604.243
+"MEU","TCD","Chad","fdi",2.89,1.407,3.111
+"MEU","TCD","Chad","labour",38.914,31.932,36.628
+"MEU","TCD","Chad","polity2",-2.667,-1.954,1.286
+"MEU","TCD","Chad","special.outcome_selected.1981.2001",59.658,58.12,19.488
+"MEU","TCD","Chad","special.outcome_selected.1981",51.287,58.259,19.662
+"MEU","TCD","Chad","special.outcome_selected.1990",62.786,58.527,20.298
+"MEU","TCD","Chad","special.outcome_selected.1995",61.529,61.244,19.303
+"MEU","TCD","Chad","special.outcome_selected.2001",42.386,64.395,18.66
+"MEU","COG","Republic of Congo","agriculture",9.751,13.512,15.232
+"MEU","COG","Republic of Congo","govt_share",0.432,0.184,0.232
+"MEU","COG","Republic of Congo","invest_share",0.175,0.38,0.209
+"MEU","COG","Republic of Congo","oda_share",15661058.487,29977186.062,53508604.243
+"MEU","COG","Republic of Congo","fdi",0.493,1.465,3.111
+"MEU","COG","Republic of Congo","labour",32.101,32.152,36.628
+"MEU","COG","Republic of Congo","polity2",-4.048,-0.964,1.286
+"MEU","COG","Republic of Congo","special.outcome_selected.1981.2001",62.167,60.098,19.488
+"MEU","COG","Republic of Congo","special.outcome_selected.1981",73.656,60.512,19.662
+"MEU","COG","Republic of Congo","special.outcome_selected.1990",61.984,61.094,20.298
+"MEU","COG","Republic of Congo","special.outcome_selected.1995",53.919,64.277,19.303
+"MEU","COG","Republic of Congo","special.outcome_selected.2001",48.227,67.564,18.66
+"MEU","GAB","Gabon","agriculture",7.637,13.445,15.232
+"MEU","GAB","Gabon","govt_share",0.151,0.181,0.232
+"MEU","GAB","Gabon","invest_share",0.118,0.419,0.209
+"MEU","GAB","Gabon","oda_share",1900630.118,23714094.992,53508604.243
+"MEU","GAB","Gabon","fdi",0.595,1.539,3.111
+"MEU","GAB","Gabon","labour",30.527,32.435,36.628
+"MEU","GAB","Gabon","polity2",-6.238,0.307,1.286
+"MEU","GAB","Gabon","special.outcome_selected.1981.2001",64.464,62.635,19.488
+"MEU","GAB","Gabon","special.outcome_selected.1981",68.259,63.399,19.662
+"MEU","GAB","Gabon","special.outcome_selected.1990",66.022,64.387,20.298
+"MEU","GAB","Gabon","special.outcome_selected.1995",60.336,68.166,19.303
+"MEU","GAB","Gabon","special.outcome_selected.2001",59.809,71.627,18.66
+"MEU","GNQ","Equatorial Guinea","agriculture",10.769,19.498,15.232
+"MEU","GNQ","Equatorial Guinea","govt_share",0.392,0.18,0.232
+"MEU","GNQ","Equatorial Guinea","invest_share",0.103,0.434,0.209
+"MEU","GNQ","Equatorial Guinea","oda_share",13316174.537,19317696.546,53508604.243
+"MEU","GNQ","Equatorial Guinea","fdi",26.046,1.733,3.111
+"MEU","GNQ","Equatorial Guinea","labour",32.469,35.651,36.628
+"MEU","GNQ","Equatorial Guinea","polity2",-6.429,0.593,1.286
+"MEU","GNQ","Equatorial Guinea","special.outcome_selected.1981.2001",54.61,53.844,19.488
+"MEU","GNQ","Equatorial Guinea","special.outcome_selected.1981",91.803,57.437,19.662
+"MEU","GNQ","Equatorial Guinea","special.outcome_selected.1990",49.727,56.323,20.298
+"MEU","GNQ","Equatorial Guinea","special.outcome_selected.1995",69.8,59.271,19.303
+"MEU","GNQ","Equatorial Guinea","special.outcome_selected.2001",42.69,62.223,18.66
+"trade_openness","BEN","Benin","agriculture",32.7,18.035,16.152
+"trade_openness","BEN","Benin","govt_share",0.173,0.204,0.22
+"trade_openness","BEN","Benin","invest_share",0.132,0.146,0.245
+"trade_openness","BEN","Benin","oda_share",58008396.331,127690570.363,65766998.595
+"trade_openness","BEN","Benin","fdi",-0.108,2.204,2.138
+"trade_openness","BEN","Benin","labour",35.415,35.282,33.427
+"trade_openness","BEN","Benin","polity2",0.095,1.382,1.298
+"trade_openness","BEN","Benin","special.outcome_selected.1981.2001",53.134,53.137,79.393
+"trade_openness","BEN","Benin","special.outcome_selected.1981",59.889,54.156,81.534
+"trade_openness","BEN","Benin","special.outcome_selected.1990",45.72,51.043,72.185
+"trade_openness","BEN","Benin","special.outcome_selected.1995",63.8,56.858,75.835
+"trade_openness","BEN","Benin","special.outcome_selected.2001",48.257,55.328,96.718
+"trade_openness","BFA","Burkina Faso","agriculture",29.972,21.116,16.152
+"trade_openness","BFA","Burkina Faso","govt_share",0.116,0.174,0.22
+"trade_openness","BFA","Burkina Faso","invest_share",0.152,0.15,0.245
+"trade_openness","BFA","Burkina Faso","oda_share",125622814.421,248985595.269,65766998.595
+"trade_openness","BFA","Burkina Faso","fdi",0.236,0.947,2.138
+"trade_openness","BFA","Burkina Faso","labour",44.33,32.598,33.427
+"trade_openness","BFA","Burkina Faso","polity2",-5.524,-1.464,1.298
+"trade_openness","BFA","Burkina Faso","special.outcome_selected.1981.2001",36.779,37.191,79.393
+"trade_openness","BFA","Burkina Faso","special.outcome_selected.1981",40.712,37.68,81.534
+"trade_openness","BFA","Burkina Faso","special.outcome_selected.1990",35.423,36.536,72.185
+"trade_openness","BFA","Burkina Faso","special.outcome_selected.1995",40.747,40.258,75.835
+"trade_openness","BFA","Burkina Faso","special.outcome_selected.2001",31.658,42.171,96.718
+"trade_openness","CIV","Côte d'Ivoire","agriculture",24.739,12.473,16.152
+"trade_openness","CIV","Côte d'Ivoire","govt_share",0.19,0.192,0.22
+"trade_openness","CIV","Côte d'Ivoire","invest_share",0.069,0.18,0.245
+"trade_openness","CIV","Côte d'Ivoire","oda_share",62006783.003,46009060.634,65766998.595
+"trade_openness","CIV","Côte d'Ivoire","fdi",1.084,1.352,2.138
+"trade_openness","CIV","Côte d'Ivoire","labour",32.908,29.223,33.427
+"trade_openness","CIV","Côte d'Ivoire","polity2",-6.238,-3.741,1.298
+"trade_openness","CIV","Côte d'Ivoire","special.outcome_selected.1981.2001",63.619,63.738,79.393
+"trade_openness","CIV","Côte d'Ivoire","special.outcome_selected.1981",77.459,75.42,81.534
+"trade_openness","CIV","Côte d'Ivoire","special.outcome_selected.1990",58.801,65.171,72.185
+"trade_openness","CIV","Côte d'Ivoire","special.outcome_selected.1995",76.202,62.99,75.835
+"trade_openness","CIV","Côte d'Ivoire","special.outcome_selected.2001",53.114,62.947,96.718
+"trade_openness","MLI","Mali","agriculture",35.121,19.346,16.152
+"trade_openness","MLI","Mali","govt_share",0.276,0.182,0.22
+"trade_openness","MLI","Mali","invest_share",0.103,0.168,0.245
+"trade_openness","MLI","Mali","oda_share",128499263.951,186681104.708,65766998.595
+"trade_openness","MLI","Mali","fdi",0.743,0.809,2.138
+"trade_openness","MLI","Mali","labour",30.635,31.26,33.427
+"trade_openness","MLI","Mali","polity2",-1.238,-2.754,1.298
+"trade_openness","MLI","Mali","special.outcome_selected.1981.2001",40.778,40.869,79.393
+"trade_openness","MLI","Mali","special.outcome_selected.1981",28.565,41.45,81.534
+"trade_openness","MLI","Mali","special.outcome_selected.1990",38.46,41.543,72.185
+"trade_openness","MLI","Mali","special.outcome_selected.1995",45.081,43.214,75.835
+"trade_openness","MLI","Mali","special.outcome_selected.2001",49.324,46.618,96.718
+"trade_openness","NER","Niger","agriculture",35.395,19.246,16.152
+"trade_openness","NER","Niger","govt_share",0.246,0.184,0.22
+"trade_openness","NER","Niger","invest_share",0.126,0.153,0.245
+"trade_openness","NER","Niger","oda_share",107937703.746,197821555.596,65766998.595
+"trade_openness","NER","Niger","fdi",0.26,1.16,2.138
+"trade_openness","NER","Niger","labour",41.966,32.854,33.427
+"trade_openness","NER","Niger","polity2",-1.81,-1.909,1.298
+"trade_openness","NER","Niger","special.outcome_selected.1981.2001",39.526,40.936,79.393
+"trade_openness","NER","Niger","special.outcome_selected.1981",60.357,42.635,81.534
+"trade_openness","NER","Niger","special.outcome_selected.1990",35.617,40.42,72.185
+"trade_openness","NER","Niger","special.outcome_selected.1995",34.778,42.642,75.835
+"trade_openness","NER","Niger","special.outcome_selected.2001",33.014,45.461,96.718
+"trade_openness","SEN","Senegal","agriculture",18.993,14.824,16.152
+"trade_openness","SEN","Senegal","govt_share",0.196,0.212,0.22
+"trade_openness","SEN","Senegal","invest_share",0.062,0.159,0.245
+"trade_openness","SEN","Senegal","oda_share",70979836.861,73834998.258,65766998.595
+"trade_openness","SEN","Senegal","fdi",0.617,1.779,2.138
+"trade_openness","SEN","Senegal","labour",32.619,34.005,33.427
+"trade_openness","SEN","Senegal","polity2",-0.143,-2.296,1.298
+"trade_openness","SEN","Senegal","special.outcome_selected.1981.2001",49.598,49.874,79.393
+"trade_openness","SEN","Senegal","special.outcome_selected.1981",65.852,54.054,81.534
+"trade_openness","SEN","Senegal","special.outcome_selected.1990",44.789,49.72,72.185
+"trade_openness","SEN","Senegal","special.outcome_selected.1995",52.725,48.635,75.835
+"trade_openness","SEN","Senegal","special.outcome_selected.2001",49.721,52.794,96.718
+"trade_openness","TGO","Togo","agriculture",23.36,13.996,16.152
+"trade_openness","TGO","Togo","govt_share",0.162,0.18,0.22
+"trade_openness","TGO","Togo","invest_share",0.19,0.397,0.245
+"trade_openness","TGO","Togo","oda_share",30775463.654,40827120.836,65766998.595
+"trade_openness","TGO","Togo","fdi",0.543,1.465,2.138
+"trade_openness","TGO","Togo","labour",40.022,32.309,33.427
+"trade_openness","TGO","Togo","polity2",-4.667,-0.073,1.298
+"trade_openness","TGO","Togo","special.outcome_selected.1981.2001",73.027,74.283,79.393
+"trade_openness","TGO","Togo","special.outcome_selected.1981",95.814,80.251,81.534
+"trade_openness","TGO","Togo","special.outcome_selected.1990",59.766,75.161,72.185
+"trade_openness","TGO","Togo","special.outcome_selected.1995",55.602,68.833,75.835
+"trade_openness","TGO","Togo","special.outcome_selected.2001",51.394,79.641,96.718
+"trade_openness","CMR","Cameroon","agriculture",21.849,16.976,16.152
+"trade_openness","CMR","Cameroon","govt_share",0.165,0.183,0.22
+"trade_openness","CMR","Cameroon","invest_share",0.127,0.174,0.245
+"trade_openness","CMR","Cameroon","oda_share",44162037.211,153236151.95,65766998.595
+"trade_openness","CMR","Cameroon","fdi",0.706,0.817,2.138
+"trade_openness","CMR","Cameroon","labour",40.356,30.247,33.427
+"trade_openness","CMR","Cameroon","polity2",-6,-5.756,1.298
+"trade_openness","CMR","Cameroon","special.outcome_selected.1981.2001",44.706,45.704,79.393
+"trade_openness","CMR","Cameroon","special.outcome_selected.1981",50.281,51.364,81.534
+"trade_openness","CMR","Cameroon","special.outcome_selected.1990",37.496,44.559,72.185
+"trade_openness","CMR","Cameroon","special.outcome_selected.1995",36.682,43.546,75.835
+"trade_openness","CMR","Cameroon","special.outcome_selected.2001",51.572,53.249,96.718
+"trade_openness","CAF","Central African Republic","agriculture",37.869,15.127,16.152
+"trade_openness","CAF","Central African Republic","govt_share",0.223,0.224,0.22
+"trade_openness","CAF","Central African Republic","invest_share",0.12,0.143,0.245
+"trade_openness","CAF","Central African Republic","oda_share",41521332.154,65549267.667,65766998.595
+"trade_openness","CAF","Central African Republic","fdi",0.371,2.313,2.138
+"trade_openness","CAF","Central African Republic","labour",39.547,36.725,33.427
+"trade_openness","CAF","Central African Republic","polity2",-1.762,0.889,1.298
+"trade_openness","CAF","Central African Republic","special.outcome_selected.1981.2001",48.678,49.069,79.393
+"trade_openness","CAF","Central African Republic","special.outcome_selected.1981",58.443,50.684,81.534
+"trade_openness","CAF","Central African Republic","special.outcome_selected.1990",42.943,49.665,72.185
+"trade_openness","CAF","Central African Republic","special.outcome_selected.1995",50.476,50.154,75.835
+"trade_openness","CAF","Central African Republic","special.outcome_selected.2001",39.73,48.666,96.718
+"trade_openness","TCD","Chad","agriculture",35.852,23.99,16.152
+"trade_openness","TCD","Chad","govt_share",0.062,0.141,0.22
+"trade_openness","TCD","Chad","invest_share",0.072,0.136,0.245
+"trade_openness","TCD","Chad","oda_share",88735068.384,345783462.785,65766998.595
+"trade_openness","TCD","Chad","fdi",2.89,0.291,2.138
+"trade_openness","TCD","Chad","labour",38.914,32.212,33.427
+"trade_openness","TCD","Chad","polity2",-2.667,2.358,1.298
+"trade_openness","TCD","Chad","special.outcome_selected.1981.2001",45.115,44.549,79.393
+"trade_openness","TCD","Chad","special.outcome_selected.1981",37.762,37.881,81.534
+"trade_openness","TCD","Chad","special.outcome_selected.1990",41.387,45.768,72.185
+"trade_openness","TCD","Chad","special.outcome_selected.1995",55.697,48.829,75.835
+"trade_openness","TCD","Chad","special.outcome_selected.2001",64.322,54,96.718
+"trade_openness","COG","Republic of Congo","agriculture",9.751,12.451,16.152
+"trade_openness","COG","Republic of Congo","govt_share",0.432,0.239,0.22
+"trade_openness","COG","Republic of Congo","invest_share",0.175,0.24,0.245
+"trade_openness","COG","Republic of Congo","oda_share",15661058.487,47347522.848,65766998.595
+"trade_openness","COG","Republic of Congo","fdi",0.493,2.76,2.138
+"trade_openness","COG","Republic of Congo","labour",32.101,30.779,33.427
+"trade_openness","COG","Republic of Congo","polity2",-4.048,0.726,1.298
+"trade_openness","COG","Republic of Congo","special.outcome_selected.1981.2001",107.518,104.875,79.393
+"trade_openness","COG","Republic of Congo","special.outcome_selected.1981",134.115,118.231,81.534
+"trade_openness","COG","Republic of Congo","special.outcome_selected.1990",70.819,86.247,72.185
+"trade_openness","COG","Republic of Congo","special.outcome_selected.1995",128.313,91.421,75.835
+"trade_openness","COG","Republic of Congo","special.outcome_selected.2001",130.732,127.733,96.718
+"trade_openness","GAB","Gabon","agriculture",7.637,9.407,16.152
+"trade_openness","GAB","Gabon","govt_share",0.151,0.239,0.22
+"trade_openness","GAB","Gabon","invest_share",0.118,0.217,0.245
+"trade_openness","GAB","Gabon","oda_share",1900630.118,23077172.838,65766998.595
+"trade_openness","GAB","Gabon","fdi",0.595,2.268,2.138
+"trade_openness","GAB","Gabon","labour",30.527,31.72,33.427
+"trade_openness","GAB","Gabon","polity2",-6.238,2.243,1.298
+"trade_openness","GAB","Gabon","special.outcome_selected.1981.2001",93.41,92.687,79.393
+"trade_openness","GAB","Gabon","special.outcome_selected.1981",104.059,105.901,81.534
+"trade_openness","GAB","Gabon","special.outcome_selected.1990",76.897,88.349,72.185
+"trade_openness","GAB","Gabon","special.outcome_selected.1995",95.135,85.978,75.835
+"trade_openness","GAB","Gabon","special.outcome_selected.2001",83.639,94.686,96.718
+"exports_gdp","BEN","Benin","agriculture",32.7,24.696,16.152
+"exports_gdp","BEN","Benin","govt_share",0.173,0.182,0.22
+"exports_gdp","BEN","Benin","invest_share",0.132,0.172,0.245
+"exports_gdp","BEN","Benin","oda_share",58008396.331,249527544.941,65766998.595
+"exports_gdp","BEN","Benin","fdi",-0.108,1.254,2.138
+"exports_gdp","BEN","Benin","labour",35.415,33.512,33.427
+"exports_gdp","BEN","Benin","polity2",0.095,0.153,1.298
+"exports_gdp","BEN","Benin","special.outcome_selected.1981.2001",20.751,20.734,34.26
+"exports_gdp","BEN","Benin","special.outcome_selected.1981",15.931,18.119,30.423
+"exports_gdp","BEN","Benin","special.outcome_selected.1990",19.181,18.813,30.776
+"exports_gdp","BEN","Benin","special.outcome_selected.1995",27.369,25.213,33.238
+"exports_gdp","BEN","Benin","special.outcome_selected.2001",19.869,23.646,44.906
+"exports_gdp","BFA","Burkina Faso","agriculture",29.972,25.896,16.152
+"exports_gdp","BFA","Burkina Faso","govt_share",0.116,0.157,0.22
+"exports_gdp","BFA","Burkina Faso","invest_share",0.152,0.13,0.245
+"exports_gdp","BFA","Burkina Faso","oda_share",125622814.421,374132022.989,65766998.595
+"exports_gdp","BFA","Burkina Faso","fdi",0.236,0.781,2.138
+"exports_gdp","BFA","Burkina Faso","labour",44.33,33.501,33.427
+"exports_gdp","BFA","Burkina Faso","polity2",-5.524,1.975,1.298
+"exports_gdp","BFA","Burkina Faso","special.outcome_selected.1981.2001",10.206,10.634,34.26
+"exports_gdp","BFA","Burkina Faso","special.outcome_selected.1981",9.276,8.857,30.423
+"exports_gdp","BFA","Burkina Faso","special.outcome_selected.1990",10.967,9.375,30.776
+"exports_gdp","BFA","Burkina Faso","special.outcome_selected.1995",14.141,13.266,33.238
+"exports_gdp","BFA","Burkina Faso","special.outcome_selected.2001",9.044,14.74,44.906
+"exports_gdp","CIV","Côte d'Ivoire","agriculture",24.739,13.124,16.152
+"exports_gdp","CIV","Côte d'Ivoire","govt_share",0.19,0.198,0.22
+"exports_gdp","CIV","Côte d'Ivoire","invest_share",0.069,0.15,0.245
+"exports_gdp","CIV","Côte d'Ivoire","oda_share",62006783.003,65877469.872,65766998.595
+"exports_gdp","CIV","Côte d'Ivoire","fdi",1.084,2.349,2.138
+"exports_gdp","CIV","Côte d'Ivoire","labour",32.908,31.679,33.427
+"exports_gdp","CIV","Côte d'Ivoire","polity2",-6.238,6.136,1.298
+"exports_gdp","CIV","Côte d'Ivoire","special.outcome_selected.1981.2001",33.754,33.716,34.26
+"exports_gdp","CIV","Côte d'Ivoire","special.outcome_selected.1981",35.175,39.725,30.423
+"exports_gdp","CIV","Côte d'Ivoire","special.outcome_selected.1990",31.69,32.563,30.776
+"exports_gdp","CIV","Côte d'Ivoire","special.outcome_selected.1995",41.759,33.594,33.238
+"exports_gdp","CIV","Côte d'Ivoire","special.outcome_selected.2001",27.47,30.937,44.906
+"exports_gdp","MLI","Mali","agriculture",35.121,22.372,16.152
+"exports_gdp","MLI","Mali","govt_share",0.276,0.167,0.22
+"exports_gdp","MLI","Mali","invest_share",0.103,0.151,0.245
+"exports_gdp","MLI","Mali","oda_share",128499263.951,285779744.667,65766998.595
+"exports_gdp","MLI","Mali","fdi",0.743,0.713,2.138
+"exports_gdp","MLI","Mali","labour",30.635,31.788,33.427
+"exports_gdp","MLI","Mali","polity2",-1.238,-1.31,1.298
+"exports_gdp","MLI","Mali","special.outcome_selected.1981.2001",14.391,14.439,34.26
+"exports_gdp","MLI","Mali","special.outcome_selected.1981",8.967,12.959,30.423
+"exports_gdp","MLI","Mali","special.outcome_selected.1990",12.922,13.353,30.776
+"exports_gdp","MLI","Mali","special.outcome_selected.1995",15.694,15.306,33.238
+"exports_gdp","MLI","Mali","special.outcome_selected.2001",21.268,19.405,44.906
+"exports_gdp","NER","Niger","agriculture",35.395,19.698,16.152
+"exports_gdp","NER","Niger","govt_share",0.246,0.212,0.22
+"exports_gdp","NER","Niger","invest_share",0.126,0.123,0.245
+"exports_gdp","NER","Niger","oda_share",107937703.746,179864155.69,65766998.595
+"exports_gdp","NER","Niger","fdi",0.26,2.367,2.138
+"exports_gdp","NER","Niger","labour",41.966,38.559,33.427
+"exports_gdp","NER","Niger","polity2",-1.81,5.511,1.298
+"exports_gdp","NER","Niger","special.outcome_selected.1981.2001",16.474,17.176,34.26
+"exports_gdp","NER","Niger","special.outcome_selected.1981",24.156,17.52,30.423
+"exports_gdp","NER","Niger","special.outcome_selected.1990",15.069,17.381,30.776
+"exports_gdp","NER","Niger","special.outcome_selected.1995",14.538,18.794,33.238
+"exports_gdp","NER","Niger","special.outcome_selected.2001",13.456,18.019,44.906
+"exports_gdp","SEN","Senegal","agriculture",18.993,18.845,16.152
+"exports_gdp","SEN","Senegal","govt_share",0.196,0.215,0.22
+"exports_gdp","SEN","Senegal","invest_share",0.062,0.125,0.245
+"exports_gdp","SEN","Senegal","oda_share",70979836.861,161334246.245,65766998.595
+"exports_gdp","SEN","Senegal","fdi",0.617,2.338,2.138
+"exports_gdp","SEN","Senegal","labour",32.619,38.021,33.427
+"exports_gdp","SEN","Senegal","polity2",-0.143,4.562,1.298
+"exports_gdp","SEN","Senegal","special.outcome_selected.1981.2001",18.147,18.171,34.26
+"exports_gdp","SEN","Senegal","special.outcome_selected.1981",21.349,18.658,30.423
+"exports_gdp","SEN","Senegal","special.outcome_selected.1990",17.056,18.185,30.776
+"exports_gdp","SEN","Senegal","special.outcome_selected.1995",20.657,19.043,33.238
+"exports_gdp","SEN","Senegal","special.outcome_selected.2001",17.701,19.566,44.906
+"exports_gdp","TGO","Togo","agriculture",23.36,12.203,16.152
+"exports_gdp","TGO","Togo","govt_share",0.162,0.232,0.22
+"exports_gdp","TGO","Togo","invest_share",0.19,0.144,0.245
+"exports_gdp","TGO","Togo","oda_share",30775463.654,32091816.528,65766998.595
+"exports_gdp","TGO","Togo","fdi",0.543,2.83,2.138
+"exports_gdp","TGO","Togo","labour",40.022,35.966,33.427
+"exports_gdp","TGO","Togo","polity2",-4.667,7.25,1.298
+"exports_gdp","TGO","Togo","special.outcome_selected.1981.2001",31.991,33.552,34.26
+"exports_gdp","TGO","Togo","special.outcome_selected.1981",40.078,36.521,30.423
+"exports_gdp","TGO","Togo","special.outcome_selected.1990",26.243,33.324,30.776
+"exports_gdp","TGO","Togo","special.outcome_selected.1995",22.757,32.92,33.238
+"exports_gdp","TGO","Togo","special.outcome_selected.2001",20.51,30.097,44.906
+"exports_gdp","CMR","Cameroon","agriculture",21.849,15.002,16.152
+"exports_gdp","CMR","Cameroon","govt_share",0.165,0.231,0.22
+"exports_gdp","CMR","Cameroon","invest_share",0.127,0.144,0.245
+"exports_gdp","CMR","Cameroon","oda_share",44162037.211,60369659.433,65766998.595
+"exports_gdp","CMR","Cameroon","fdi",0.706,2.595,2.138
+"exports_gdp","CMR","Cameroon","labour",40.356,37.677,33.427
+"exports_gdp","CMR","Cameroon","polity2",-6,2.781,1.298
+"exports_gdp","CMR","Cameroon","special.outcome_selected.1981.2001",23.418,22.315,34.26
+"exports_gdp","CMR","Cameroon","special.outcome_selected.1981",21.867,23.541,30.423
+"exports_gdp","CMR","Cameroon","special.outcome_selected.1990",20.183,22.463,30.776
+"exports_gdp","CMR","Cameroon","special.outcome_selected.1995",21.618,21.431,33.238
+"exports_gdp","CMR","Cameroon","special.outcome_selected.2001",25.261,24.063,44.906
+"exports_gdp","CAF","Central African Republic","agriculture",37.869,17.397,16.152
+"exports_gdp","CAF","Central African Republic","govt_share",0.223,0.23,0.22
+"exports_gdp","CAF","Central African Republic","invest_share",0.12,0.136,0.245
+"exports_gdp","CAF","Central African Republic","oda_share",41521332.154,102558299.481,65766998.595
+"exports_gdp","CAF","Central African Republic","fdi",0.371,2.526,2.138
+"exports_gdp","CAF","Central African Republic","labour",39.547,38.487,33.427
+"exports_gdp","CAF","Central African Republic","polity2",-1.762,3.928,1.298
+"exports_gdp","CAF","Central African Republic","special.outcome_selected.1981.2001",20.581,20.606,34.26
+"exports_gdp","CAF","Central African Republic","special.outcome_selected.1981",24.383,21.216,30.423
+"exports_gdp","CAF","Central African Republic","special.outcome_selected.1990",17.067,20.652,30.776
+"exports_gdp","CAF","Central African Republic","special.outcome_selected.1995",22.221,20.957,33.238
+"exports_gdp","CAF","Central African Republic","special.outcome_selected.2001",17.157,21.923,44.906
+"exports_gdp","TCD","Chad","agriculture",35.852,22.806,16.152
+"exports_gdp","TCD","Chad","govt_share",0.062,0.173,0.22
+"exports_gdp","TCD","Chad","invest_share",0.072,0.163,0.245
+"exports_gdp","TCD","Chad","oda_share",88735068.384,265533225.849,65766998.595
+"exports_gdp","TCD","Chad","fdi",2.89,0.658,2.138
+"exports_gdp","TCD","Chad","labour",38.914,32.236,33.427
+"exports_gdp","TCD","Chad","polity2",-2.667,-2.401,1.298
+"exports_gdp","TCD","Chad","special.outcome_selected.1981.2001",15.142,15.192,34.26
+"exports_gdp","TCD","Chad","special.outcome_selected.1981",15.1,13.081,30.423
+"exports_gdp","TCD","Chad","special.outcome_selected.1990",13.48,14.854,30.776
+"exports_gdp","TCD","Chad","special.outcome_selected.1995",21.929,17.528,33.238
+"exports_gdp","TCD","Chad","special.outcome_selected.2001",14.666,18.711,44.906
+"exports_gdp","COG","Republic of Congo","agriculture",9.751,15.526,16.152
+"exports_gdp","COG","Republic of Congo","govt_share",0.432,0.217,0.22
+"exports_gdp","COG","Republic of Congo","invest_share",0.175,0.226,0.245
+"exports_gdp","COG","Republic of Congo","oda_share",15661058.487,55373345.685,65766998.595
+"exports_gdp","COG","Republic of Congo","fdi",0.493,2.851,2.138
+"exports_gdp","COG","Republic of Congo","labour",32.101,29.069,33.427
+"exports_gdp","COG","Republic of Congo","polity2",-4.048,-0.297,1.298
+"exports_gdp","COG","Republic of Congo","special.outcome_selected.1981.2001",57.66,55.372,34.26
+"exports_gdp","COG","Republic of Congo","special.outcome_selected.1981",58.021,49.942,30.423
+"exports_gdp","COG","Republic of Congo","special.outcome_selected.1990",51.777,42.888,30.776
+"exports_gdp","COG","Republic of Congo","special.outcome_selected.1995",64.705,50.805,33.238
+"exports_gdp","COG","Republic of Congo","special.outcome_selected.2001",77.42,67.526,44.906
+"exports_gdp","GAB","Gabon","agriculture",7.637,13.201,16.152
+"exports_gdp","GAB","Gabon","govt_share",0.151,0.187,0.22
+"exports_gdp","GAB","Gabon","invest_share",0.118,0.198,0.245
+"exports_gdp","GAB","Gabon","oda_share",1900630.118,21355203.317,65766998.595
+"exports_gdp","GAB","Gabon","fdi",0.595,2.757,2.138
+"exports_gdp","GAB","Gabon","labour",30.527,26.874,33.427
+"exports_gdp","GAB","Gabon","polity2",-6.238,3.286,1.298
+"exports_gdp","GAB","Gabon","special.outcome_selected.1981.2001",53.899,52.476,34.26
+"exports_gdp","GAB","Gabon","special.outcome_selected.1981",63.364,55.749,30.423
+"exports_gdp","GAB","Gabon","special.outcome_selected.1990",46.039,45.093,30.776
+"exports_gdp","GAB","Gabon","special.outcome_selected.1995",59.387,52.214,33.238
+"exports_gdp","GAB","Gabon","special.outcome_selected.2001",54.275,54.525,44.906
+"imports_gdp","BEN","Benin","agriculture",32.7,19.601,16.152
+"imports_gdp","BEN","Benin","govt_share",0.173,0.195,0.22
+"imports_gdp","BEN","Benin","invest_share",0.132,0.201,0.245
+"imports_gdp","BEN","Benin","oda_share",58008396.331,136699019.542,65766998.595
+"imports_gdp","BEN","Benin","fdi",-0.108,0.841,2.138
+"imports_gdp","BEN","Benin","labour",35.415,31.13,33.427
+"imports_gdp","BEN","Benin","polity2",0.095,-3.513,1.298
+"imports_gdp","BEN","Benin","special.outcome_selected.1981.2001",32.382,32.542,45.133
+"imports_gdp","BEN","Benin","special.outcome_selected.1981",43.959,38.681,51.111
+"imports_gdp","BEN","Benin","special.outcome_selected.1990",26.539,30.229,41.409
+"imports_gdp","BEN","Benin","special.outcome_selected.1995",36.431,32.641,42.597
+"imports_gdp","BEN","Benin","special.outcome_selected.2001",28.389,32.599,51.812
+"imports_gdp","BFA","Burkina Faso","agriculture",29.972,20.315,16.152
+"imports_gdp","BFA","Burkina Faso","govt_share",0.116,0.188,0.22
+"imports_gdp","BFA","Burkina Faso","invest_share",0.152,0.187,0.245
+"imports_gdp","BFA","Burkina Faso","oda_share",125622814.421,175180636.142,65766998.595
+"imports_gdp","BFA","Burkina Faso","fdi",0.236,0.671,2.138
+"imports_gdp","BFA","Burkina Faso","labour",44.33,31.726,33.427
+"imports_gdp","BFA","Burkina Faso","polity2",-5.524,-5.292,1.298
+"imports_gdp","BFA","Burkina Faso","special.outcome_selected.1981.2001",26.573,26.581,45.133
+"imports_gdp","BFA","Burkina Faso","special.outcome_selected.1981",31.435,30.339,51.111
+"imports_gdp","BFA","Burkina Faso","special.outcome_selected.1990",24.456,25.286,41.409
+"imports_gdp","BFA","Burkina Faso","special.outcome_selected.1995",26.607,27.288,42.597
+"imports_gdp","BFA","Burkina Faso","special.outcome_selected.2001",22.614,27.311,51.812
+"imports_gdp","CIV","Côte d'Ivoire","agriculture",24.739,15.394,16.152
+"imports_gdp","CIV","Côte d'Ivoire","govt_share",0.19,0.195,0.22
+"imports_gdp","CIV","Côte d'Ivoire","invest_share",0.069,0.171,0.245
+"imports_gdp","CIV","Côte d'Ivoire","oda_share",62006783.003,131510702.972,65766998.595
+"imports_gdp","CIV","Côte d'Ivoire","fdi",1.084,1.2,2.138
+"imports_gdp","CIV","Côte d'Ivoire","labour",32.908,31.439,33.427
+"imports_gdp","CIV","Côte d'Ivoire","polity2",-6.238,-1.574,1.298
+"imports_gdp","CIV","Côte d'Ivoire","special.outcome_selected.1981.2001",29.866,30.474,45.133
+"imports_gdp","CIV","Côte d'Ivoire","special.outcome_selected.1981",42.284,37.794,51.111
+"imports_gdp","CIV","Côte d'Ivoire","special.outcome_selected.1990",27.112,31.003,41.409
+"imports_gdp","CIV","Côte d'Ivoire","special.outcome_selected.1995",34.443,30.492,42.597
+"imports_gdp","CIV","Côte d'Ivoire","special.outcome_selected.2001",25.644,29.414,51.812
+"imports_gdp","MLI","Mali","agriculture",35.121,28.174,16.152
+"imports_gdp","MLI","Mali","govt_share",0.276,0.2,0.22
+"imports_gdp","MLI","Mali","invest_share",0.103,0.218,0.245
+"imports_gdp","MLI","Mali","oda_share",128499263.951,248816119.143,65766998.595
+"imports_gdp","MLI","Mali","fdi",0.743,0.247,2.138
+"imports_gdp","MLI","Mali","labour",30.635,33.669,33.427
+"imports_gdp","MLI","Mali","polity2",-1.238,-1.92,1.298
+"imports_gdp","MLI","Mali","special.outcome_selected.1981.2001",26.388,26.281,45.133
+"imports_gdp","MLI","Mali","special.outcome_selected.1981",19.598,26.339,51.111
+"imports_gdp","MLI","Mali","special.outcome_selected.1990",25.537,20.919,41.409
+"imports_gdp","MLI","Mali","special.outcome_selected.1995",29.387,27.304,42.597
+"imports_gdp","MLI","Mali","special.outcome_selected.2001",28.056,29.011,51.812
+"imports_gdp","NER","Niger","agriculture",35.395,22.151,16.152
+"imports_gdp","NER","Niger","govt_share",0.246,0.171,0.22
+"imports_gdp","NER","Niger","invest_share",0.126,0.155,0.245
+"imports_gdp","NER","Niger","oda_share",107937703.746,333207864.529,65766998.595
+"imports_gdp","NER","Niger","fdi",0.26,0.589,2.138
+"imports_gdp","NER","Niger","labour",41.966,31.82,33.427
+"imports_gdp","NER","Niger","polity2",-1.81,2.22,1.298
+"imports_gdp","NER","Niger","special.outcome_selected.1981.2001",23.052,23.814,45.133
+"imports_gdp","NER","Niger","special.outcome_selected.1981",36.201,29.882,51.111
+"imports_gdp","NER","Niger","special.outcome_selected.1990",20.548,23.145,41.409
+"imports_gdp","NER","Niger","special.outcome_selected.1995",20.239,24.598,42.597
+"imports_gdp","NER","Niger","special.outcome_selected.2001",19.558,24.246,51.812
+"imports_gdp","SEN","Senegal","agriculture",18.993,19.142,16.152
+"imports_gdp","SEN","Senegal","govt_share",0.196,0.204,0.22
+"imports_gdp","SEN","Senegal","invest_share",0.062,0.187,0.245
+"imports_gdp","SEN","Senegal","oda_share",70979836.861,224657137.613,65766998.595
+"imports_gdp","SEN","Senegal","fdi",0.617,0.82,2.138
+"imports_gdp","SEN","Senegal","labour",32.619,32.467,33.427
+"imports_gdp","SEN","Senegal","polity2",-0.143,1.566,1.298
+"imports_gdp","SEN","Senegal","special.outcome_selected.1981.2001",31.451,31.302,45.133
+"imports_gdp","SEN","Senegal","special.outcome_selected.1981",44.503,40.931,51.111
+"imports_gdp","SEN","Senegal","special.outcome_selected.1990",27.733,29.529,41.409
+"imports_gdp","SEN","Senegal","special.outcome_selected.1995",32.069,30.153,42.597
+"imports_gdp","SEN","Senegal","special.outcome_selected.2001",32.02,29.918,51.812
+"imports_gdp","TGO","Togo","agriculture",23.36,8.723,16.152
+"imports_gdp","TGO","Togo","govt_share",0.162,0.243,0.22
+"imports_gdp","TGO","Togo","invest_share",0.19,0.198,0.245
+"imports_gdp","TGO","Togo","oda_share",30775463.654,31148574.64,65766998.595
+"imports_gdp","TGO","Togo","fdi",0.543,1.584,2.138
+"imports_gdp","TGO","Togo","labour",40.022,32.284,33.427
+"imports_gdp","TGO","Togo","polity2",-4.667,1.532,1.298
+"imports_gdp","TGO","Togo","special.outcome_selected.1981.2001",41.035,40.842,45.133
+"imports_gdp","TGO","Togo","special.outcome_selected.1981",55.736,57.156,51.111
+"imports_gdp","TGO","Togo","special.outcome_selected.1990",33.523,42.018,41.409
+"imports_gdp","TGO","Togo","special.outcome_selected.1995",32.844,37.969,42.597
+"imports_gdp","TGO","Togo","special.outcome_selected.2001",30.885,34.621,51.812
+"imports_gdp","CMR","Cameroon","agriculture",21.849,20.739,16.152
+"imports_gdp","CMR","Cameroon","govt_share",0.165,0.166,0.22
+"imports_gdp","CMR","Cameroon","invest_share",0.127,0.165,0.245
+"imports_gdp","CMR","Cameroon","oda_share",44162037.211,260687659.64,65766998.595
+"imports_gdp","CMR","Cameroon","fdi",0.706,0.51,2.138
+"imports_gdp","CMR","Cameroon","labour",40.356,29.901,33.427
+"imports_gdp","CMR","Cameroon","polity2",-6,-3.829,1.298
+"imports_gdp","CMR","Cameroon","special.outcome_selected.1981.2001",21.288,21.939,45.133
+"imports_gdp","CMR","Cameroon","special.outcome_selected.1981",28.414,27.934,51.111
+"imports_gdp","CMR","Cameroon","special.outcome_selected.1990",17.314,19.55,41.409
+"imports_gdp","CMR","Cameroon","special.outcome_selected.1995",15.064,20.357,42.597
+"imports_gdp","CMR","Cameroon","special.outcome_selected.2001",26.311,27.247,51.812
+"imports_gdp","CAF","Central African Republic","agriculture",37.869,17.604,16.152
+"imports_gdp","CAF","Central African Republic","govt_share",0.223,0.191,0.22
+"imports_gdp","CAF","Central African Republic","invest_share",0.12,0.169,0.245
+"imports_gdp","CAF","Central African Republic","oda_share",41521332.154,208845316.868,65766998.595
+"imports_gdp","CAF","Central African Republic","fdi",0.371,0.902,2.138
+"imports_gdp","CAF","Central African Republic","labour",39.547,31.64,33.427
+"imports_gdp","CAF","Central African Republic","polity2",-1.762,-0.329,1.298
+"imports_gdp","CAF","Central African Republic","special.outcome_selected.1981.2001",28.097,28.147,45.133
+"imports_gdp","CAF","Central African Republic","special.outcome_selected.1981",34.06,36.017,51.111
+"imports_gdp","CAF","Central African Republic","special.outcome_selected.1990",25.876,28.303,41.409
+"imports_gdp","CAF","Central African Republic","special.outcome_selected.1995",28.255,28.137,42.597
+"imports_gdp","CAF","Central African Republic","special.outcome_selected.2001",22.573,27.105,51.812
+"imports_gdp","TCD","Chad","agriculture",35.852,18.551,16.152
+"imports_gdp","TCD","Chad","govt_share",0.062,0.204,0.22
+"imports_gdp","TCD","Chad","invest_share",0.072,0.174,0.245
+"imports_gdp","TCD","Chad","oda_share",88735068.384,91156947.44,65766998.595
+"imports_gdp","TCD","Chad","fdi",2.89,0.987,2.138
+"imports_gdp","TCD","Chad","labour",38.914,33.19,33.427
+"imports_gdp","TCD","Chad","polity2",-2.667,7.459,1.298
+"imports_gdp","TCD","Chad","special.outcome_selected.1981.2001",29.972,29.847,45.133
+"imports_gdp","TCD","Chad","special.outcome_selected.1981",22.661,24.635,51.111
+"imports_gdp","TCD","Chad","special.outcome_selected.1990",27.907,32.23,41.409
+"imports_gdp","TCD","Chad","special.outcome_selected.1995",33.768,31.962,42.597
+"imports_gdp","TCD","Chad","special.outcome_selected.2001",49.656,34.604,51.812
+"imports_gdp","COG","Republic of Congo","agriculture",9.751,12.408,16.152
+"imports_gdp","COG","Republic of Congo","govt_share",0.432,0.267,0.22
+"imports_gdp","COG","Republic of Congo","invest_share",0.175,0.273,0.245
+"imports_gdp","COG","Republic of Congo","oda_share",15661058.487,37229359.57,65766998.595
+"imports_gdp","COG","Republic of Congo","fdi",0.493,2.313,2.138
+"imports_gdp","COG","Republic of Congo","labour",32.101,33.284,33.427
+"imports_gdp","COG","Republic of Congo","polity2",-4.048,-0.195,1.298
+"imports_gdp","COG","Republic of Congo","special.outcome_selected.1981.2001",49.858,49.192,45.133
+"imports_gdp","COG","Republic of Congo","special.outcome_selected.1981",76.094,66.284,51.111
+"imports_gdp","COG","Republic of Congo","special.outcome_selected.1990",19.042,41.225,41.409
+"imports_gdp","COG","Republic of Congo","special.outcome_selected.1995",63.608,40.671,42.597
+"imports_gdp","COG","Republic of Congo","special.outcome_selected.2001",53.312,58.143,51.812
+"imports_gdp","GAB","Gabon","agriculture",7.637,21.606,16.152
+"imports_gdp","GAB","Gabon","govt_share",0.151,0.248,0.22
+"imports_gdp","GAB","Gabon","invest_share",0.118,0.26,0.245
+"imports_gdp","GAB","Gabon","oda_share",1900630.118,31673829.005,65766998.595
+"imports_gdp","GAB","Gabon","fdi",0.595,0.799,2.138
+"imports_gdp","GAB","Gabon","labour",30.527,34.864,33.427
+"imports_gdp","GAB","Gabon","polity2",-6.238,-6.338,1.298
+"imports_gdp","GAB","Gabon","special.outcome_selected.1981.2001",39.511,38.318,45.133
+"imports_gdp","GAB","Gabon","special.outcome_selected.1981",40.696,42.969,51.111
+"imports_gdp","GAB","Gabon","special.outcome_selected.1990",30.859,32.375,41.409
+"imports_gdp","GAB","Gabon","special.outcome_selected.1995",35.748,36.97,42.597
+"imports_gdp","GAB","Gabon","special.outcome_selected.2001",29.363,36.983,51.812

@@ -151,8 +151,13 @@ indicators <- c(
   wdi_gdp_constant = "NY.GDP.MKTP.KD",
   # GDP, constant 2015 US$
 
-  wdi_gdp_current = "NY.GDP.MKTP.CD"
+  wdi_gdp_current = "NY.GDP.MKTP.CD",
   # GDP, current US$
+
+  # Trade-extension variables from WDI
+  trade_openness = "NE.TRD.GNFS.ZS",
+  exports_gdp = "NE.EXP.GNFS.ZS",
+  imports_gdp = "NE.IMP.GNFS.ZS"
 )
 
 #### ========================================================================###
@@ -188,5 +193,33 @@ cat("Number of country-year rows returned by WDI:", nrow(wdi), "\n")
 #### ========================================================================###
 
 saveRDS(wdi, "data/raw/wdi.rds")
+
+
+# Verify that the saved WDI file contains the extension trade variables.
+wdi_check <- readRDS("data/raw/wdi.rds")
+
+cat("\nSaved WDI file path:\n")
+print(normalizePath("data/raw/wdi.rds"))
+
+cat("\nSaved WDI file timestamp:\n")
+print(file.info("data/raw/wdi.rds")$mtime)
+
+cat("\nSaved WDI columns:\n")
+print(names(wdi_check))
+
+missing_saved_trade_cols <- setdiff(
+  c("trade_openness", "exports_gdp", "imports_gdp"),
+  names(wdi_check)
+)
+
+if (length(missing_saved_trade_cols) > 0) {
+  stop(
+    "The saved wdi.rds is missing these trade columns: ",
+    paste(missing_saved_trade_cols, collapse = ", ")
+  )
+}
+
+print("Complete")
+
 
 print("Complete")
