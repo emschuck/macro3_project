@@ -25,7 +25,7 @@
 # ))
 
 # Set to TRUE while debugging the main SCM results.
-skip_placebo_analysis <- TRUE
+skip_placebo_analysis <- FALSE
 
 library(pwt10)
 library(WDI)
