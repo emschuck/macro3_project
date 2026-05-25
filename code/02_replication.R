@@ -40,6 +40,7 @@ library(readxl)
 library(countrycode)
 library(stringr)
 library(Synth)
+library(progress)
 
 # Create output folders before saving SCM tables, figures, and processed data.
 dir.create("output/tables", recursive = TRUE, showWarnings = FALSE)
@@ -834,18 +835,61 @@ if (skip_placebo_analysis) {
 
 } else {
 
-  # This placebo analysis follows the in-place / in-space approach:
-  # each donor country is treated as if it had received treatment in 2002.
-  # The true treated-country gap is compared with the placebo gap distribution.
+  # --------------------------------------------------------------------------
+  # This placebo analysis follows the in-place / in-space placebo approach.
+  #
+  # For each treated country:
+  #   1. The true treated-country SCM gap is extracted.
+  #   2. Each donor country is treated as if it had received treatment.
+  #   3. A synthetic control is estimated for each donor-placebo country.
+  #   4. The treated gap is compared with the placebo gap distribution.
+  #
+  # The progress bar tracks progress through all donor-placebo runs.
+  # Console output from Synth is suppressed to keep the progress bar readable.
+  # --------------------------------------------------------------------------
 
+  #### ======================================================================###
+  #### ======================== PLACEBO HELPERS ==============================###
+  #### ======================================================================###
+
+  # Run noisy expressions quietly.
+  # This suppresses:
+  #   - printed output from Synth
+  #   - messages
+  #   - warnings
+  #
+  # The result of the expression is still returned.
+  quietly <- function(expr) {
+    result <- NULL
+
+    invisible(
+      capture.output(
+        result <- suppressMessages(
+          suppressWarnings(
+            expr
+          )
+        )
+      )
+    )
+
+    result
+  }
+
+  # Root mean squared prediction error.
   rmspe <- function(x) {
     sqrt(mean(x^2, na.rm = TRUE))
   }
 
+  # Safe division for post/pre RMSPE ratios.
   safe_ratio <- function(numerator, denominator) {
-    ifelse(is.na(denominator) | denominator == 0, NA_real_, numerator / denominator)
+    ifelse(
+      is.na(denominator) | denominator == 0,
+      NA_real_,
+      numerator / denominator
+    )
   }
 
+  # Extract the actual path, synthetic path, and gap from one SCM result.
   extract_gap_path <- function(dataprep.out, synth.out, unit_code, unit_name, unit_type) {
 
     actual <- as.numeric(dataprep.out$Y1plot)
@@ -863,6 +907,7 @@ if (skip_placebo_analysis) {
     )
   }
 
+  # Summarise one gap path using pre-treatment and post-treatment fit statistics.
   make_gap_summary <- function(gap_data) {
 
     gap_data |>
@@ -877,41 +922,67 @@ if (skip_placebo_analysis) {
       )
   }
 
+  #### ======================================================================###
+  #### ======================== PLACEBO SCM FUNCTION =========================###
+  #### ======================================================================###
+
+  # Run one donor-placebo SCM.
+  #
+  # placebo_iso3c:
+  #   donor country temporarily treated as if it were treated.
+  #
+  # donor_pool_ids:
+  #   usable donor IDs from the main SCM donor pool.
+  #
+  # The placebo country is removed from the donor pool before constructing
+  # its synthetic control.
   run_placebo_unit <- function(placebo_iso3c, donor_pool_ids) {
 
+    # Numeric Synth ID for the placebo-treated donor.
     placebo_id <- country_ids$unit_id[
       country_ids$iso3c == placebo_iso3c
     ]
 
+    # All other usable donors become controls.
     placebo_controls <- donor_pool_ids[
       donor_pool_ids != placebo_id
     ]
 
+    # Readable country name for output tables.
     placebo_name <- get_country_name(placebo_iso3c)
 
-    dataprep.out <- dataprep(
-      foo = scm_df,
-      predictors = scm_predictors_active,
-      predictors.op = "mean",
-      dependent = outcome_var,
-      unit.variable = 1,
-      unit.names.variable = 2,
-      time.variable = 3,
-      treatment.identifier = placebo_id,
-      controls.identifier = placebo_controls,
-      time.predictors.prior = pre_period,
-      time.optimize.ssr = pre_period,
-      time.plot = plot_period,
-      special.predictors = lapply(
-        special_years_scm,
-        function(y) list(outcome_var, y, c("mean"))
+    # Prepare placebo SCM data quietly.
+    # Synth's dataprep can print diagnostic text, so we suppress it.
+    dataprep.out <- quietly(
+      dataprep(
+        foo = scm_df,
+        predictors = scm_predictors_active,
+        predictors.op = "mean",
+        dependent = outcome_var,
+        unit.variable = 1,
+        unit.names.variable = 2,
+        time.variable = 3,
+        treatment.identifier = placebo_id,
+        controls.identifier = placebo_controls,
+        time.predictors.prior = pre_period,
+        time.optimize.ssr = pre_period,
+        time.plot = plot_period,
+        special.predictors = lapply(
+          special_years_scm,
+          function(y) list(outcome_var, y, c("mean"))
+        )
       )
     )
 
-    synth.out <- synth(
-      data.prep.obj = dataprep.out
+    # Estimate placebo SCM quietly.
+    # This suppresses printed MSPE, solution.v, and solution.w output.
+    synth.out <- quietly(
+      synth(
+        data.prep.obj = dataprep.out
+      )
     )
 
+    # Return the placebo gap path.
     extract_gap_path(
       dataprep.out = dataprep.out,
       synth.out = synth.out,
@@ -921,6 +992,11 @@ if (skip_placebo_analysis) {
     )
   }
 
+  #### ======================================================================###
+  #### ======================== PLACEBO SAMPLE ===============================###
+  #### ======================================================================###
+
+  # Keep only donors that were usable in the main SCM analysis.
   usable_donor_ids <- country_ids$unit_id[
     country_ids$iso3c %in% donor_countries &
       !(country_ids$unit_id %in% bad_controls)
@@ -930,19 +1006,45 @@ if (skip_placebo_analysis) {
     filter(unit_id %in% usable_donor_ids) |>
     pull(iso3c)
 
+  # Lists to collect outputs across all treated countries.
   all_placebo_paths <- list()
   all_placebo_summaries <- list()
   all_placebo_yearly_pvalues <- list()
   all_placebo_conclusions <- list()
 
+  # Log placebo failures silently.
+  # This avoids printing many error messages around the progress bar.
+  placebo_run_log <- list()
+
+  #### ======================================================================###
+  #### ======================== PROGRESS BAR SETUP ===========================###
+  #### ======================================================================###
+
+  # Total number of placebo SCMs to run.
+  total_placebo_runs <- length(names(scm_success)) * length(usable_donor_codes)
+
+  # Create terminal progress bar.
+  placebo_progress <- progress_bar$new(
+    format = paste0(
+      "GDP placebo tests [:bar] :percent | ",
+      "Run :current/:total | ETA: :eta | ",
+      "treated :treated / placebo :placebo"
+    ),
+    total = total_placebo_runs,
+    clear = FALSE,
+    width = 100
+  )
+
+  #### ======================================================================###
+  #### ======================== RUN PLACEBO TESTS ============================###
+  #### ======================================================================###
+
   for (treated_code in names(scm_success)) {
 
-    cat("\n=====================================================\n")
-    cat("PLACEBO ANALYSIS FOR", treated_code, "-", get_country_name(treated_code), "\n")
-    cat("=====================================================\n")
-
+    # Get the already-estimated real SCM result for this treated country.
     real_result <- scm_success[[treated_code]]
 
+    # Extract the real treated-country gap.
     real_gap <- extract_gap_path(
       dataprep.out = real_result$dataprep,
       synth.out = real_result$synth,
@@ -951,6 +1053,7 @@ if (skip_placebo_analysis) {
       unit_type = "treated"
     )
 
+    # Summarise the true treated gap.
     real_summary <- make_gap_summary(real_gap) |>
       mutate(
         treated_iso3c = treated_code,
@@ -960,8 +1063,11 @@ if (skip_placebo_analysis) {
         unit_type = "treated"
       )
 
+    # Lists for this treated country.
     placebo_paths_i <- list()
+    placebo_log_i <- list()
 
+    # Run one placebo SCM for each usable donor.
     for (placebo_code in usable_donor_codes) {
 
       placebo_paths_i[[placebo_code]] <- tryCatch(
@@ -970,23 +1076,65 @@ if (skip_placebo_analysis) {
           donor_pool_ids = usable_donor_ids
         ),
         error = function(e) {
-          message("Placebo failed for ", treated_code, " / ", placebo_code, ": ", e$message)
+
+          # Store failure but do not print it.
+          placebo_log_i[[placebo_code]] <<- tibble(
+            treated_iso3c = treated_code,
+            treated_country = real_result$country_name,
+            placebo_iso3c = placebo_code,
+            placebo_country = get_country_name(placebo_code),
+            success = FALSE,
+            error_message = e$message
+          )
+
           return(NULL)
         }
       )
+
+      # If successful, record success in the log.
+      if (!is.null(placebo_paths_i[[placebo_code]])) {
+        placebo_log_i[[placebo_code]] <- tibble(
+          treated_iso3c = treated_code,
+          treated_country = real_result$country_name,
+          placebo_iso3c = placebo_code,
+          placebo_country = get_country_name(placebo_code),
+          success = TRUE,
+          error_message = NA_character_
+        )
+      }
+
+      # Tick progress after the run finishes.
+      placebo_progress$tick(
+        tokens = list(
+          treated = treated_code,
+          placebo = placebo_code
+        )
+      )
     }
 
+    # Save run log for this treated country.
+    placebo_run_log[[treated_code]] <- bind_rows(placebo_log_i)
+
+    # Keep successful placebo paths only.
     placebo_paths_i <- placebo_paths_i[
       !vapply(placebo_paths_i, is.null, logical(1))
     ]
 
+    # Skip this treated country if all donor placebos failed.
     if (length(placebo_paths_i) == 0) {
-      cat("No successful placebo runs for", treated_code, "\n")
+      all_placebo_paths[[treated_code]] <- real_gap |>
+        mutate(
+          treated_iso3c = treated_code,
+          treated_country = real_result$country_name
+        )
+
       next
     }
 
+    # Combine all successful placebo paths.
     placebo_paths_i <- bind_rows(placebo_paths_i)
 
+    # Summarise placebo gaps.
     placebo_summaries_i <- placebo_paths_i |>
       group_by(unit_iso3c, unit_name, unit_type) |>
       group_modify(~ make_gap_summary(.x)) |>
@@ -1011,6 +1159,7 @@ if (skip_placebo_analysis) {
         max_abs_post_gap
       )
 
+    # Combine true treated summary with donor-placebo summaries.
     summary_i <- bind_rows(
       real_summary |>
         select(
@@ -1029,15 +1178,18 @@ if (skip_placebo_analysis) {
       placebo_summaries_i
     )
 
+    # Extract treated-country statistics.
     real_ratio <- real_summary$rmspe_ratio[1]
     real_avg_abs_gap <- real_summary$avg_abs_post_gap[1]
     real_avg_gap <- real_summary$avg_post_gap[1]
 
     n_units <- nrow(summary_i)
 
+    # Placebo p-values.
     p_rmspe_ratio <- mean(summary_i$rmspe_ratio >= real_ratio, na.rm = TRUE)
     p_avg_abs_gap <- mean(summary_i$avg_abs_post_gap >= real_avg_abs_gap, na.rm = TRUE)
 
+    # Directional p-value depends on whether treated effect is positive or negative.
     if (real_avg_gap >= 0) {
       p_avg_gap_directional <- mean(summary_i$avg_post_gap >= real_avg_gap, na.rm = TRUE)
       direction_text <- "positive"
@@ -1046,6 +1198,7 @@ if (skip_placebo_analysis) {
       direction_text <- "negative"
     }
 
+    # Rank treated country among treated + placebos.
     rank_rmspe <- rank(
       -summary_i$rmspe_ratio,
       ties.method = "min"
@@ -1056,6 +1209,7 @@ if (skip_placebo_analysis) {
       ties.method = "min"
     )[summary_i$unit_type == "treated"]
 
+    # Combine real and placebo paths for plotting.
     combined_paths_i <- bind_rows(
       real_gap,
       placebo_paths_i
@@ -1065,6 +1219,7 @@ if (skip_placebo_analysis) {
         treated_country = real_result$country_name
       )
 
+    # Year-by-year placebo p-values.
     real_yearly <- combined_paths_i |>
       filter(unit_type == "treated") |>
       select(year, treated_gap = gap)
@@ -1099,6 +1254,7 @@ if (skip_placebo_analysis) {
         significant_5pct_directional = p_directional_gap <= 0.05
       )
 
+    # Final conclusion row for this treated country.
     conclusion_i <- tibble(
       treated_iso3c = treated_code,
       treated_country = real_result$country_name,
@@ -1119,43 +1275,22 @@ if (skip_placebo_analysis) {
       conclusion_5pct = p_rmspe_ratio <= 0.05
     )
 
-    cat("Successful placebo countries:", nrow(placebo_summaries_i), "\n")
-    cat("Treated pre-treatment RMSPE:", round(real_summary$pre_rmspe[1], 4), "\n")
-    cat("Treated post-treatment RMSPE:", round(real_summary$post_rmspe[1], 4), "\n")
-    cat("Treated post/pre RMSPE ratio:", round(real_ratio, 4), "\n")
-    cat("RMSPE-ratio rank:", rank_rmspe, "out of", n_units, "\n")
-    cat("RMSPE-ratio placebo p-value:", round(p_rmspe_ratio, 4), "\n")
-    cat("Average post-treatment gap:", round(real_avg_gap, 4), "\n")
-    cat("Average absolute post-treatment gap:", round(real_avg_abs_gap, 4), "\n")
-    cat("Average absolute gap placebo p-value:", round(p_avg_abs_gap, 4), "\n")
-    cat("Directional average gap p-value:", round(p_avg_gap_directional, 4), "\n")
-
-    if (p_rmspe_ratio <= 0.05) {
-      cat("Conclusion: RMSPE-ratio evidence is significant at the 5% level.\n")
-    } else if (p_rmspe_ratio <= 0.10) {
-      cat("Conclusion: RMSPE-ratio evidence is significant at the 10% level, but not the 5% level.\n")
-    } else {
-      cat("Conclusion: RMSPE-ratio evidence is not significant at the 10% level.\n")
-    }
-
-    if (real_avg_gap > 0) {
-      cat("Interpretation: the treated country is above its synthetic control on average after 2002.\n")
-    } else if (real_avg_gap < 0) {
-      cat("Interpretation: the treated country is below its synthetic control on average after 2002.\n")
-    } else {
-      cat("Interpretation: the treated country has zero average post-treatment gap.\n")
-    }
-
+    # Save outputs for this treated country.
     all_placebo_paths[[treated_code]] <- combined_paths_i
     all_placebo_summaries[[treated_code]] <- summary_i
     all_placebo_yearly_pvalues[[treated_code]] <- yearly_pvalues_i
     all_placebo_conclusions[[treated_code]] <- conclusion_i
   }
 
+  #### ======================================================================###
+  #### ======================== COMBINE AND SAVE OUTPUTS =====================###
+  #### ======================================================================###
+
   placebo_paths_all <- bind_rows(all_placebo_paths)
   placebo_summaries_all <- bind_rows(all_placebo_summaries)
   placebo_yearly_pvalues_all <- bind_rows(all_placebo_yearly_pvalues)
   placebo_conclusions_all <- bind_rows(all_placebo_conclusions)
+  placebo_run_log_all <- bind_rows(placebo_run_log)
 
   saveRDS(
     placebo_paths_all,
@@ -1177,6 +1312,11 @@ if (skip_placebo_analysis) {
     "data/processed/scm_placebo_conclusions_all.rds"
   )
 
+  saveRDS(
+    placebo_run_log_all,
+    "data/processed/scm_placebo_run_log_all.rds"
+  )
+
   write.csv(
     placebo_summaries_all,
     "output/tables/scm_placebo_summaries_all.csv",
@@ -1194,6 +1334,16 @@ if (skip_placebo_analysis) {
     "output/tables/scm_placebo_conclusions_all.csv",
     row.names = FALSE
   )
+
+  write.csv(
+    placebo_run_log_all,
+    "output/tables/scm_placebo_run_log_all.csv",
+    row.names = FALSE
+  )
+
+  #### ======================================================================###
+  #### ======================== PRINT FINAL SUMMARY ONLY =====================###
+  #### ======================================================================###
 
   cat("\n=====================================================\n")
   cat("OVERALL PLACEBO CONCLUSIONS\n")
@@ -1224,6 +1374,12 @@ if (skip_placebo_analysis) {
       conclusion
     ) |>
     print(n = Inf)
+
+  cat("\nPlacebo run log saved to output/tables/scm_placebo_run_log_all.csv\n")
+
+  #### ======================================================================###
+  #### ======================== PLACEBO GAP PLOTS ============================###
+  #### ======================================================================###
 
   for (treated_code in unique(placebo_paths_all$treated_iso3c)) {
 
@@ -1262,6 +1418,10 @@ if (skip_placebo_analysis) {
       dpi = 300
     )
   }
+
+  #### ======================================================================###
+  #### ======================== PLACEBO P-VALUE PLOT =========================###
+  #### ======================================================================###
 
   p_placebo_pvalues <- placebo_conclusions_all |>
     mutate(

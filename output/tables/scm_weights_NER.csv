@@ -1,5 +1,5 @@
 "w.weights","unit.names","unit.numbers"
-1,"BGD",3
+0.757,"BGD",3
 0,"BOL",4
 0,"BRB",5
 0,"BTN",6
@@ -9,9 +9,9 @@
 0,"ECU",14
 0,"GRD",17
 0,"GUY",18
-0,"IRQ",19
+0.008,"IRQ",19
 0,"KNA",20
-0,"LAO",21
+0.236,"LAO",21
 0,"LCA",22
 0,"LSO",23
 0,"MAR",24
