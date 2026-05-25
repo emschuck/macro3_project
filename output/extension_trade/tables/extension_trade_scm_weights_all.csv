@@ -1,0 +1,820 @@
+"outcome","treated_iso3c","treated_country","donor_iso3c","donor_weight"
+"trade_openness","BEN","Benin","BGD",0.411
+"trade_openness","BEN","Benin","BOL",0
+"trade_openness","BEN","Benin","BRB",0
+"trade_openness","BEN","Benin","BTN",0.585
+"trade_openness","BEN","Benin","BWA",0
+"trade_openness","BEN","Benin","CPV",0
+"trade_openness","BEN","Benin","DMA",0
+"trade_openness","BEN","Benin","ECU",0
+"trade_openness","BEN","Benin","GRD",0
+"trade_openness","BEN","Benin","GUY",0
+"trade_openness","BEN","Benin","IRQ",0
+"trade_openness","BEN","Benin","KNA",0
+"trade_openness","BEN","Benin","LAO",0
+"trade_openness","BEN","Benin","LCA",0
+"trade_openness","BEN","Benin","LSO",0
+"trade_openness","BEN","Benin","MAR",0
+"trade_openness","BEN","Benin","MUS",0.003
+"trade_openness","BEN","Benin","NAM",0
+"trade_openness","BEN","Benin","SWZ",0
+"trade_openness","BEN","Benin","SYC",0
+"trade_openness","BEN","Benin","TKM",0
+"trade_openness","BFA","Burkina Faso","BGD",0.252
+"trade_openness","BFA","Burkina Faso","BOL",0
+"trade_openness","BFA","Burkina Faso","BRB",0.494
+"trade_openness","BFA","Burkina Faso","BTN",0
+"trade_openness","BFA","Burkina Faso","BWA",0
+"trade_openness","BFA","Burkina Faso","CPV",0.044
+"trade_openness","BFA","Burkina Faso","DMA",0
+"trade_openness","BFA","Burkina Faso","ECU",0
+"trade_openness","BFA","Burkina Faso","GRD",0
+"trade_openness","BFA","Burkina Faso","GUY",0
+"trade_openness","BFA","Burkina Faso","IRQ",0.01
+"trade_openness","BFA","Burkina Faso","KNA",0
+"trade_openness","BFA","Burkina Faso","LAO",0
+"trade_openness","BFA","Burkina Faso","LCA",0
+"trade_openness","BFA","Burkina Faso","LSO",0.152
+"trade_openness","BFA","Burkina Faso","MAR",0
+"trade_openness","BFA","Burkina Faso","MUS",0.049
+"trade_openness","BFA","Burkina Faso","NAM",0
+"trade_openness","BFA","Burkina Faso","SWZ",0
+"trade_openness","BFA","Burkina Faso","SYC",0
+"trade_openness","BFA","Burkina Faso","TKM",0
+"trade_openness","CIV","Côte d'Ivoire","BGD",0.008
+"trade_openness","CIV","Côte d'Ivoire","BOL",0
+"trade_openness","CIV","Côte d'Ivoire","BRB",0.023
+"trade_openness","CIV","Côte d'Ivoire","BTN",0
+"trade_openness","CIV","Côte d'Ivoire","BWA",0
+"trade_openness","CIV","Côte d'Ivoire","CPV",0
+"trade_openness","CIV","Côte d'Ivoire","DMA",0
+"trade_openness","CIV","Côte d'Ivoire","ECU",0
+"trade_openness","CIV","Côte d'Ivoire","GRD",0
+"trade_openness","CIV","Côte d'Ivoire","GUY",0
+"trade_openness","CIV","Côte d'Ivoire","IRQ",0
+"trade_openness","CIV","Côte d'Ivoire","KNA",0
+"trade_openness","CIV","Côte d'Ivoire","LAO",0
+"trade_openness","CIV","Côte d'Ivoire","LCA",0
+"trade_openness","CIV","Côte d'Ivoire","LSO",0.161
+"trade_openness","CIV","Côte d'Ivoire","MAR",0.808
+"trade_openness","CIV","Côte d'Ivoire","MUS",0
+"trade_openness","CIV","Côte d'Ivoire","NAM",0
+"trade_openness","CIV","Côte d'Ivoire","SWZ",0
+"trade_openness","CIV","Côte d'Ivoire","SYC",0
+"trade_openness","CIV","Côte d'Ivoire","TKM",0
+"trade_openness","MLI","Mali","BGD",0.27
+"trade_openness","MLI","Mali","BOL",0
+"trade_openness","MLI","Mali","BRB",0
+"trade_openness","MLI","Mali","BTN",0.104
+"trade_openness","MLI","Mali","BWA",0
+"trade_openness","MLI","Mali","CPV",0
+"trade_openness","MLI","Mali","DMA",0.272
+"trade_openness","MLI","Mali","ECU",0.094
+"trade_openness","MLI","Mali","GRD",0
+"trade_openness","MLI","Mali","GUY",0
+"trade_openness","MLI","Mali","IRQ",0
+"trade_openness","MLI","Mali","KNA",0
+"trade_openness","MLI","Mali","LAO",0
+"trade_openness","MLI","Mali","LCA",0
+"trade_openness","MLI","Mali","LSO",0
+"trade_openness","MLI","Mali","MAR",0
+"trade_openness","MLI","Mali","MUS",0
+"trade_openness","MLI","Mali","NAM",0
+"trade_openness","MLI","Mali","SWZ",0.258
+"trade_openness","MLI","Mali","SYC",0
+"trade_openness","MLI","Mali","TKM",0
+"trade_openness","NER","Niger","BGD",0.191
+"trade_openness","NER","Niger","BOL",0
+"trade_openness","NER","Niger","BRB",0.002
+"trade_openness","NER","Niger","BTN",0
+"trade_openness","NER","Niger","BWA",0
+"trade_openness","NER","Niger","CPV",0
+"trade_openness","NER","Niger","DMA",0.23
+"trade_openness","NER","Niger","ECU",0.023
+"trade_openness","NER","Niger","GRD",0
+"trade_openness","NER","Niger","GUY",0
+"trade_openness","NER","Niger","IRQ",0
+"trade_openness","NER","Niger","KNA",0
+"trade_openness","NER","Niger","LAO",0
+"trade_openness","NER","Niger","LCA",0
+"trade_openness","NER","Niger","LSO",0
+"trade_openness","NER","Niger","MAR",0.448
+"trade_openness","NER","Niger","MUS",0.105
+"trade_openness","NER","Niger","NAM",0
+"trade_openness","NER","Niger","SWZ",0
+"trade_openness","NER","Niger","SYC",0
+"trade_openness","NER","Niger","TKM",0
+"trade_openness","SEN","Senegal","BGD",0.11
+"trade_openness","SEN","Senegal","BOL",0.382
+"trade_openness","SEN","Senegal","BRB",0.016
+"trade_openness","SEN","Senegal","BTN",0
+"trade_openness","SEN","Senegal","BWA",0
+"trade_openness","SEN","Senegal","CPV",0
+"trade_openness","SEN","Senegal","DMA",0.156
+"trade_openness","SEN","Senegal","ECU",0
+"trade_openness","SEN","Senegal","GRD",0
+"trade_openness","SEN","Senegal","GUY",0
+"trade_openness","SEN","Senegal","IRQ",0
+"trade_openness","SEN","Senegal","KNA",0
+"trade_openness","SEN","Senegal","LAO",0
+"trade_openness","SEN","Senegal","LCA",0
+"trade_openness","SEN","Senegal","LSO",0
+"trade_openness","SEN","Senegal","MAR",0
+"trade_openness","SEN","Senegal","MUS",0
+"trade_openness","SEN","Senegal","NAM",0
+"trade_openness","SEN","Senegal","SWZ",0.337
+"trade_openness","SEN","Senegal","SYC",0
+"trade_openness","SEN","Senegal","TKM",0
+"trade_openness","TGO","Togo","BGD",0.097
+"trade_openness","TGO","Togo","BOL",0
+"trade_openness","TGO","Togo","BRB",0.109
+"trade_openness","TGO","Togo","BTN",0.433
+"trade_openness","TGO","Togo","BWA",0
+"trade_openness","TGO","Togo","CPV",0
+"trade_openness","TGO","Togo","DMA",0
+"trade_openness","TGO","Togo","ECU",0
+"trade_openness","TGO","Togo","GRD",0
+"trade_openness","TGO","Togo","GUY",0
+"trade_openness","TGO","Togo","IRQ",0.001
+"trade_openness","TGO","Togo","KNA",0
+"trade_openness","TGO","Togo","LAO",0.082
+"trade_openness","TGO","Togo","LCA",0
+"trade_openness","TGO","Togo","LSO",0.208
+"trade_openness","TGO","Togo","MAR",0
+"trade_openness","TGO","Togo","MUS",0.071
+"trade_openness","TGO","Togo","NAM",0
+"trade_openness","TGO","Togo","SWZ",0
+"trade_openness","TGO","Togo","SYC",0
+"trade_openness","TGO","Togo","TKM",0
+"trade_openness","CMR","Cameroon","BGD",0
+"trade_openness","CMR","Cameroon","BOL",0
+"trade_openness","CMR","Cameroon","BRB",0.189
+"trade_openness","CMR","Cameroon","BTN",0
+"trade_openness","CMR","Cameroon","BWA",0
+"trade_openness","CMR","Cameroon","CPV",0
+"trade_openness","CMR","Cameroon","DMA",0
+"trade_openness","CMR","Cameroon","ECU",0
+"trade_openness","CMR","Cameroon","GRD",0
+"trade_openness","CMR","Cameroon","GUY",0
+"trade_openness","CMR","Cameroon","IRQ",0.082
+"trade_openness","CMR","Cameroon","KNA",0
+"trade_openness","CMR","Cameroon","LAO",0
+"trade_openness","CMR","Cameroon","LCA",0
+"trade_openness","CMR","Cameroon","LSO",0.026
+"trade_openness","CMR","Cameroon","MAR",0.702
+"trade_openness","CMR","Cameroon","MUS",0.001
+"trade_openness","CMR","Cameroon","NAM",0
+"trade_openness","CMR","Cameroon","SWZ",0
+"trade_openness","CMR","Cameroon","SYC",0
+"trade_openness","CMR","Cameroon","TKM",0
+"trade_openness","CAF","Central African Republic","BGD",0.212
+"trade_openness","CAF","Central African Republic","BOL",0
+"trade_openness","CAF","Central African Republic","BRB",0
+"trade_openness","CAF","Central African Republic","BTN",0
+"trade_openness","CAF","Central African Republic","BWA",0
+"trade_openness","CAF","Central African Republic","CPV",0
+"trade_openness","CAF","Central African Republic","DMA",0.14
+"trade_openness","CAF","Central African Republic","ECU",0
+"trade_openness","CAF","Central African Republic","GRD",0
+"trade_openness","CAF","Central African Republic","GUY",0
+"trade_openness","CAF","Central African Republic","IRQ",0.024
+"trade_openness","CAF","Central African Republic","KNA",0
+"trade_openness","CAF","Central African Republic","LAO",0
+"trade_openness","CAF","Central African Republic","LCA",0
+"trade_openness","CAF","Central African Republic","LSO",0
+"trade_openness","CAF","Central African Republic","MAR",0.461
+"trade_openness","CAF","Central African Republic","MUS",0.163
+"trade_openness","CAF","Central African Republic","NAM",0
+"trade_openness","CAF","Central African Republic","SWZ",0
+"trade_openness","CAF","Central African Republic","SYC",0
+"trade_openness","CAF","Central African Republic","TKM",0
+"trade_openness","TCD","Chad","BGD",0.766
+"trade_openness","TCD","Chad","BOL",0
+"trade_openness","TCD","Chad","BRB",0.002
+"trade_openness","TCD","Chad","BTN",0
+"trade_openness","TCD","Chad","BWA",0
+"trade_openness","TCD","Chad","CPV",0
+"trade_openness","TCD","Chad","DMA",0
+"trade_openness","TCD","Chad","ECU",0
+"trade_openness","TCD","Chad","GRD",0
+"trade_openness","TCD","Chad","GUY",0
+"trade_openness","TCD","Chad","IRQ",0
+"trade_openness","TCD","Chad","KNA",0
+"trade_openness","TCD","Chad","LAO",0
+"trade_openness","TCD","Chad","LCA",0
+"trade_openness","TCD","Chad","LSO",0
+"trade_openness","TCD","Chad","MAR",0
+"trade_openness","TCD","Chad","MUS",0.232
+"trade_openness","TCD","Chad","NAM",0
+"trade_openness","TCD","Chad","SWZ",0
+"trade_openness","TCD","Chad","SYC",0
+"trade_openness","TCD","Chad","TKM",0
+"trade_openness","COG","Republic of Congo","BGD",0
+"trade_openness","COG","Republic of Congo","BOL",0
+"trade_openness","COG","Republic of Congo","BRB",0
+"trade_openness","COG","Republic of Congo","BTN",0
+"trade_openness","COG","Republic of Congo","BWA",0.082
+"trade_openness","COG","Republic of Congo","CPV",0
+"trade_openness","COG","Republic of Congo","DMA",0
+"trade_openness","COG","Republic of Congo","ECU",0
+"trade_openness","COG","Republic of Congo","GRD",0
+"trade_openness","COG","Republic of Congo","GUY",0
+"trade_openness","COG","Republic of Congo","IRQ",0.232
+"trade_openness","COG","Republic of Congo","KNA",0
+"trade_openness","COG","Republic of Congo","LAO",0
+"trade_openness","COG","Republic of Congo","LCA",0
+"trade_openness","COG","Republic of Congo","LSO",0.515
+"trade_openness","COG","Republic of Congo","MAR",0
+"trade_openness","COG","Republic of Congo","MUS",0
+"trade_openness","COG","Republic of Congo","NAM",0
+"trade_openness","COG","Republic of Congo","SWZ",0
+"trade_openness","COG","Republic of Congo","SYC",0
+"trade_openness","COG","Republic of Congo","TKM",0.171
+"trade_openness","GAB","Gabon","BGD",0
+"trade_openness","GAB","Gabon","BOL",0
+"trade_openness","GAB","Gabon","BRB",0
+"trade_openness","GAB","Gabon","BTN",0
+"trade_openness","GAB","Gabon","BWA",0
+"trade_openness","GAB","Gabon","CPV",0
+"trade_openness","GAB","Gabon","DMA",0
+"trade_openness","GAB","Gabon","ECU",0
+"trade_openness","GAB","Gabon","GRD",0
+"trade_openness","GAB","Gabon","GUY",0
+"trade_openness","GAB","Gabon","IRQ",0.074
+"trade_openness","GAB","Gabon","KNA",0
+"trade_openness","GAB","Gabon","LAO",0
+"trade_openness","GAB","Gabon","LCA",0
+"trade_openness","GAB","Gabon","LSO",0.484
+"trade_openness","GAB","Gabon","MAR",0.442
+"trade_openness","GAB","Gabon","MUS",0
+"trade_openness","GAB","Gabon","NAM",0
+"trade_openness","GAB","Gabon","SWZ",0
+"trade_openness","GAB","Gabon","SYC",0
+"trade_openness","GAB","Gabon","TKM",0
+"trade_openness","GNQ","Equatorial Guinea","BGD",0
+"trade_openness","GNQ","Equatorial Guinea","BOL",0
+"trade_openness","GNQ","Equatorial Guinea","BRB",0
+"trade_openness","GNQ","Equatorial Guinea","BTN",0
+"trade_openness","GNQ","Equatorial Guinea","BWA",0
+"trade_openness","GNQ","Equatorial Guinea","CPV",0
+"trade_openness","GNQ","Equatorial Guinea","DMA",0
+"trade_openness","GNQ","Equatorial Guinea","ECU",0
+"trade_openness","GNQ","Equatorial Guinea","GRD",0
+"trade_openness","GNQ","Equatorial Guinea","GUY",0
+"trade_openness","GNQ","Equatorial Guinea","IRQ",0
+"trade_openness","GNQ","Equatorial Guinea","KNA",0
+"trade_openness","GNQ","Equatorial Guinea","LAO",0
+"trade_openness","GNQ","Equatorial Guinea","LCA",0
+"trade_openness","GNQ","Equatorial Guinea","LSO",0.882
+"trade_openness","GNQ","Equatorial Guinea","MAR",0
+"trade_openness","GNQ","Equatorial Guinea","MUS",0
+"trade_openness","GNQ","Equatorial Guinea","NAM",0.053
+"trade_openness","GNQ","Equatorial Guinea","SWZ",0.065
+"trade_openness","GNQ","Equatorial Guinea","SYC",0
+"trade_openness","GNQ","Equatorial Guinea","TKM",0
+"exports_gdp","BEN","Benin","BGD",0.072
+"exports_gdp","BEN","Benin","BOL",0.197
+"exports_gdp","BEN","Benin","BRB",0
+"exports_gdp","BEN","Benin","BTN",0
+"exports_gdp","BEN","Benin","BWA",0
+"exports_gdp","BEN","Benin","CPV",0
+"exports_gdp","BEN","Benin","DMA",0.17
+"exports_gdp","BEN","Benin","ECU",0
+"exports_gdp","BEN","Benin","GRD",0
+"exports_gdp","BEN","Benin","GUY",0
+"exports_gdp","BEN","Benin","IRQ",0
+"exports_gdp","BEN","Benin","KNA",0
+"exports_gdp","BEN","Benin","LAO",0.294
+"exports_gdp","BEN","Benin","LCA",0
+"exports_gdp","BEN","Benin","LSO",0
+"exports_gdp","BEN","Benin","MAR",0
+"exports_gdp","BEN","Benin","MUS",0
+"exports_gdp","BEN","Benin","NAM",0
+"exports_gdp","BEN","Benin","SWZ",0.266
+"exports_gdp","BEN","Benin","SYC",0
+"exports_gdp","BEN","Benin","TKM",0
+"exports_gdp","BFA","Burkina Faso","BGD",0
+"exports_gdp","BFA","Burkina Faso","BOL",0
+"exports_gdp","BFA","Burkina Faso","BRB",0.832
+"exports_gdp","BFA","Burkina Faso","BTN",0
+"exports_gdp","BFA","Burkina Faso","BWA",0
+"exports_gdp","BFA","Burkina Faso","CPV",0
+"exports_gdp","BFA","Burkina Faso","DMA",0
+"exports_gdp","BFA","Burkina Faso","ECU",0
+"exports_gdp","BFA","Burkina Faso","GRD",0
+"exports_gdp","BFA","Burkina Faso","GUY",0.012
+"exports_gdp","BFA","Burkina Faso","IRQ",0
+"exports_gdp","BFA","Burkina Faso","KNA",0
+"exports_gdp","BFA","Burkina Faso","LAO",0
+"exports_gdp","BFA","Burkina Faso","LCA",0
+"exports_gdp","BFA","Burkina Faso","LSO",0
+"exports_gdp","BFA","Burkina Faso","MAR",0
+"exports_gdp","BFA","Burkina Faso","MUS",0.156
+"exports_gdp","BFA","Burkina Faso","NAM",0
+"exports_gdp","BFA","Burkina Faso","SWZ",0
+"exports_gdp","BFA","Burkina Faso","SYC",0
+"exports_gdp","BFA","Burkina Faso","TKM",0
+"exports_gdp","CIV","Côte d'Ivoire","BGD",0
+"exports_gdp","CIV","Côte d'Ivoire","BOL",0.41
+"exports_gdp","CIV","Côte d'Ivoire","BRB",0
+"exports_gdp","CIV","Côte d'Ivoire","BTN",0
+"exports_gdp","CIV","Côte d'Ivoire","BWA",0
+"exports_gdp","CIV","Côte d'Ivoire","CPV",0
+"exports_gdp","CIV","Côte d'Ivoire","DMA",0
+"exports_gdp","CIV","Côte d'Ivoire","ECU",0
+"exports_gdp","CIV","Côte d'Ivoire","GRD",0
+"exports_gdp","CIV","Côte d'Ivoire","GUY",0
+"exports_gdp","CIV","Côte d'Ivoire","IRQ",0
+"exports_gdp","CIV","Côte d'Ivoire","KNA",0
+"exports_gdp","CIV","Côte d'Ivoire","LAO",0
+"exports_gdp","CIV","Côte d'Ivoire","LCA",0
+"exports_gdp","CIV","Côte d'Ivoire","LSO",0
+"exports_gdp","CIV","Côte d'Ivoire","MAR",0
+"exports_gdp","CIV","Côte d'Ivoire","MUS",0
+"exports_gdp","CIV","Côte d'Ivoire","NAM",0
+"exports_gdp","CIV","Côte d'Ivoire","SWZ",0.59
+"exports_gdp","CIV","Côte d'Ivoire","SYC",0
+"exports_gdp","CIV","Côte d'Ivoire","TKM",0
+"exports_gdp","MLI","Mali","BGD",0.481
+"exports_gdp","MLI","Mali","BOL",0
+"exports_gdp","MLI","Mali","BRB",0
+"exports_gdp","MLI","Mali","BTN",0
+"exports_gdp","MLI","Mali","BWA",0
+"exports_gdp","MLI","Mali","CPV",0
+"exports_gdp","MLI","Mali","DMA",0.098
+"exports_gdp","MLI","Mali","ECU",0.07
+"exports_gdp","MLI","Mali","GRD",0
+"exports_gdp","MLI","Mali","GUY",0
+"exports_gdp","MLI","Mali","IRQ",0.021
+"exports_gdp","MLI","Mali","KNA",0
+"exports_gdp","MLI","Mali","LAO",0
+"exports_gdp","MLI","Mali","LCA",0
+"exports_gdp","MLI","Mali","LSO",0
+"exports_gdp","MLI","Mali","MAR",0.303
+"exports_gdp","MLI","Mali","MUS",0.025
+"exports_gdp","MLI","Mali","NAM",0
+"exports_gdp","MLI","Mali","SWZ",0
+"exports_gdp","MLI","Mali","SYC",0
+"exports_gdp","MLI","Mali","TKM",0
+"exports_gdp","NER","Niger","BGD",0.149
+"exports_gdp","NER","Niger","BOL",0.59
+"exports_gdp","NER","Niger","BRB",0.101
+"exports_gdp","NER","Niger","BTN",0.109
+"exports_gdp","NER","Niger","BWA",0
+"exports_gdp","NER","Niger","CPV",0
+"exports_gdp","NER","Niger","DMA",0.047
+"exports_gdp","NER","Niger","ECU",0
+"exports_gdp","NER","Niger","GRD",0
+"exports_gdp","NER","Niger","GUY",0
+"exports_gdp","NER","Niger","IRQ",0
+"exports_gdp","NER","Niger","KNA",0
+"exports_gdp","NER","Niger","LAO",0.003
+"exports_gdp","NER","Niger","LCA",0
+"exports_gdp","NER","Niger","LSO",0
+"exports_gdp","NER","Niger","MAR",0
+"exports_gdp","NER","Niger","MUS",0
+"exports_gdp","NER","Niger","NAM",0
+"exports_gdp","NER","Niger","SWZ",0
+"exports_gdp","NER","Niger","SYC",0
+"exports_gdp","NER","Niger","TKM",0
+"exports_gdp","SEN","Senegal","BGD",0.104
+"exports_gdp","SEN","Senegal","BOL",0.626
+"exports_gdp","SEN","Senegal","BRB",0.07
+"exports_gdp","SEN","Senegal","BTN",0
+"exports_gdp","SEN","Senegal","BWA",0
+"exports_gdp","SEN","Senegal","CPV",0
+"exports_gdp","SEN","Senegal","DMA",0.081
+"exports_gdp","SEN","Senegal","ECU",0
+"exports_gdp","SEN","Senegal","GRD",0
+"exports_gdp","SEN","Senegal","GUY",0
+"exports_gdp","SEN","Senegal","IRQ",0
+"exports_gdp","SEN","Senegal","KNA",0
+"exports_gdp","SEN","Senegal","LAO",0.05
+"exports_gdp","SEN","Senegal","LCA",0
+"exports_gdp","SEN","Senegal","LSO",0
+"exports_gdp","SEN","Senegal","MAR",0
+"exports_gdp","SEN","Senegal","MUS",0
+"exports_gdp","SEN","Senegal","NAM",0
+"exports_gdp","SEN","Senegal","SWZ",0.07
+"exports_gdp","SEN","Senegal","SYC",0
+"exports_gdp","SEN","Senegal","TKM",0
+"exports_gdp","TGO","Togo","BGD",0
+"exports_gdp","TGO","Togo","BOL",0
+"exports_gdp","TGO","Togo","BRB",0
+"exports_gdp","TGO","Togo","BTN",0.081
+"exports_gdp","TGO","Togo","BWA",0
+"exports_gdp","TGO","Togo","CPV",0
+"exports_gdp","TGO","Togo","DMA",0
+"exports_gdp","TGO","Togo","ECU",0
+"exports_gdp","TGO","Togo","GRD",0
+"exports_gdp","TGO","Togo","GUY",0
+"exports_gdp","TGO","Togo","IRQ",0.038
+"exports_gdp","TGO","Togo","KNA",0
+"exports_gdp","TGO","Togo","LAO",0
+"exports_gdp","TGO","Togo","LCA",0
+"exports_gdp","TGO","Togo","LSO",0
+"exports_gdp","TGO","Togo","MAR",0.604
+"exports_gdp","TGO","Togo","MUS",0.179
+"exports_gdp","TGO","Togo","NAM",0
+"exports_gdp","TGO","Togo","SWZ",0
+"exports_gdp","TGO","Togo","SYC",0
+"exports_gdp","TGO","Togo","TKM",0.098
+"exports_gdp","CMR","Cameroon","BGD",0.029
+"exports_gdp","CMR","Cameroon","BOL",0
+"exports_gdp","CMR","Cameroon","BRB",0.253
+"exports_gdp","CMR","Cameroon","BTN",0
+"exports_gdp","CMR","Cameroon","BWA",0
+"exports_gdp","CMR","Cameroon","CPV",0
+"exports_gdp","CMR","Cameroon","DMA",0
+"exports_gdp","CMR","Cameroon","ECU",0
+"exports_gdp","CMR","Cameroon","GRD",0
+"exports_gdp","CMR","Cameroon","GUY",0
+"exports_gdp","CMR","Cameroon","IRQ",0.027
+"exports_gdp","CMR","Cameroon","KNA",0
+"exports_gdp","CMR","Cameroon","LAO",0
+"exports_gdp","CMR","Cameroon","LCA",0
+"exports_gdp","CMR","Cameroon","LSO",0
+"exports_gdp","CMR","Cameroon","MAR",0.336
+"exports_gdp","CMR","Cameroon","MUS",0
+"exports_gdp","CMR","Cameroon","NAM",0
+"exports_gdp","CMR","Cameroon","SWZ",0.355
+"exports_gdp","CMR","Cameroon","SYC",0
+"exports_gdp","CMR","Cameroon","TKM",0
+"exports_gdp","CAF","Central African Republic","BGD",0.069
+"exports_gdp","CAF","Central African Republic","BOL",0.152
+"exports_gdp","CAF","Central African Republic","BRB",0.236
+"exports_gdp","CAF","Central African Republic","BTN",0
+"exports_gdp","CAF","Central African Republic","BWA",0
+"exports_gdp","CAF","Central African Republic","CPV",0
+"exports_gdp","CAF","Central African Republic","DMA",0.138
+"exports_gdp","CAF","Central African Republic","ECU",0
+"exports_gdp","CAF","Central African Republic","GRD",0
+"exports_gdp","CAF","Central African Republic","GUY",0
+"exports_gdp","CAF","Central African Republic","IRQ",0
+"exports_gdp","CAF","Central African Republic","KNA",0
+"exports_gdp","CAF","Central African Republic","LAO",0
+"exports_gdp","CAF","Central African Republic","LCA",0
+"exports_gdp","CAF","Central African Republic","LSO",0
+"exports_gdp","CAF","Central African Republic","MAR",0
+"exports_gdp","CAF","Central African Republic","MUS",0
+"exports_gdp","CAF","Central African Republic","NAM",0
+"exports_gdp","CAF","Central African Republic","SWZ",0.404
+"exports_gdp","CAF","Central African Republic","SYC",0
+"exports_gdp","CAF","Central African Republic","TKM",0
+"exports_gdp","TCD","Chad","BGD",0.186
+"exports_gdp","TCD","Chad","BOL",0.058
+"exports_gdp","TCD","Chad","BRB",0.325
+"exports_gdp","TCD","Chad","BTN",0
+"exports_gdp","TCD","Chad","BWA",0
+"exports_gdp","TCD","Chad","CPV",0
+"exports_gdp","TCD","Chad","DMA",0.065
+"exports_gdp","TCD","Chad","ECU",0
+"exports_gdp","TCD","Chad","GRD",0
+"exports_gdp","TCD","Chad","GUY",0
+"exports_gdp","TCD","Chad","IRQ",0
+"exports_gdp","TCD","Chad","KNA",0
+"exports_gdp","TCD","Chad","LAO",0.092
+"exports_gdp","TCD","Chad","LCA",0.01
+"exports_gdp","TCD","Chad","LSO",0
+"exports_gdp","TCD","Chad","MAR",0
+"exports_gdp","TCD","Chad","MUS",0
+"exports_gdp","TCD","Chad","NAM",0
+"exports_gdp","TCD","Chad","SWZ",0.265
+"exports_gdp","TCD","Chad","SYC",0
+"exports_gdp","TCD","Chad","TKM",0
+"exports_gdp","COG","Republic of Congo","BGD",0
+"exports_gdp","COG","Republic of Congo","BOL",0
+"exports_gdp","COG","Republic of Congo","BRB",0
+"exports_gdp","COG","Republic of Congo","BTN",0
+"exports_gdp","COG","Republic of Congo","BWA",0.362
+"exports_gdp","COG","Republic of Congo","CPV",0
+"exports_gdp","COG","Republic of Congo","DMA",0
+"exports_gdp","COG","Republic of Congo","ECU",0
+"exports_gdp","COG","Republic of Congo","GRD",0
+"exports_gdp","COG","Republic of Congo","GUY",0.291
+"exports_gdp","COG","Republic of Congo","IRQ",0.297
+"exports_gdp","COG","Republic of Congo","KNA",0
+"exports_gdp","COG","Republic of Congo","LAO",0
+"exports_gdp","COG","Republic of Congo","LCA",0
+"exports_gdp","COG","Republic of Congo","LSO",0
+"exports_gdp","COG","Republic of Congo","MAR",0
+"exports_gdp","COG","Republic of Congo","MUS",0.001
+"exports_gdp","COG","Republic of Congo","NAM",0
+"exports_gdp","COG","Republic of Congo","SWZ",0
+"exports_gdp","COG","Republic of Congo","SYC",0
+"exports_gdp","COG","Republic of Congo","TKM",0.048
+"exports_gdp","GAB","Gabon","BGD",0
+"exports_gdp","GAB","Gabon","BOL",0
+"exports_gdp","GAB","Gabon","BRB",0
+"exports_gdp","GAB","Gabon","BTN",0
+"exports_gdp","GAB","Gabon","BWA",0.445
+"exports_gdp","GAB","Gabon","CPV",0
+"exports_gdp","GAB","Gabon","DMA",0
+"exports_gdp","GAB","Gabon","ECU",0
+"exports_gdp","GAB","Gabon","GRD",0
+"exports_gdp","GAB","Gabon","GUY",0.117
+"exports_gdp","GAB","Gabon","IRQ",0.172
+"exports_gdp","GAB","Gabon","KNA",0
+"exports_gdp","GAB","Gabon","LAO",0
+"exports_gdp","GAB","Gabon","LCA",0
+"exports_gdp","GAB","Gabon","LSO",0
+"exports_gdp","GAB","Gabon","MAR",0
+"exports_gdp","GAB","Gabon","MUS",0
+"exports_gdp","GAB","Gabon","NAM",0
+"exports_gdp","GAB","Gabon","SWZ",0
+"exports_gdp","GAB","Gabon","SYC",0
+"exports_gdp","GAB","Gabon","TKM",0.266
+"exports_gdp","GNQ","Equatorial Guinea","BGD",0
+"exports_gdp","GNQ","Equatorial Guinea","BOL",0
+"exports_gdp","GNQ","Equatorial Guinea","BRB",0
+"exports_gdp","GNQ","Equatorial Guinea","BTN",0
+"exports_gdp","GNQ","Equatorial Guinea","BWA",0.367
+"exports_gdp","GNQ","Equatorial Guinea","CPV",0
+"exports_gdp","GNQ","Equatorial Guinea","DMA",0
+"exports_gdp","GNQ","Equatorial Guinea","ECU",0
+"exports_gdp","GNQ","Equatorial Guinea","GRD",0
+"exports_gdp","GNQ","Equatorial Guinea","GUY",0.633
+"exports_gdp","GNQ","Equatorial Guinea","IRQ",0
+"exports_gdp","GNQ","Equatorial Guinea","KNA",0
+"exports_gdp","GNQ","Equatorial Guinea","LAO",0
+"exports_gdp","GNQ","Equatorial Guinea","LCA",0
+"exports_gdp","GNQ","Equatorial Guinea","LSO",0
+"exports_gdp","GNQ","Equatorial Guinea","MAR",0
+"exports_gdp","GNQ","Equatorial Guinea","MUS",0
+"exports_gdp","GNQ","Equatorial Guinea","NAM",0
+"exports_gdp","GNQ","Equatorial Guinea","SWZ",0
+"exports_gdp","GNQ","Equatorial Guinea","SYC",0
+"exports_gdp","GNQ","Equatorial Guinea","TKM",0
+"imports_gdp","BEN","Benin","BGD",0.415
+"imports_gdp","BEN","Benin","BOL",0
+"imports_gdp","BEN","Benin","BRB",0
+"imports_gdp","BEN","Benin","BTN",0.549
+"imports_gdp","BEN","Benin","BWA",0
+"imports_gdp","BEN","Benin","CPV",0
+"imports_gdp","BEN","Benin","DMA",0
+"imports_gdp","BEN","Benin","ECU",0
+"imports_gdp","BEN","Benin","GRD",0
+"imports_gdp","BEN","Benin","GUY",0
+"imports_gdp","BEN","Benin","IRQ",0
+"imports_gdp","BEN","Benin","KNA",0
+"imports_gdp","BEN","Benin","LAO",0.036
+"imports_gdp","BEN","Benin","LCA",0
+"imports_gdp","BEN","Benin","LSO",0
+"imports_gdp","BEN","Benin","MAR",0
+"imports_gdp","BEN","Benin","MUS",0
+"imports_gdp","BEN","Benin","NAM",0
+"imports_gdp","BEN","Benin","SWZ",0
+"imports_gdp","BEN","Benin","SYC",0
+"imports_gdp","BEN","Benin","TKM",0
+"imports_gdp","BFA","Burkina Faso","BGD",0.287
+"imports_gdp","BFA","Burkina Faso","BOL",0
+"imports_gdp","BFA","Burkina Faso","BRB",0.489
+"imports_gdp","BFA","Burkina Faso","BTN",0
+"imports_gdp","BFA","Burkina Faso","BWA",0
+"imports_gdp","BFA","Burkina Faso","CPV",0.008
+"imports_gdp","BFA","Burkina Faso","DMA",0
+"imports_gdp","BFA","Burkina Faso","ECU",0
+"imports_gdp","BFA","Burkina Faso","GRD",0
+"imports_gdp","BFA","Burkina Faso","GUY",0
+"imports_gdp","BFA","Burkina Faso","IRQ",0.048
+"imports_gdp","BFA","Burkina Faso","KNA",0
+"imports_gdp","BFA","Burkina Faso","LAO",0
+"imports_gdp","BFA","Burkina Faso","LCA",0
+"imports_gdp","BFA","Burkina Faso","LSO",0.168
+"imports_gdp","BFA","Burkina Faso","MAR",0
+"imports_gdp","BFA","Burkina Faso","MUS",0
+"imports_gdp","BFA","Burkina Faso","NAM",0
+"imports_gdp","BFA","Burkina Faso","SWZ",0
+"imports_gdp","BFA","Burkina Faso","SYC",0
+"imports_gdp","BFA","Burkina Faso","TKM",0
+"imports_gdp","CIV","Côte d'Ivoire","BGD",0.012
+"imports_gdp","CIV","Côte d'Ivoire","BOL",0
+"imports_gdp","CIV","Côte d'Ivoire","BRB",0.092
+"imports_gdp","CIV","Côte d'Ivoire","BTN",0
+"imports_gdp","CIV","Côte d'Ivoire","BWA",0
+"imports_gdp","CIV","Côte d'Ivoire","CPV",0
+"imports_gdp","CIV","Côte d'Ivoire","DMA",0
+"imports_gdp","CIV","Côte d'Ivoire","ECU",0
+"imports_gdp","CIV","Côte d'Ivoire","GRD",0
+"imports_gdp","CIV","Côte d'Ivoire","GUY",0
+"imports_gdp","CIV","Côte d'Ivoire","IRQ",0
+"imports_gdp","CIV","Côte d'Ivoire","KNA",0
+"imports_gdp","CIV","Côte d'Ivoire","LAO",0
+"imports_gdp","CIV","Côte d'Ivoire","LCA",0
+"imports_gdp","CIV","Côte d'Ivoire","LSO",0.049
+"imports_gdp","CIV","Côte d'Ivoire","MAR",0.845
+"imports_gdp","CIV","Côte d'Ivoire","MUS",0.001
+"imports_gdp","CIV","Côte d'Ivoire","NAM",0
+"imports_gdp","CIV","Côte d'Ivoire","SWZ",0
+"imports_gdp","CIV","Côte d'Ivoire","SYC",0
+"imports_gdp","CIV","Côte d'Ivoire","TKM",0
+"imports_gdp","MLI","Mali","BGD",0.388
+"imports_gdp","MLI","Mali","BOL",0
+"imports_gdp","MLI","Mali","BRB",0
+"imports_gdp","MLI","Mali","BTN",0.086
+"imports_gdp","MLI","Mali","BWA",0
+"imports_gdp","MLI","Mali","CPV",0
+"imports_gdp","MLI","Mali","DMA",0.355
+"imports_gdp","MLI","Mali","ECU",0
+"imports_gdp","MLI","Mali","GRD",0
+"imports_gdp","MLI","Mali","GUY",0
+"imports_gdp","MLI","Mali","IRQ",0
+"imports_gdp","MLI","Mali","KNA",0
+"imports_gdp","MLI","Mali","LAO",0
+"imports_gdp","MLI","Mali","LCA",0
+"imports_gdp","MLI","Mali","LSO",0.118
+"imports_gdp","MLI","Mali","MAR",0
+"imports_gdp","MLI","Mali","MUS",0
+"imports_gdp","MLI","Mali","NAM",0
+"imports_gdp","MLI","Mali","SWZ",0.053
+"imports_gdp","MLI","Mali","SYC",0
+"imports_gdp","MLI","Mali","TKM",0
+"imports_gdp","NER","Niger","BGD",0.181
+"imports_gdp","NER","Niger","BOL",0
+"imports_gdp","NER","Niger","BRB",0.242
+"imports_gdp","NER","Niger","BTN",0
+"imports_gdp","NER","Niger","BWA",0
+"imports_gdp","NER","Niger","CPV",0
+"imports_gdp","NER","Niger","DMA",0
+"imports_gdp","NER","Niger","ECU",0
+"imports_gdp","NER","Niger","GRD",0
+"imports_gdp","NER","Niger","GUY",0
+"imports_gdp","NER","Niger","IRQ",0.092
+"imports_gdp","NER","Niger","KNA",0
+"imports_gdp","NER","Niger","LAO",0
+"imports_gdp","NER","Niger","LCA",0
+"imports_gdp","NER","Niger","LSO",0
+"imports_gdp","NER","Niger","MAR",0.347
+"imports_gdp","NER","Niger","MUS",0.138
+"imports_gdp","NER","Niger","NAM",0
+"imports_gdp","NER","Niger","SWZ",0
+"imports_gdp","NER","Niger","SYC",0
+"imports_gdp","NER","Niger","TKM",0
+"imports_gdp","SEN","Senegal","BGD",0.208
+"imports_gdp","SEN","Senegal","BOL",0
+"imports_gdp","SEN","Senegal","BRB",0.12
+"imports_gdp","SEN","Senegal","BTN",0
+"imports_gdp","SEN","Senegal","BWA",0
+"imports_gdp","SEN","Senegal","CPV",0
+"imports_gdp","SEN","Senegal","DMA",0
+"imports_gdp","SEN","Senegal","ECU",0
+"imports_gdp","SEN","Senegal","GRD",0
+"imports_gdp","SEN","Senegal","GUY",0
+"imports_gdp","SEN","Senegal","IRQ",0.078
+"imports_gdp","SEN","Senegal","KNA",0
+"imports_gdp","SEN","Senegal","LAO",0
+"imports_gdp","SEN","Senegal","LCA",0
+"imports_gdp","SEN","Senegal","LSO",0
+"imports_gdp","SEN","Senegal","MAR",0.315
+"imports_gdp","SEN","Senegal","MUS",0.279
+"imports_gdp","SEN","Senegal","NAM",0
+"imports_gdp","SEN","Senegal","SWZ",0
+"imports_gdp","SEN","Senegal","SYC",0
+"imports_gdp","SEN","Senegal","TKM",0
+"imports_gdp","TGO","Togo","BGD",0
+"imports_gdp","TGO","Togo","BOL",0
+"imports_gdp","TGO","Togo","BRB",0.469
+"imports_gdp","TGO","Togo","BTN",0.05
+"imports_gdp","TGO","Togo","BWA",0
+"imports_gdp","TGO","Togo","CPV",0.097
+"imports_gdp","TGO","Togo","DMA",0
+"imports_gdp","TGO","Togo","ECU",0
+"imports_gdp","TGO","Togo","GRD",0
+"imports_gdp","TGO","Togo","GUY",0
+"imports_gdp","TGO","Togo","IRQ",0.131
+"imports_gdp","TGO","Togo","KNA",0
+"imports_gdp","TGO","Togo","LAO",0
+"imports_gdp","TGO","Togo","LCA",0
+"imports_gdp","TGO","Togo","LSO",0.253
+"imports_gdp","TGO","Togo","MAR",0
+"imports_gdp","TGO","Togo","MUS",0
+"imports_gdp","TGO","Togo","NAM",0
+"imports_gdp","TGO","Togo","SWZ",0
+"imports_gdp","TGO","Togo","SYC",0
+"imports_gdp","TGO","Togo","TKM",0
+"imports_gdp","CMR","Cameroon","BGD",0
+"imports_gdp","CMR","Cameroon","BOL",0
+"imports_gdp","CMR","Cameroon","BRB",0.245
+"imports_gdp","CMR","Cameroon","BTN",0
+"imports_gdp","CMR","Cameroon","BWA",0
+"imports_gdp","CMR","Cameroon","CPV",0
+"imports_gdp","CMR","Cameroon","DMA",0
+"imports_gdp","CMR","Cameroon","ECU",0
+"imports_gdp","CMR","Cameroon","GRD",0
+"imports_gdp","CMR","Cameroon","GUY",0
+"imports_gdp","CMR","Cameroon","IRQ",0.124
+"imports_gdp","CMR","Cameroon","KNA",0
+"imports_gdp","CMR","Cameroon","LAO",0
+"imports_gdp","CMR","Cameroon","LCA",0
+"imports_gdp","CMR","Cameroon","LSO",0
+"imports_gdp","CMR","Cameroon","MAR",0.63
+"imports_gdp","CMR","Cameroon","MUS",0
+"imports_gdp","CMR","Cameroon","NAM",0
+"imports_gdp","CMR","Cameroon","SWZ",0
+"imports_gdp","CMR","Cameroon","SYC",0
+"imports_gdp","CMR","Cameroon","TKM",0
+"imports_gdp","CAF","Central African Republic","BGD",0.365
+"imports_gdp","CAF","Central African Republic","BOL",0
+"imports_gdp","CAF","Central African Republic","BRB",0
+"imports_gdp","CAF","Central African Republic","BTN",0
+"imports_gdp","CAF","Central African Republic","BWA",0
+"imports_gdp","CAF","Central African Republic","CPV",0
+"imports_gdp","CAF","Central African Republic","DMA",0
+"imports_gdp","CAF","Central African Republic","ECU",0
+"imports_gdp","CAF","Central African Republic","GRD",0
+"imports_gdp","CAF","Central African Republic","GUY",0
+"imports_gdp","CAF","Central African Republic","IRQ",0.026
+"imports_gdp","CAF","Central African Republic","KNA",0
+"imports_gdp","CAF","Central African Republic","LAO",0
+"imports_gdp","CAF","Central African Republic","LCA",0
+"imports_gdp","CAF","Central African Republic","LSO",0
+"imports_gdp","CAF","Central African Republic","MAR",0.454
+"imports_gdp","CAF","Central African Republic","MUS",0.154
+"imports_gdp","CAF","Central African Republic","NAM",0
+"imports_gdp","CAF","Central African Republic","SWZ",0
+"imports_gdp","CAF","Central African Republic","SYC",0
+"imports_gdp","CAF","Central African Republic","TKM",0
+"imports_gdp","TCD","Chad","BGD",0.153
+"imports_gdp","TCD","Chad","BOL",0
+"imports_gdp","TCD","Chad","BRB",0.154
+"imports_gdp","TCD","Chad","BTN",0
+"imports_gdp","TCD","Chad","BWA",0
+"imports_gdp","TCD","Chad","CPV",0
+"imports_gdp","TCD","Chad","DMA",0.236
+"imports_gdp","TCD","Chad","ECU",0
+"imports_gdp","TCD","Chad","GRD",0
+"imports_gdp","TCD","Chad","GUY",0
+"imports_gdp","TCD","Chad","IRQ",0
+"imports_gdp","TCD","Chad","KNA",0
+"imports_gdp","TCD","Chad","LAO",0.2
+"imports_gdp","TCD","Chad","LCA",0
+"imports_gdp","TCD","Chad","LSO",0.153
+"imports_gdp","TCD","Chad","MAR",0
+"imports_gdp","TCD","Chad","MUS",0
+"imports_gdp","TCD","Chad","NAM",0
+"imports_gdp","TCD","Chad","SWZ",0.103
+"imports_gdp","TCD","Chad","SYC",0
+"imports_gdp","TCD","Chad","TKM",0
+"imports_gdp","COG","Republic of Congo","BGD",0
+"imports_gdp","COG","Republic of Congo","BOL",0
+"imports_gdp","COG","Republic of Congo","BRB",0
+"imports_gdp","COG","Republic of Congo","BTN",0.001
+"imports_gdp","COG","Republic of Congo","BWA",0.318
+"imports_gdp","COG","Republic of Congo","CPV",0
+"imports_gdp","COG","Republic of Congo","DMA",0.001
+"imports_gdp","COG","Republic of Congo","ECU",0
+"imports_gdp","COG","Republic of Congo","GRD",0
+"imports_gdp","COG","Republic of Congo","GUY",0
+"imports_gdp","COG","Republic of Congo","IRQ",0.296
+"imports_gdp","COG","Republic of Congo","KNA",0
+"imports_gdp","COG","Republic of Congo","LAO",0
+"imports_gdp","COG","Republic of Congo","LCA",0
+"imports_gdp","COG","Republic of Congo","LSO",0.128
+"imports_gdp","COG","Republic of Congo","MAR",0
+"imports_gdp","COG","Republic of Congo","MUS",0
+"imports_gdp","COG","Republic of Congo","NAM",0
+"imports_gdp","COG","Republic of Congo","SWZ",0
+"imports_gdp","COG","Republic of Congo","SYC",0
+"imports_gdp","COG","Republic of Congo","TKM",0.256
+"imports_gdp","GAB","Gabon","BGD",0
+"imports_gdp","GAB","Gabon","BOL",0
+"imports_gdp","GAB","Gabon","BRB",0.243
+"imports_gdp","GAB","Gabon","BTN",0.462
+"imports_gdp","GAB","Gabon","BWA",0
+"imports_gdp","GAB","Gabon","CPV",0
+"imports_gdp","GAB","Gabon","DMA",0
+"imports_gdp","GAB","Gabon","ECU",0
+"imports_gdp","GAB","Gabon","GRD",0
+"imports_gdp","GAB","Gabon","GUY",0
+"imports_gdp","GAB","Gabon","IRQ",0.011
+"imports_gdp","GAB","Gabon","KNA",0
+"imports_gdp","GAB","Gabon","LAO",0
+"imports_gdp","GAB","Gabon","LCA",0
+"imports_gdp","GAB","Gabon","LSO",0.101
+"imports_gdp","GAB","Gabon","MAR",0.182
+"imports_gdp","GAB","Gabon","MUS",0
+"imports_gdp","GAB","Gabon","NAM",0
+"imports_gdp","GAB","Gabon","SWZ",0
+"imports_gdp","GAB","Gabon","SYC",0
+"imports_gdp","GAB","Gabon","TKM",0
+"imports_gdp","GNQ","Equatorial Guinea","BGD",0.001
+"imports_gdp","GNQ","Equatorial Guinea","BOL",0
+"imports_gdp","GNQ","Equatorial Guinea","BRB",0.002
+"imports_gdp","GNQ","Equatorial Guinea","BTN",0
+"imports_gdp","GNQ","Equatorial Guinea","BWA",0.003
+"imports_gdp","GNQ","Equatorial Guinea","CPV",0
+"imports_gdp","GNQ","Equatorial Guinea","DMA",0.024
+"imports_gdp","GNQ","Equatorial Guinea","ECU",0
+"imports_gdp","GNQ","Equatorial Guinea","GRD",0
+"imports_gdp","GNQ","Equatorial Guinea","GUY",0
+"imports_gdp","GNQ","Equatorial Guinea","IRQ",0
+"imports_gdp","GNQ","Equatorial Guinea","KNA",0.076
+"imports_gdp","GNQ","Equatorial Guinea","LAO",0
+"imports_gdp","GNQ","Equatorial Guinea","LCA",0.005
+"imports_gdp","GNQ","Equatorial Guinea","LSO",0.066
+"imports_gdp","GNQ","Equatorial Guinea","MAR",0
+"imports_gdp","GNQ","Equatorial Guinea","MUS",0
+"imports_gdp","GNQ","Equatorial Guinea","NAM",0
+"imports_gdp","GNQ","Equatorial Guinea","SWZ",0.82
+"imports_gdp","GNQ","Equatorial Guinea","SYC",0
+"imports_gdp","GNQ","Equatorial Guinea","TKM",0

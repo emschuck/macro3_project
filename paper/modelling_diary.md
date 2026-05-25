@@ -27,4 +27,8 @@
 * 24-05-2026 [ES]: Testing with added special variable years: 1985, 1990. Some slight improvement in outcome, may keep -- justified by poor data for some input variables. Keeping only 1990 to avoid overfitting
 * 24-05-2026 [ES]: Testing without industry variable, as it is causing poor fit for countries with missing data (CAF, Chad)
 * 24-05-2026 [ES]: Out of GDP variables, wdi_gdp_pc_current is closest fit to decribed variables in report, and also has minimal missing data
+* 24-05-2026 [ES]: For extension variables: MEU, XEU completely missing for many countries, available from 1981 for some. Trade openness incomplete for many countries including in treated. Exports/imports missing for equatorial guinea, barbados, dominica, eswatini (partial), grenada, guyana (partial), laos (partial), lesotho (partial), st kitts and nevis, st lucia, turkmenistan (partial), 
+* 25-05-2026 [ES]: Missing data for equatorial guinea for EU Exports/imports, and many control countries. 
+* 25-05-2026 [ES]: Initially matched on just average trade variables by period. Instead add sparse years as well, as there is a lot of variability.
+
 

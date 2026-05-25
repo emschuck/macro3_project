@@ -112,7 +112,7 @@ scm_predictors <- c(
 )
 
 special_var <- "gdp_selected"
-special_years <- c(1980, 1985, 1990, 1995, 2001)
+special_years <- c(1980, 1990, 1995, 2001)
 
 # Country names
 country_names <- tibble::tribble(
@@ -220,4 +220,52 @@ make_treated_labels <- function(treated_codes = treated_countries) {
     dplyr::arrange(order) |>
     dplyr::select(iso3c, treated_label)
 }
+
+# =====================================================
+# Extension
+# =====================================================
+
+
+# Periods for the trade-extension SCM analysis
+extension_pre_period <- 1981:2001
+extension_post_period <- 2002:2019
+extension_plot_period <- 1981:2019
+
+# Trade variables used as SCM outcomes
+extension_trade_outcomes <- c(
+  "XEU",
+  "MEU",
+  "trade_openness",
+  "exports_gdp",
+  "imports_gdp"
+)
+
+# Labels for charts and tables
+extension_trade_outcome_labels <- c(
+  XEU = "Exports to EU (% of total exports)",
+  MEU = "Imports from EU (% of total imports)",
+  trade_openness = "Trade openness (% of GDP)",
+  exports_gdp = "Exports of goods and services (% of GDP)",
+  imports_gdp = "Imports of goods and services (% of GDP)"
+)
+
+# Predictors used in the extension SCM
+extension_scm_predictors <- c(
+  "agriculture",
+  "govt_share",
+  "invest_share",
+  "oda_share",
+  "fdi",
+  "labour",
+  "polity2"
+)
+
+# Main output folder for extension figures and tables.
+extension_output_dir <- "output/extension_trade"
+
+# Folder for processed extension RDS objects.
+extension_processed_dir <- "data/processed/extension_trade"
+
+
+extension_special_years <- c(1981, 1990, 1995, 2001)
 
