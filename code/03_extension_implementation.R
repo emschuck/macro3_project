@@ -249,6 +249,8 @@ write.csv(
   row.names = FALSE
 )
 
+
+
 # Combined descriptive plot for all trade outcomes.
 # The four country groups are shown with different coloured lines.
 p_group_averages <- ggplot(
@@ -280,6 +282,85 @@ ggsave(
 )
 
 
+
+
+
+### Make chart without euro area trade
+extension_grouped_reduced <- df |>
+  filter(
+    iso3c %in% descriptive_countries,
+    year %in% extension_plot_period
+  ) |>
+  mutate(
+    group = case_when(
+      iso3c %in% waemu ~ "WAEMU",
+      iso3c %in% caemc ~ "CAEMC",
+      iso3c %in% donor_countries ~ "Donor pool",
+      iso3c %in% non_cfa_comparison_countries ~ "Non-donor comparison",
+      TRUE ~ NA_character_
+    )
+  ) |>
+  filter(!is.na(group)) |>
+  select(
+    iso3c,
+    year,
+    group,
+    all_of(extension_trade_outcomes_chart)
+  ) |>
+  pivot_longer(
+    cols = all_of(extension_trade_outcomes_chart),
+    names_to = "outcome",
+    values_to = "value"
+  ) |>
+  group_by(group, year, outcome) |>
+  summarise(
+    value = mean(value, na.rm = TRUE),
+    n_countries = sum(!is.na(value)),
+    .groups = "drop"
+  ) |>
+  mutate(
+    outcome_label = extension_trade_outcome_labels[outcome]
+  )
+
+# Save the group averages behind the descriptive figure.
+write.csv(
+  extension_grouped_reduced,
+  file.path(extension_output_dir, "tables", "extension_trade_group_averages_reduced.csv"),
+  row.names = FALSE
+)
+
+
+
+# Combined descriptive plot for all trade outcomes.
+# The four country groups are shown with different coloured lines.
+p_group_averages <- ggplot(
+  extension_grouped_reduced,
+  aes(x = year, y = value, color = group)
+) +
+  geom_line(linewidth = 0.8) +
+  geom_vline(xintercept = treatment_year, linetype = "dashed") +
+  geom_vline(xintercept = 1994, linetype = "dotted") +
+  facet_wrap(~ outcome_label, scales = "free_y", ncol = 3) +
+  labs(
+    title = "Trade-extension variables: group averages",
+    subtitle = paste0("Dashed vertical line = ", treatment_year, ", Dotted vertical line = ", 1994),
+    x = NULL,
+    y = NULL,
+    color = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+
+ggsave(
+  filename = file.path(extension_output_dir, "figures", "extension_trade_group_averages_reduced.png"),
+  plot = p_group_averages,
+  width = 16,
+  height = 6,
+  dpi = 300
+)
 
 
 #### ========================================================================###
@@ -774,7 +855,7 @@ for (outcome_var in successful_outcomes) {
   ) +
     geom_line(linewidth = 0.6) +
     geom_vline(xintercept = treatment_year, linetype = "dashed") +
-    facet_wrap(~ treated_country, scales = "free_y", ncol = 4) +
+    facet_wrap(~ treated_country, scales = "free_y", ncol = 5) +
     labs(
       title = paste0("Extension SCM: actual and synthetic — ", outcome_label_i),
       subtitle = paste0("Dashed line = ", treatment_year),
@@ -796,8 +877,8 @@ for (outcome_var in successful_outcomes) {
       paste0("extension_trade_scm_paths_", outcome_file_stub, ".png")
     ),
     plot = p_paths_i,
-    width = 18,
-    height = 12,
+    width = 12,
+    height = 6,
     dpi = 300
   )
 
@@ -812,7 +893,7 @@ for (outcome_var in successful_outcomes) {
     geom_line(linewidth = 0.6) +
     geom_hline(yintercept = 0, linetype = "dashed") +
     geom_vline(xintercept = treatment_year, linetype = "dashed") +
-    facet_wrap(~ treated_country, scales = "free_y", ncol = 4) +
+    facet_wrap(~ treated_country, scales = "free_y", ncol = 5) +
     labs(
       title = paste0("Extension SCM: actual minus synthetic — ", outcome_label_i),
       subtitle = paste0("Dashed line = ", treatment_year),
@@ -832,8 +913,8 @@ for (outcome_var in successful_outcomes) {
       paste0("extension_trade_scm_gaps_", outcome_file_stub, ".png")
     ),
     plot = p_gaps_i,
-    width = 18,
-    height = 12,
+    width = 12,
+    height = 6,
     dpi = 300
   )
 

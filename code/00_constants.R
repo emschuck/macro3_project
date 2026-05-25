@@ -240,6 +240,12 @@ extension_trade_outcomes <- c(
   "imports_gdp"
 )
 
+extension_trade_outcomes_chart <- c(
+  "trade_openness",
+  "exports_gdp",
+  "imports_gdp"
+)
+
 # Labels for charts and tables
 extension_trade_outcome_labels <- c(
   XEU = "Exports to EU (% of total exports)",
