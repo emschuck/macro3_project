@@ -5,10 +5,7 @@
 # This script runs in-space placebo tests for the trade-extension SCM analysis.
 #
 # The main extension SCM script estimates one synthetic control for each treated
-# country and each trade outcome. This placebo script then asks:
-#
-#   "How unusual is the treated-country gap relative to gaps obtained when each
-#    donor country is treated as if it had been treated in the same year?"
+# country and each trade outcome. 
 #
 # For each outcome and treated country, the script:
 #   1. Uses the same donor pool as the main SCM.
@@ -18,8 +15,7 @@
 #   5. Computes a rank-style placebo p-value.
 #   6. Saves separate charts and tables for each outcome.
 #
-# Outputs are saved separately by outcome, rather than pooled into one combined
-# figure. This makes the extension results easier to inspect and report.
+# Outputs are saved separately by outcome.
 
 #### ========================================================================###
 #### ======================== 1. PROJECT SETUP ==============================###

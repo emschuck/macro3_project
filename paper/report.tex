@@ -7,9 +7,15 @@
 \usepackage{hhline}
 \usepackage[table]{xcolor}
 \usepackage{threeparttable}
+\usepackage{booktabs}
 
 \newenvironment{centerbox}{\begin{center}}{\end{center}}
 
+\providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
+\providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
+
+\providecommand{\huxtpad}[1]{\rule{0pt}{2.2ex}}
+\providecommand{\huxbpad}[1]{\rule[-0.8ex]{0pt}{0.8ex}}
 
 \title{Macro Three Replication Project: Investigating the Economic Impact of the CFA Franc Zone with Synthetic Control Methods}
 \date{Due: 29 May 2026}
