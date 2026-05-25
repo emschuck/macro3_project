@@ -1,9 +1,15 @@
 % !TEX root = Users/ems/projects/macro3_project/paper/report.tex
 
-\documentclass[a4paper,landscape]{article}
+\documentclass[a3paper,landscape]{article}
 
 \usepackage[margin=1in]{geometry}
-\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hhline}
+\usepackage[table]{xcolor}
+\usepackage{threeparttable}
+
+\newenvironment{centerbox}{\begin{center}}{\end{center}}
+
 
 \title{Macro Three Replication Project: Investigating the Economic Impact of the CFA Franc Zone with Synthetic Control Methods}
 \date{Due: 29 May 2026}
@@ -79,14 +85,6 @@ Treatment effect & $\tau_{it}$ & Continuous & Constructed &  &  \\
 \input{../output/tables/table2_non_cfa_inflation.tex}
 
 
-\input{../output/tables/appendix3_panelA_waemu_gdp_growth_factor.tex}
-
-\input{../output/tables/appendix3_panelB_caemc_gdp_growth_factor.tex}
-
-\input{../output/tables/appendix4_non_cfa_gdp_growth_factor.tex}
-
-
-
 \input{../output/tables/appendix3_panelA_waemu_gdp_growth.tex}
 
 \input{../output/tables/appendix3_panelB_caemc_gdp_growth.tex}
@@ -97,17 +95,26 @@ Treatment effect & $\tau_{it}$ & Continuous & Constructed &  &  \\
 
 
 
-\input{../output/gdp_exploration/countries/country_method_table_AGO.tex}
+% \input{../output/gdp_exploration/countries/country_method_table_AGO.tex}
 
-\input{../output/gdp_exploration/countries/country_method_table_BEN.tex}
+% \input{../output/gdp_exploration/countries/country_method_table_BEN.tex}
 
 
-\input{../output/gdp_exploration/countries/country_method_table_CMR.tex}
+% \input{../output/gdp_exploration/countries/country_method_table_CMR.tex}
 
-\input{../output/gdp_exploration/tables/table_pwt_pwt_cgdpo_pc_log_growth.tex}
+% \input{../output/gdp_exploration/tables/table_pwt_pwt_cgdpo_pc_log_growth.tex}
+
 
 \input{../output/tables/scm_weights_all_treated_wide_formatted.tex}
 
 
+\input{../output/tables/table_averages_CFAzone.tex}
 
+\input{../output/tables/table_averages_CFAzone.tex}
+\input{../output/tables/table_ols_regression_gdp_with_treatment.tex}
+
+\input{../output/tables/table_ols_regression_gdp.tex}
+
+
+\input{../output/extension_trade/tables/extension_trade_scm_summary.tex}
 \end{document}
