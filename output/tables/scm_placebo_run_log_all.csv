@@ -1,0 +1,274 @@
+"treated_iso3c","treated_country","placebo_iso3c","placebo_country","success","error_message"
+"BEN","Benin","BGD","Bangladesh",TRUE,NA
+"BEN","Benin","BOL","Bolivia",TRUE,NA
+"BEN","Benin","BRB","Barbados",TRUE,NA
+"BEN","Benin","BTN","Bhutan",TRUE,NA
+"BEN","Benin","BWA","Botswana",TRUE,NA
+"BEN","Benin","CPV","Cabo Verde",TRUE,NA
+"BEN","Benin","DMA","Dominica",TRUE,NA
+"BEN","Benin","ECU","Ecuador",TRUE,NA
+"BEN","Benin","GRD","Grenada",TRUE,NA
+"BEN","Benin","GUY","Guyana",TRUE,NA
+"BEN","Benin","IRQ","Iraq",TRUE,NA
+"BEN","Benin","KNA","St. Kitts and Nevis",TRUE,NA
+"BEN","Benin","LAO","Lao PDR",TRUE,NA
+"BEN","Benin","LCA","St. Lucia",TRUE,NA
+"BEN","Benin","LSO","Lesotho",TRUE,NA
+"BEN","Benin","MAR","Morocco",TRUE,NA
+"BEN","Benin","MUS","Mauritius",TRUE,NA
+"BEN","Benin","NAM","Namibia",TRUE,NA
+"BEN","Benin","SWZ","Eswatini",TRUE,NA
+"BEN","Benin","SYC","Seychelles",TRUE,NA
+"BEN","Benin","TKM","Turkmenistan",TRUE,NA
+"BFA","Burkina Faso","BGD","Bangladesh",TRUE,NA
+"BFA","Burkina Faso","BOL","Bolivia",TRUE,NA
+"BFA","Burkina Faso","BRB","Barbados",TRUE,NA
+"BFA","Burkina Faso","BTN","Bhutan",TRUE,NA
+"BFA","Burkina Faso","BWA","Botswana",TRUE,NA
+"BFA","Burkina Faso","CPV","Cabo Verde",TRUE,NA
+"BFA","Burkina Faso","DMA","Dominica",TRUE,NA
+"BFA","Burkina Faso","ECU","Ecuador",TRUE,NA
+"BFA","Burkina Faso","GRD","Grenada",TRUE,NA
+"BFA","Burkina Faso","GUY","Guyana",TRUE,NA
+"BFA","Burkina Faso","IRQ","Iraq",TRUE,NA
+"BFA","Burkina Faso","KNA","St. Kitts and Nevis",TRUE,NA
+"BFA","Burkina Faso","LAO","Lao PDR",TRUE,NA
+"BFA","Burkina Faso","LCA","St. Lucia",TRUE,NA
+"BFA","Burkina Faso","LSO","Lesotho",TRUE,NA
+"BFA","Burkina Faso","MAR","Morocco",TRUE,NA
+"BFA","Burkina Faso","MUS","Mauritius",TRUE,NA
+"BFA","Burkina Faso","NAM","Namibia",TRUE,NA
+"BFA","Burkina Faso","SWZ","Eswatini",TRUE,NA
+"BFA","Burkina Faso","SYC","Seychelles",TRUE,NA
+"BFA","Burkina Faso","TKM","Turkmenistan",TRUE,NA
+"CIV","Côte d'Ivoire","BGD","Bangladesh",TRUE,NA
+"CIV","Côte d'Ivoire","BOL","Bolivia",TRUE,NA
+"CIV","Côte d'Ivoire","BRB","Barbados",TRUE,NA
+"CIV","Côte d'Ivoire","BTN","Bhutan",TRUE,NA
+"CIV","Côte d'Ivoire","BWA","Botswana",TRUE,NA
+"CIV","Côte d'Ivoire","CPV","Cabo Verde",TRUE,NA
+"CIV","Côte d'Ivoire","DMA","Dominica",TRUE,NA
+"CIV","Côte d'Ivoire","ECU","Ecuador",TRUE,NA
+"CIV","Côte d'Ivoire","GRD","Grenada",TRUE,NA
+"CIV","Côte d'Ivoire","GUY","Guyana",TRUE,NA
+"CIV","Côte d'Ivoire","IRQ","Iraq",TRUE,NA
+"CIV","Côte d'Ivoire","KNA","St. Kitts and Nevis",TRUE,NA
+"CIV","Côte d'Ivoire","LAO","Lao PDR",TRUE,NA
+"CIV","Côte d'Ivoire","LCA","St. Lucia",TRUE,NA
+"CIV","Côte d'Ivoire","LSO","Lesotho",TRUE,NA
+"CIV","Côte d'Ivoire","MAR","Morocco",TRUE,NA
+"CIV","Côte d'Ivoire","MUS","Mauritius",TRUE,NA
+"CIV","Côte d'Ivoire","NAM","Namibia",TRUE,NA
+"CIV","Côte d'Ivoire","SWZ","Eswatini",TRUE,NA
+"CIV","Côte d'Ivoire","SYC","Seychelles",TRUE,NA
+"CIV","Côte d'Ivoire","TKM","Turkmenistan",TRUE,NA
+"MLI","Mali","BGD","Bangladesh",TRUE,NA
+"MLI","Mali","BOL","Bolivia",TRUE,NA
+"MLI","Mali","BRB","Barbados",TRUE,NA
+"MLI","Mali","BTN","Bhutan",TRUE,NA
+"MLI","Mali","BWA","Botswana",TRUE,NA
+"MLI","Mali","CPV","Cabo Verde",TRUE,NA
+"MLI","Mali","DMA","Dominica",TRUE,NA
+"MLI","Mali","ECU","Ecuador",TRUE,NA
+"MLI","Mali","GRD","Grenada",TRUE,NA
+"MLI","Mali","GUY","Guyana",TRUE,NA
+"MLI","Mali","IRQ","Iraq",TRUE,NA
+"MLI","Mali","KNA","St. Kitts and Nevis",TRUE,NA
+"MLI","Mali","LAO","Lao PDR",TRUE,NA
+"MLI","Mali","LCA","St. Lucia",TRUE,NA
+"MLI","Mali","LSO","Lesotho",TRUE,NA
+"MLI","Mali","MAR","Morocco",TRUE,NA
+"MLI","Mali","MUS","Mauritius",TRUE,NA
+"MLI","Mali","NAM","Namibia",TRUE,NA
+"MLI","Mali","SWZ","Eswatini",TRUE,NA
+"MLI","Mali","SYC","Seychelles",TRUE,NA
+"MLI","Mali","TKM","Turkmenistan",TRUE,NA
+"NER","Niger","BGD","Bangladesh",TRUE,NA
+"NER","Niger","BOL","Bolivia",TRUE,NA
+"NER","Niger","BRB","Barbados",TRUE,NA
+"NER","Niger","BTN","Bhutan",TRUE,NA
+"NER","Niger","BWA","Botswana",TRUE,NA
+"NER","Niger","CPV","Cabo Verde",TRUE,NA
+"NER","Niger","DMA","Dominica",TRUE,NA
+"NER","Niger","ECU","Ecuador",TRUE,NA
+"NER","Niger","GRD","Grenada",TRUE,NA
+"NER","Niger","GUY","Guyana",TRUE,NA
+"NER","Niger","IRQ","Iraq",TRUE,NA
+"NER","Niger","KNA","St. Kitts and Nevis",TRUE,NA
+"NER","Niger","LAO","Lao PDR",TRUE,NA
+"NER","Niger","LCA","St. Lucia",TRUE,NA
+"NER","Niger","LSO","Lesotho",TRUE,NA
+"NER","Niger","MAR","Morocco",TRUE,NA
+"NER","Niger","MUS","Mauritius",TRUE,NA
+"NER","Niger","NAM","Namibia",TRUE,NA
+"NER","Niger","SWZ","Eswatini",TRUE,NA
+"NER","Niger","SYC","Seychelles",TRUE,NA
+"NER","Niger","TKM","Turkmenistan",TRUE,NA
+"SEN","Senegal","BGD","Bangladesh",TRUE,NA
+"SEN","Senegal","BOL","Bolivia",TRUE,NA
+"SEN","Senegal","BRB","Barbados",TRUE,NA
+"SEN","Senegal","BTN","Bhutan",TRUE,NA
+"SEN","Senegal","BWA","Botswana",TRUE,NA
+"SEN","Senegal","CPV","Cabo Verde",TRUE,NA
+"SEN","Senegal","DMA","Dominica",TRUE,NA
+"SEN","Senegal","ECU","Ecuador",TRUE,NA
+"SEN","Senegal","GRD","Grenada",TRUE,NA
+"SEN","Senegal","GUY","Guyana",TRUE,NA
+"SEN","Senegal","IRQ","Iraq",TRUE,NA
+"SEN","Senegal","KNA","St. Kitts and Nevis",TRUE,NA
+"SEN","Senegal","LAO","Lao PDR",TRUE,NA
+"SEN","Senegal","LCA","St. Lucia",TRUE,NA
+"SEN","Senegal","LSO","Lesotho",TRUE,NA
+"SEN","Senegal","MAR","Morocco",TRUE,NA
+"SEN","Senegal","MUS","Mauritius",TRUE,NA
+"SEN","Senegal","NAM","Namibia",TRUE,NA
+"SEN","Senegal","SWZ","Eswatini",TRUE,NA
+"SEN","Senegal","SYC","Seychelles",TRUE,NA
+"SEN","Senegal","TKM","Turkmenistan",TRUE,NA
+"TGO","Togo","BGD","Bangladesh",TRUE,NA
+"TGO","Togo","BOL","Bolivia",TRUE,NA
+"TGO","Togo","BRB","Barbados",TRUE,NA
+"TGO","Togo","BTN","Bhutan",TRUE,NA
+"TGO","Togo","BWA","Botswana",TRUE,NA
+"TGO","Togo","CPV","Cabo Verde",TRUE,NA
+"TGO","Togo","DMA","Dominica",TRUE,NA
+"TGO","Togo","ECU","Ecuador",TRUE,NA
+"TGO","Togo","GRD","Grenada",TRUE,NA
+"TGO","Togo","GUY","Guyana",TRUE,NA
+"TGO","Togo","IRQ","Iraq",TRUE,NA
+"TGO","Togo","KNA","St. Kitts and Nevis",TRUE,NA
+"TGO","Togo","LAO","Lao PDR",TRUE,NA
+"TGO","Togo","LCA","St. Lucia",TRUE,NA
+"TGO","Togo","LSO","Lesotho",TRUE,NA
+"TGO","Togo","MAR","Morocco",TRUE,NA
+"TGO","Togo","MUS","Mauritius",TRUE,NA
+"TGO","Togo","NAM","Namibia",TRUE,NA
+"TGO","Togo","SWZ","Eswatini",TRUE,NA
+"TGO","Togo","SYC","Seychelles",TRUE,NA
+"TGO","Togo","TKM","Turkmenistan",TRUE,NA
+"CMR","Cameroon","BGD","Bangladesh",TRUE,NA
+"CMR","Cameroon","BOL","Bolivia",TRUE,NA
+"CMR","Cameroon","BRB","Barbados",TRUE,NA
+"CMR","Cameroon","BTN","Bhutan",TRUE,NA
+"CMR","Cameroon","BWA","Botswana",TRUE,NA
+"CMR","Cameroon","CPV","Cabo Verde",TRUE,NA
+"CMR","Cameroon","DMA","Dominica",TRUE,NA
+"CMR","Cameroon","ECU","Ecuador",TRUE,NA
+"CMR","Cameroon","GRD","Grenada",TRUE,NA
+"CMR","Cameroon","GUY","Guyana",TRUE,NA
+"CMR","Cameroon","IRQ","Iraq",TRUE,NA
+"CMR","Cameroon","KNA","St. Kitts and Nevis",TRUE,NA
+"CMR","Cameroon","LAO","Lao PDR",TRUE,NA
+"CMR","Cameroon","LCA","St. Lucia",TRUE,NA
+"CMR","Cameroon","LSO","Lesotho",TRUE,NA
+"CMR","Cameroon","MAR","Morocco",TRUE,NA
+"CMR","Cameroon","MUS","Mauritius",TRUE,NA
+"CMR","Cameroon","NAM","Namibia",TRUE,NA
+"CMR","Cameroon","SWZ","Eswatini",TRUE,NA
+"CMR","Cameroon","SYC","Seychelles",TRUE,NA
+"CMR","Cameroon","TKM","Turkmenistan",TRUE,NA
+"CAF","Central African Republic","BGD","Bangladesh",TRUE,NA
+"CAF","Central African Republic","BOL","Bolivia",TRUE,NA
+"CAF","Central African Republic","BRB","Barbados",TRUE,NA
+"CAF","Central African Republic","BTN","Bhutan",TRUE,NA
+"CAF","Central African Republic","BWA","Botswana",TRUE,NA
+"CAF","Central African Republic","CPV","Cabo Verde",TRUE,NA
+"CAF","Central African Republic","DMA","Dominica",TRUE,NA
+"CAF","Central African Republic","ECU","Ecuador",TRUE,NA
+"CAF","Central African Republic","GRD","Grenada",TRUE,NA
+"CAF","Central African Republic","GUY","Guyana",TRUE,NA
+"CAF","Central African Republic","IRQ","Iraq",TRUE,NA
+"CAF","Central African Republic","KNA","St. Kitts and Nevis",TRUE,NA
+"CAF","Central African Republic","LAO","Lao PDR",TRUE,NA
+"CAF","Central African Republic","LCA","St. Lucia",TRUE,NA
+"CAF","Central African Republic","LSO","Lesotho",TRUE,NA
+"CAF","Central African Republic","MAR","Morocco",TRUE,NA
+"CAF","Central African Republic","MUS","Mauritius",TRUE,NA
+"CAF","Central African Republic","NAM","Namibia",TRUE,NA
+"CAF","Central African Republic","SWZ","Eswatini",TRUE,NA
+"CAF","Central African Republic","SYC","Seychelles",TRUE,NA
+"CAF","Central African Republic","TKM","Turkmenistan",TRUE,NA
+"TCD","Chad","BGD","Bangladesh",TRUE,NA
+"TCD","Chad","BOL","Bolivia",TRUE,NA
+"TCD","Chad","BRB","Barbados",TRUE,NA
+"TCD","Chad","BTN","Bhutan",TRUE,NA
+"TCD","Chad","BWA","Botswana",TRUE,NA
+"TCD","Chad","CPV","Cabo Verde",TRUE,NA
+"TCD","Chad","DMA","Dominica",TRUE,NA
+"TCD","Chad","ECU","Ecuador",TRUE,NA
+"TCD","Chad","GRD","Grenada",TRUE,NA
+"TCD","Chad","GUY","Guyana",TRUE,NA
+"TCD","Chad","IRQ","Iraq",TRUE,NA
+"TCD","Chad","KNA","St. Kitts and Nevis",TRUE,NA
+"TCD","Chad","LAO","Lao PDR",TRUE,NA
+"TCD","Chad","LCA","St. Lucia",TRUE,NA
+"TCD","Chad","LSO","Lesotho",TRUE,NA
+"TCD","Chad","MAR","Morocco",TRUE,NA
+"TCD","Chad","MUS","Mauritius",TRUE,NA
+"TCD","Chad","NAM","Namibia",TRUE,NA
+"TCD","Chad","SWZ","Eswatini",TRUE,NA
+"TCD","Chad","SYC","Seychelles",TRUE,NA
+"TCD","Chad","TKM","Turkmenistan",TRUE,NA
+"COG","Republic of Congo","BGD","Bangladesh",TRUE,NA
+"COG","Republic of Congo","BOL","Bolivia",TRUE,NA
+"COG","Republic of Congo","BRB","Barbados",TRUE,NA
+"COG","Republic of Congo","BTN","Bhutan",TRUE,NA
+"COG","Republic of Congo","BWA","Botswana",TRUE,NA
+"COG","Republic of Congo","CPV","Cabo Verde",TRUE,NA
+"COG","Republic of Congo","DMA","Dominica",TRUE,NA
+"COG","Republic of Congo","ECU","Ecuador",TRUE,NA
+"COG","Republic of Congo","GRD","Grenada",TRUE,NA
+"COG","Republic of Congo","GUY","Guyana",TRUE,NA
+"COG","Republic of Congo","IRQ","Iraq",TRUE,NA
+"COG","Republic of Congo","KNA","St. Kitts and Nevis",TRUE,NA
+"COG","Republic of Congo","LAO","Lao PDR",TRUE,NA
+"COG","Republic of Congo","LCA","St. Lucia",TRUE,NA
+"COG","Republic of Congo","LSO","Lesotho",TRUE,NA
+"COG","Republic of Congo","MAR","Morocco",TRUE,NA
+"COG","Republic of Congo","MUS","Mauritius",TRUE,NA
+"COG","Republic of Congo","NAM","Namibia",TRUE,NA
+"COG","Republic of Congo","SWZ","Eswatini",TRUE,NA
+"COG","Republic of Congo","SYC","Seychelles",TRUE,NA
+"COG","Republic of Congo","TKM","Turkmenistan",TRUE,NA
+"GAB","Gabon","BGD","Bangladesh",TRUE,NA
+"GAB","Gabon","BOL","Bolivia",TRUE,NA
+"GAB","Gabon","BRB","Barbados",TRUE,NA
+"GAB","Gabon","BTN","Bhutan",TRUE,NA
+"GAB","Gabon","BWA","Botswana",TRUE,NA
+"GAB","Gabon","CPV","Cabo Verde",TRUE,NA
+"GAB","Gabon","DMA","Dominica",TRUE,NA
+"GAB","Gabon","ECU","Ecuador",TRUE,NA
+"GAB","Gabon","GRD","Grenada",TRUE,NA
+"GAB","Gabon","GUY","Guyana",TRUE,NA
+"GAB","Gabon","IRQ","Iraq",TRUE,NA
+"GAB","Gabon","KNA","St. Kitts and Nevis",TRUE,NA
+"GAB","Gabon","LAO","Lao PDR",TRUE,NA
+"GAB","Gabon","LCA","St. Lucia",TRUE,NA
+"GAB","Gabon","LSO","Lesotho",TRUE,NA
+"GAB","Gabon","MAR","Morocco",TRUE,NA
+"GAB","Gabon","MUS","Mauritius",TRUE,NA
+"GAB","Gabon","NAM","Namibia",TRUE,NA
+"GAB","Gabon","SWZ","Eswatini",TRUE,NA
+"GAB","Gabon","SYC","Seychelles",TRUE,NA
+"GAB","Gabon","TKM","Turkmenistan",TRUE,NA
+"GNQ","Equatorial Guinea","BGD","Bangladesh",TRUE,NA
+"GNQ","Equatorial Guinea","BOL","Bolivia",TRUE,NA
+"GNQ","Equatorial Guinea","BRB","Barbados",TRUE,NA
+"GNQ","Equatorial Guinea","BTN","Bhutan",TRUE,NA
+"GNQ","Equatorial Guinea","BWA","Botswana",TRUE,NA
+"GNQ","Equatorial Guinea","CPV","Cabo Verde",TRUE,NA
+"GNQ","Equatorial Guinea","DMA","Dominica",TRUE,NA
+"GNQ","Equatorial Guinea","ECU","Ecuador",TRUE,NA
+"GNQ","Equatorial Guinea","GRD","Grenada",TRUE,NA
+"GNQ","Equatorial Guinea","GUY","Guyana",TRUE,NA
+"GNQ","Equatorial Guinea","IRQ","Iraq",TRUE,NA
+"GNQ","Equatorial Guinea","KNA","St. Kitts and Nevis",TRUE,NA
+"GNQ","Equatorial Guinea","LAO","Lao PDR",TRUE,NA
+"GNQ","Equatorial Guinea","LCA","St. Lucia",TRUE,NA
+"GNQ","Equatorial Guinea","LSO","Lesotho",TRUE,NA
+"GNQ","Equatorial Guinea","MAR","Morocco",TRUE,NA
+"GNQ","Equatorial Guinea","MUS","Mauritius",TRUE,NA
+"GNQ","Equatorial Guinea","NAM","Namibia",TRUE,NA
+"GNQ","Equatorial Guinea","SWZ","Eswatini",TRUE,NA
+"GNQ","Equatorial Guinea","SYC","Seychelles",TRUE,NA
+"GNQ","Equatorial Guinea","TKM","Turkmenistan",TRUE,NA
