@@ -2,6 +2,8 @@
 # Shared constants for replication project
 # =====================================================
 
+chart_bg <- "#f5f3f3"
+
 # GDP outcome used across scripts
 gdp_var <- "wdi_gdp_pc_current"
 gdp_selected_var <- "gdp_selected"

@@ -1,0 +1,63 @@
+"outcome","treated_iso3c","treated_country","success","error_message"
+"XEU","BEN","Benin",TRUE,NA
+"XEU","BFA","Burkina Faso",TRUE,NA
+"XEU","CIV","Côte d'Ivoire",TRUE,NA
+"XEU","MLI","Mali",TRUE,NA
+"XEU","NER","Niger",TRUE,NA
+"XEU","SEN","Senegal",TRUE,NA
+"XEU","TGO","Togo",TRUE,NA
+"XEU","CMR","Cameroon",TRUE,NA
+"XEU","CAF","Central African Republic",TRUE,NA
+"XEU","TCD","Chad",TRUE,NA
+"XEU","COG","Republic of Congo",TRUE,NA
+"XEU","GAB","Gabon",TRUE,NA
+"XEU","GNQ","Equatorial Guinea",TRUE,NA
+"MEU","BEN","Benin",TRUE,NA
+"MEU","BFA","Burkina Faso",TRUE,NA
+"MEU","CIV","Côte d'Ivoire",TRUE,NA
+"MEU","MLI","Mali",TRUE,NA
+"MEU","NER","Niger",TRUE,NA
+"MEU","SEN","Senegal",TRUE,NA
+"MEU","TGO","Togo",TRUE,NA
+"MEU","CMR","Cameroon",TRUE,NA
+"MEU","CAF","Central African Republic",TRUE,NA
+"MEU","TCD","Chad",TRUE,NA
+"MEU","COG","Republic of Congo",TRUE,NA
+"MEU","GAB","Gabon",TRUE,NA
+"MEU","GNQ","Equatorial Guinea",TRUE,NA
+"trade_openness","BEN","Benin",TRUE,NA
+"trade_openness","BFA","Burkina Faso",TRUE,NA
+"trade_openness","CIV","Côte d'Ivoire",TRUE,NA
+"trade_openness","MLI","Mali",TRUE,NA
+"trade_openness","NER","Niger",TRUE,NA
+"trade_openness","SEN","Senegal",TRUE,NA
+"trade_openness","TGO","Togo",TRUE,NA
+"trade_openness","CMR","Cameroon",TRUE,NA
+"trade_openness","CAF","Central African Republic",TRUE,NA
+"trade_openness","TCD","Chad",TRUE,NA
+"trade_openness","COG","Republic of Congo",TRUE,NA
+"trade_openness","GAB","Gabon",TRUE,NA
+"exports_gdp","BEN","Benin",TRUE,NA
+"exports_gdp","BFA","Burkina Faso",TRUE,NA
+"exports_gdp","CIV","Côte d'Ivoire",TRUE,NA
+"exports_gdp","MLI","Mali",TRUE,NA
+"exports_gdp","NER","Niger",TRUE,NA
+"exports_gdp","SEN","Senegal",TRUE,NA
+"exports_gdp","TGO","Togo",TRUE,NA
+"exports_gdp","CMR","Cameroon",TRUE,NA
+"exports_gdp","CAF","Central African Republic",TRUE,NA
+"exports_gdp","TCD","Chad",TRUE,NA
+"exports_gdp","COG","Republic of Congo",TRUE,NA
+"exports_gdp","GAB","Gabon",TRUE,NA
+"imports_gdp","BEN","Benin",TRUE,NA
+"imports_gdp","BFA","Burkina Faso",TRUE,NA
+"imports_gdp","CIV","Côte d'Ivoire",TRUE,NA
+"imports_gdp","MLI","Mali",TRUE,NA
+"imports_gdp","NER","Niger",TRUE,NA
+"imports_gdp","SEN","Senegal",TRUE,NA
+"imports_gdp","TGO","Togo",TRUE,NA
+"imports_gdp","CMR","Cameroon",TRUE,NA
+"imports_gdp","CAF","Central African Republic",TRUE,NA
+"imports_gdp","TCD","Chad",TRUE,NA
+"imports_gdp","COG","Republic of Congo",TRUE,NA
+"imports_gdp","GAB","Gabon",TRUE,NA

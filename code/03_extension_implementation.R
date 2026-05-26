@@ -5,23 +5,28 @@
 # This script runs synthetic control analysis for trade-extension outcomes.
 # It assumes that trade variables have already been added to the processed panel.
 # Placebo analysis is kept in a separate file.
-# Outputs are combined charts and summary tables only.
+#
+# Update in this version:
+#   - Adds a progress bar for treated-country SCM runs.
+#   - Suppresses noisy Synth console output.
+#   - Logs failed SCM runs to CSV/RDS instead of printing every failure.
 
 #### ========================================================================###
 #### ======================== 1. PROJECT SETUP ==============================###
 #### ========================================================================###
 
 # Data manipulation and plotting packages.
-library(dplyr)
-library(tidyr)
-library(tidyverse)
-library(ggplot2)
-library(readr)
-library(stringr)
-library(knitr)
-
-# Synthetic control package.
-library(Synth)
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(tidyr)
+  library(tidyverse)
+  library(ggplot2)
+  library(readr)
+  library(stringr)
+  library(knitr)
+  library(Synth)
+  library(progress)
+})
 
 # Load shared project constants.
 constants_file <- "code/00_constants.R"
@@ -32,8 +37,24 @@ if (!file.exists(constants_file)) {
 
 source(constants_file)
 
+# Background colour for charts.
+# If this is already defined in code/00_constants.R, this fallback is ignored.
+if (!exists("chart_bg")) {
+  chart_bg <- "#f5f3f3"
+}
+
+# If a reduced descriptive-chart outcome list is not defined, default to the
+# non-EU-share trade variables.
+if (!exists("extension_trade_outcomes_chart")) {
+  extension_trade_outcomes_chart <- setdiff(
+    extension_trade_outcomes,
+    c("XEU", "MEU")
+  )
+}
+
 # Check that the constants file contains all objects used in this script.
-# This script does not define fallbacks, so missing constants should stop execution.
+# This script does not define fallbacks for core project objects, so missing
+# constants should stop execution.
 required_constants <- c(
   "waemu",
   "caemc",
@@ -79,7 +100,8 @@ dir.create(extension_processed_dir, recursive = TRUE, showWarnings = FALSE)
 # Load the project processed panel.
 # This file should already contain:
 #   - trade-extension outcomes: XEU, MEU, trade_openness, exports_gdp, imports_gdp
-#   - SCM predictors: agriculture, government share, investment share, ODA, FDI, labour, polity2
+#   - SCM predictors: agriculture, government share, investment share, ODA, FDI,
+#     labour, polity2
 df <- readRDS("data/processed/processed_panel_imputed.rds")
 
 # Check that all extension outcomes are available in the processed panel.
@@ -196,13 +218,12 @@ extension_missing_check <- df |>
   arrange(outcome, group, desc(n_missing_pre), iso3c)
 
 # Save missingness diagnostics for later inspection.
+# The table is not printed to keep the console output focused on the progress bar.
 write.csv(
   extension_missing_check,
   file.path(extension_output_dir, "tables", "extension_trade_missing_check.csv"),
   row.names = FALSE
 )
-
-print(extension_missing_check, n = Inf)
 
 # Create group-average data for descriptive line charts.
 # This is not the SCM estimate; it is only a descriptive comparison of trends.
@@ -249,8 +270,6 @@ write.csv(
   row.names = FALSE
 )
 
-
-
 # Combined descriptive plot for all trade outcomes.
 # The four country groups are shown with different coloured lines.
 p_group_averages <- ggplot(
@@ -270,7 +289,12 @@ p_group_averages <- ggplot(
   theme_minimal(base_size = 11) +
   theme(
     legend.position = "bottom",
-    panel.grid.minor = element_blank()
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = chart_bg, color = NA),
+    panel.background = element_rect(fill = chart_bg, color = NA),
+    legend.background = element_rect(fill = chart_bg, color = NA),
+    legend.box.background = element_rect(fill = chart_bg, color = NA),
+    strip.background = element_rect(fill = chart_bg, color = NA)
   )
 
 ggsave(
@@ -278,14 +302,11 @@ ggsave(
   plot = p_group_averages,
   width = 12,
   height = 9,
-  dpi = 300
+  dpi = 300,
+  bg = chart_bg
 )
 
-
-
-
-
-### Make chart without euro area trade
+# Make chart without euro-area trade-share variables.
 extension_grouped_reduced <- df |>
   filter(
     iso3c %in% descriptive_countries,
@@ -322,18 +343,15 @@ extension_grouped_reduced <- df |>
     outcome_label = extension_trade_outcome_labels[outcome]
   )
 
-# Save the group averages behind the descriptive figure.
+# Save the group averages behind the reduced descriptive figure.
 write.csv(
   extension_grouped_reduced,
   file.path(extension_output_dir, "tables", "extension_trade_group_averages_reduced.csv"),
   row.names = FALSE
 )
 
-
-
-# Combined descriptive plot for all trade outcomes.
-# The four country groups are shown with different coloured lines.
-p_group_averages <- ggplot(
+# Combined descriptive plot for reduced trade outcomes.
+p_group_averages_reduced <- ggplot(
   extension_grouped_reduced,
   aes(x = year, y = value, color = group)
 ) +
@@ -343,7 +361,11 @@ p_group_averages <- ggplot(
   facet_wrap(~ outcome_label, scales = "free_y", ncol = 3) +
   labs(
     title = "Trade-extension variables: group averages",
-    subtitle = paste0("Dashed vertical line = ", treatment_year, ", Dotted vertical line = ", 1994),
+    subtitle = paste0(
+      "Dashed vertical line = ",
+      treatment_year,
+      ", Dotted vertical line = 1994"
+    ),
     x = NULL,
     y = NULL,
     color = NULL
@@ -351,15 +373,21 @@ p_group_averages <- ggplot(
   theme_minimal(base_size = 11) +
   theme(
     legend.position = "bottom",
-    panel.grid.minor = element_blank()
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = chart_bg, color = NA),
+    panel.background = element_rect(fill = chart_bg, color = NA),
+    legend.background = element_rect(fill = chart_bg, color = NA),
+    legend.box.background = element_rect(fill = chart_bg, color = NA),
+    strip.background = element_rect(fill = chart_bg, color = NA)
   )
 
 ggsave(
   filename = file.path(extension_output_dir, "figures", "extension_trade_group_averages_reduced.png"),
-  plot = p_group_averages,
+  plot = p_group_averages_reduced,
   width = 16,
   height = 6,
-  dpi = 300
+  dpi = 300,
+  bg = chart_bg
 )
 
 
@@ -426,6 +454,26 @@ scm_base_df <- scm_base_df |>
 #### ========================================================================###
 #### ======================== 5. HELPER FUNCTIONS ===========================###
 #### ========================================================================###
+
+# Run noisy expressions quietly.
+# This is used around Synth functions, which otherwise print optimization
+# information such as MSPE, solution.v, and solution.w to the console.
+# The expression result is still returned; only console chatter is suppressed.
+quietly <- function(expr) {
+  result <- NULL
+
+  invisible(
+    capture.output(
+      result <- suppressMessages(
+        suppressWarnings(
+          expr
+        )
+      )
+    )
+  )
+
+  result
+}
 
 # Root mean squared prediction error.
 # This is used to compare pre-treatment and post-treatment fit.
@@ -501,7 +549,7 @@ extract_predictor_balance <- function(result, outcome_var) {
 
 run_trade_scm_country <- function(treated_iso3c, outcome_var) {
 
-  message("Running SCM for ", treated_iso3c, " / ", outcome_var)
+  # Progress is reported by the progress bar in Section 7.
 
   # Get the human-readable treated-country label.
   country_name_treated <- get_country_name(treated_iso3c)
@@ -554,8 +602,8 @@ run_trade_scm_country <- function(treated_iso3c, outcome_var) {
   }
 
   # Drop donor countries that are not usable in the pre-treatment period.
-  # Synth requires the dependent variable to be observed in every optimization year.
-  # Therefore, bad_outcome uses any(), not all().
+  # Synth requires the dependent variable to be observed in every optimization
+  # year. Therefore, bad_outcome uses any(), not all().
   bad_controls_i <- scm_df_i |>
     filter(
       year %in% extension_pre_period,
@@ -591,15 +639,6 @@ run_trade_scm_country <- function(treated_iso3c, outcome_var) {
       !(country_ids$unit_id %in% bad_controls_i)
   ]
 
-  message(
-    "Usable controls for ",
-    treated_iso3c,
-    " / ",
-    outcome_var,
-    ": ",
-    length(control_ids)
-  )
-
   if (length(control_ids) < 2) {
     stop(
       "Fewer than two usable donor countries remain for ",
@@ -610,54 +649,69 @@ run_trade_scm_country <- function(treated_iso3c, outcome_var) {
     )
   }
 
+  # Keep only special years that fall within the extension pre-treatment period.
+  # This prevents accidental use of years outside the current sample window.
+  extension_special_years_i <- extension_special_years[
+    extension_special_years %in% extension_pre_period
+  ]
+
   # Match on both:
-    # 1. the average pre-treatment outcome, and
-    # 2. selected pre-treatment outcome years from the constants file.
-    special_predictors_i <- c(
-      list(
-        list("outcome_selected", extension_pre_period, c("mean"))
-      ),
-      lapply(
-        extension_special_years,
-        function(y) {
-          list("outcome_selected", y, c("mean"))
-        }
-      )
+  #   1. the average pre-treatment outcome, and
+  #   2. selected pre-treatment outcome years from the constants file.
+  special_predictors_i <- c(
+    list(
+      list("outcome_selected", extension_pre_period, c("mean"))
+    ),
+    lapply(
+      extension_special_years_i,
+      function(y) {
+        list("outcome_selected", y, c("mean"))
+      }
     )
-  # Prepare Synth inputs.
+  )
+
+  # Prepare Synth inputs quietly.
   # predictors are averaged over extension_pre_period.
   # time.optimize.ssr defines the pre-treatment fit period.
-  dataprep.out <- dataprep(
-    foo = scm_df_i,
+  dataprep.out <- quietly(
+    dataprep(
+      foo = scm_df_i,
 
-    predictors = extension_scm_predictors,
-    predictors.op = "mean",
+      predictors = extension_scm_predictors,
+      predictors.op = "mean",
 
-    dependent = "outcome_selected",
+      dependent = "outcome_selected",
 
-    unit.variable = "unit_id",
-    unit.names.variable = "unit_name",
-    time.variable = "year",
+      unit.variable = "unit_id",
+      unit.names.variable = "unit_name",
+      time.variable = "year",
 
-    treatment.identifier = treated_id,
-    controls.identifier = control_ids,
+      treatment.identifier = treated_id,
+      controls.identifier = control_ids,
 
-    time.predictors.prior = extension_pre_period,
-    time.optimize.ssr = extension_pre_period,
-    time.plot = extension_plot_period,
+      time.predictors.prior = extension_pre_period,
+      time.optimize.ssr = extension_pre_period,
+      time.plot = extension_plot_period,
 
-    special.predictors = special_predictors_i
+      special.predictors = special_predictors_i
+    )
   )
 
-  # Estimate synthetic-control weights.
-  synth.out <- synth(
-    data.prep.obj = dataprep.out
+  # Estimate synthetic-control weights quietly.
+  # This suppresses Synth's printed MSPE and solution tables.
+  synth.out <- quietly(
+    synth(
+      data.prep.obj = dataprep.out
+    )
   )
 
-  # Build donor-weight and predictor-balance tables.
-  synth.tables <- synth.tab(
-    dataprep.res = dataprep.out,
-    synth.res = synth.out
+  # Build donor-weight and predictor-balance tables quietly.
+  # synth.tab() can also print messages, so it is wrapped as well.
+  synth.tables <- quietly(
+    synth.tab(
+      dataprep.res = dataprep.out,
+      synth.res = synth.out
+    )
   )
 
   # Return one complete result object.
@@ -681,38 +735,77 @@ all_results <- list()
 all_scm_paths <- list()
 all_weights <- list()
 all_predictor_balance <- list()
+scm_run_log <- list()
+
+# Count the total number of SCM runs.
+# Total runs = outcomes × treated countries.
+total_scm_runs <- length(extension_trade_outcomes) *
+  length(treated_countries)
+
+# Create a terminal progress bar.
+# This reports progress through all treated-country/outcome SCM estimates.
+scm_progress <- progress_bar$new(
+  format = paste0(
+    "Extension SCM [:bar] :percent | ",
+    "Run :current/:total | ETA: :eta | ",
+    ":outcome / treated :treated"
+  ),
+  total = total_scm_runs,
+  clear = FALSE,
+  width = 100
+)
 
 # Loop over each trade outcome.
 for (outcome_var in extension_trade_outcomes) {
 
-  cat("\n=====================================================\n")
-  cat("EXTENSION SCM OUTCOME:", outcome_var, "\n")
-  cat("=====================================================\n")
-
   outcome_results <- list()
+  outcome_log <- list()
 
   # Run SCM separately for each treated country.
   for (country_code in treated_countries) {
 
     result <- tryCatch(
-      run_trade_scm_country(
-        treated_iso3c = country_code,
-        outcome_var = outcome_var
-      ),
-      error = function(e) {
-        message(
-          "SCM failed for ",
-          country_code,
-          " / ",
-          outcome_var,
-          ": ",
-          e$message
+      {
+        result_i <- run_trade_scm_country(
+          treated_iso3c = country_code,
+          outcome_var = outcome_var
         )
-        return(NULL)
+
+        outcome_log[[country_code]] <- tibble(
+          outcome = outcome_var,
+          treated_iso3c = country_code,
+          treated_country = get_country_name(country_code),
+          success = TRUE,
+          error_message = NA_character_
+        )
+
+        result_i
+      },
+      error = function(e) {
+
+        # Store failure details but do not print them.
+        # This keeps the progress bar readable.
+        outcome_log[[country_code]] <- tibble(
+          outcome = outcome_var,
+          treated_iso3c = country_code,
+          treated_country = get_country_name(country_code),
+          success = FALSE,
+          error_message = e$message
+        )
+
+        NULL
       }
     )
 
     outcome_results[[country_code]] <- result
+
+    # Tick progress after the run finishes.
+    scm_progress$tick(
+      tokens = list(
+        outcome = outcome_var,
+        treated = country_code
+      )
+    )
   }
 
   # Keep successful results only.
@@ -721,9 +814,9 @@ for (outcome_var in extension_trade_outcomes) {
   ]
 
   all_results[[outcome_var]] <- outcome_results
+  scm_run_log[[outcome_var]] <- bind_rows(outcome_log)
 
   if (length(outcome_success) == 0) {
-    message("No successful SCM results for outcome: ", outcome_var)
     next
   }
 
@@ -741,13 +834,25 @@ for (outcome_var in extension_trade_outcomes) {
   )
 }
 
+# Combine and save run log before checking whether successful paths exist.
+scm_run_log_all <- bind_rows(scm_run_log)
+
+write.csv(
+  scm_run_log_all,
+  file.path(extension_output_dir, "tables", "extension_trade_scm_run_log.csv"),
+  row.names = FALSE
+)
+
 # Combine all successful outcomes.
 scm_paths_all <- bind_rows(all_scm_paths)
 scm_weights_all <- bind_rows(all_weights)
 scm_predictor_balance_all <- bind_rows(all_predictor_balance)
 
 if (nrow(scm_paths_all) == 0) {
-  stop("No successful extension SCM paths were produced.")
+  stop(
+    "No successful extension SCM paths were produced. ",
+    "Check output/extension_trade/tables/extension_trade_scm_run_log.csv."
+  )
 }
 
 
@@ -759,6 +864,11 @@ if (nrow(scm_paths_all) == 0) {
 saveRDS(
   all_results,
   file.path(extension_processed_dir, "extension_trade_scm_results_all.rds")
+)
+
+saveRDS(
+  scm_run_log_all,
+  file.path(extension_processed_dir, "extension_trade_scm_run_log.rds")
 )
 
 saveRDS(
@@ -855,7 +965,7 @@ for (outcome_var in successful_outcomes) {
   ) +
     geom_line(linewidth = 0.6) +
     geom_vline(xintercept = treatment_year, linetype = "dashed") +
-    facet_wrap(~ treated_country, scales = "free_y", ncol = 5) +
+    facet_wrap(~ treated_country, scales = "free_y", ncol = 3) +
     labs(
       title = paste0("Extension SCM: actual and synthetic — ", outcome_label_i),
       subtitle = paste0("Dashed line = ", treatment_year),
@@ -867,7 +977,12 @@ for (outcome_var in successful_outcomes) {
     theme(
       legend.position = "bottom",
       axis.text.x = element_text(angle = 45, hjust = 1),
-      panel.grid.minor = element_blank()
+      panel.grid.minor = element_blank(),
+      plot.background = element_rect(fill = chart_bg, color = NA),
+      panel.background = element_rect(fill = chart_bg, color = NA),
+      legend.background = element_rect(fill = chart_bg, color = NA),
+      legend.box.background = element_rect(fill = chart_bg, color = NA),
+      strip.background = element_rect(fill = chart_bg, color = NA)
     )
 
   ggsave(
@@ -877,9 +992,10 @@ for (outcome_var in successful_outcomes) {
       paste0("extension_trade_scm_paths_", outcome_file_stub, ".png")
     ),
     plot = p_paths_i,
-    width = 12,
-    height = 6,
-    dpi = 300
+    width = 8,
+    height = 8,
+    dpi = 300,
+    bg = chart_bg
   )
 
   # -----------------------------------------------------
@@ -893,7 +1009,7 @@ for (outcome_var in successful_outcomes) {
     geom_line(linewidth = 0.6) +
     geom_hline(yintercept = 0, linetype = "dashed") +
     geom_vline(xintercept = treatment_year, linetype = "dashed") +
-    facet_wrap(~ treated_country, scales = "free_y", ncol = 5) +
+    facet_wrap(~ treated_country, scales = "free_y", ncol = 3) +
     labs(
       title = paste0("Extension SCM: actual minus synthetic — ", outcome_label_i),
       subtitle = paste0("Dashed line = ", treatment_year),
@@ -903,7 +1019,12 @@ for (outcome_var in successful_outcomes) {
     theme_minimal(base_size = 9) +
     theme(
       axis.text.x = element_text(angle = 45, hjust = 1),
-      panel.grid.minor = element_blank()
+      panel.grid.minor = element_blank(),
+      plot.background = element_rect(fill = chart_bg, color = NA),
+      panel.background = element_rect(fill = chart_bg, color = NA),
+      legend.background = element_rect(fill = chart_bg, color = NA),
+      legend.box.background = element_rect(fill = chart_bg, color = NA),
+      strip.background = element_rect(fill = chart_bg, color = NA)
     )
 
   ggsave(
@@ -913,13 +1034,14 @@ for (outcome_var in successful_outcomes) {
       paste0("extension_trade_scm_gaps_", outcome_file_stub, ".png")
     ),
     plot = p_gaps_i,
-    width = 12,
-    height = 6,
-    dpi = 300
+    width = 8,
+    height = 8,
+    dpi = 300,
+    bg = chart_bg
   )
-
-  message("Saved SCM charts for outcome: ", outcome_var)
 }
+
+
 #### ========================================================================###
 #### ======================== 10. SUMMARY TABLE =============================###
 #### ========================================================================###
@@ -956,6 +1078,19 @@ cat(
   file = file.path(extension_output_dir, "tables", "extension_trade_scm_summary.tex")
 )
 
-print(scm_summary, n = Inf)
+cat("\n=====================================================\n")
+cat("EXTENSION TRADE SCM ANALYSIS COMPLETE\n")
+cat("=====================================================\n")
 
-print("Extension trade SCM analysis complete.")
+cat("\nSCM run log saved to:\n")
+cat(file.path(extension_output_dir, "tables", "extension_trade_scm_run_log.csv"), "\n")
+
+cat("\nSuccessful SCM runs by outcome:\n")
+print(
+  scm_run_log_all |>
+    count(outcome, success),
+  n = Inf
+)
+
+cat("\nSummary table:\n")
+print(scm_summary, n = Inf)

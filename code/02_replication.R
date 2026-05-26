@@ -595,7 +595,7 @@ p_paths_all <- ggplot(
 ) +
   geom_line(linewidth = 0.7) +
   geom_vline(xintercept = treatment_year, linetype = "dashed") +
-  facet_wrap(~ country, scales = "free_y", ncol = 4) +
+  facet_wrap(~ country, scales = "free_y", ncol = 3) +
   labs(
     title = "Actual and synthetic GDP per capita: WAEMU and CAEMC countries",
     subtitle = paste("Outcome variable:", gdp_var_label),
@@ -606,14 +606,19 @@ p_paths_all <- ggplot(
   theme_minimal(base_size = 10) +
   theme(
     legend.position = "bottom",
-    panel.grid.minor = element_blank()
-  )
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = chart_bg, color = NA),
+    panel.background = element_rect(fill = chart_bg, color = NA),
+    legend.background = element_rect(fill = chart_bg, color = NA),
+    legend.box.background = element_rect(fill = chart_bg, color = NA),
+    strip.background = element_rect(fill = chart_bg, color = NA)
+)
 
 ggsave(
   filename = "output/figures/scm_paths_all_treated.png",
   plot = p_paths_all,
-  width = 14,
-  height = 10,
+  width = 8,
+  height = 8,
   dpi = 300
 )
 
@@ -633,14 +638,19 @@ p_gaps_all <- ggplot(
   ) +
   theme_minimal(base_size = 10) +
   theme(
-    panel.grid.minor = element_blank()
-  )
+    panel.grid.minor = element_blank(),
+  plot.background = element_rect(fill = chart_bg, color = NA),
+  panel.background = element_rect(fill = chart_bg, color = NA),
+  legend.background = element_rect(fill = chart_bg, color = NA),
+  legend.box.background = element_rect(fill = chart_bg, color = NA),
+  strip.background = element_rect(fill = chart_bg, color = NA)
+)
 
 ggsave(
   filename = "output/figures/scm_gaps_all_treated.png",
   plot = p_gaps_all,
-  width = 20,
-  height = 10,
+  width = 8,
+  height = 8,
   dpi = 300
 )
 
@@ -1408,7 +1418,14 @@ if (skip_placebo_analysis) {
         x = NULL,
         y = "Actual - synthetic"
       ) +
-      theme_minimal(base_size = 11)
+      theme_minimal(base_size = 11) + 
+      theme(
+        plot.background = element_rect(fill = chart_bg, color = NA),
+        panel.background = element_rect(fill = chart_bg, color = NA),
+        legend.background = element_rect(fill = chart_bg, color = NA),
+        legend.box.background = element_rect(fill = chart_bg, color = NA),
+        strip.background = element_rect(fill = chart_bg, color = NA)
+      )
 
     ggsave(
       filename = paste0("output/figures/scm_placebo_gaps_", treated_code, ".png"),
@@ -1441,7 +1458,13 @@ if (skip_placebo_analysis) {
       x = NULL,
       y = "Placebo p-value"
     ) +
-    theme_minimal(base_size = 11)
+    theme_minimal(base_size = 11) + theme(
+  plot.background = element_rect(fill = chart_bg, color = NA),
+  panel.background = element_rect(fill = chart_bg, color = NA),
+  legend.background = element_rect(fill = chart_bg, color = NA),
+  legend.box.background = element_rect(fill = chart_bg, color = NA),
+  strip.background = element_rect(fill = chart_bg, color = NA)
+)
 
   ggsave(
     filename = "output/figures/scm_placebo_pvalues_rmspe_ratio.png",
