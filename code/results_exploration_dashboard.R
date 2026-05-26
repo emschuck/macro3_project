@@ -156,10 +156,17 @@ extension_placebo_pvalues <- safe_read_rds(
 
 # Optional GDP SCM paths.
 # The dashboard checks both likely locations.
-gdp_paths <- safe_read_rds("data/processed/scm_paths_all.rds")
+gdp_paths <- safe_read_rds("data/processed/scm_paths_all_treated.rds")
 
 if (is.null(gdp_paths)) {
-  gdp_paths <- safe_read_csv("output/tables/scm_paths_all.csv")
+  gdp_paths <- safe_read_csv("output/tables/scm_paths_all_treated.csv")
+}
+
+if (!is.null(gdp_paths)) {
+  gdp_paths <- gdp_paths |>
+    dplyr::rename(
+      treated_iso3c = iso3c
+    )
 }
 
 # Add dashboard country groups to the panel.
