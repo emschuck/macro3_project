@@ -19,7 +19,7 @@ To execute the whole analysis and generate all outputs, from the project root, r
 source("code/pipeline.R")
 ```
 
-The code takes a long time to run, due to the many (many, many) placebo tests. The placebo test portion of the replication can be toggled on or off in the first lines of the script. The extension placebo script takes upwards of an hour to run. 
+The code takes a long time to run, due to the many (many, many) placebo tests. The placebo test portion of the replication file can be toggled on or off in the first lines of the script. The extension placebo script takes upwards of an hour to run. 
 
 Individual scripts can also be run separately, as the outputs from previous runs have been included in the repository. 
 
