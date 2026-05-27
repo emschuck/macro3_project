@@ -3,8 +3,10 @@
 
 [comment]: <> (Use CTRL+SHIFT+V to view rendered markdown in VS Code)
 
-* 23-04-2026 [ES]: Data sourced from Polity5. Most recent file has data only from 2018. May be worth exploring other sources for similar data, for comparison points
+* 23-04-2026 [ES]: Data sourced from Polity5. Most recent file has data only from 2018. May be worth exploring other sources for similar data, for comparison points.
+* 23-04-2026 [ES]: Decide to extrapolate 2018 polity5 value to 2019. Values are generally consistent across years, unlikely to cause major problems (as low weight variable in ols)
 * 16-05-2026 [ES]: Initial investigation shows some differences in inflation rate from those shown in the table -- needs investigation into reasons
+* 16-05-2026 [ES]: Inflation replication suggests the published inflation values match PWT deflator-based values better than the WDI source stated in the paper.
 * 17-05-2026 [ES]: Initially using NY.GDP.PCAP.KD = constant-price GDP per capita, but appendix lists Output-side real GDP at current $. Swapping to using NY.GDP.PCAP.CD  -- GDP per capita (current US$).
 * 17-05-2026 [ES]: Penn world tables have more reliable data for output-side gdp, and include population variables -- testing using this instead of WDI variables.
 * 17-05-2026 [ES]: Using PWT for employment, government consumption share, and investment share instead of WDI 
@@ -12,6 +14,7 @@
 * 17-05-2026 [ES]: Testing for table 1A if it is 1980-2021 values (as written in the report) not 1980-2001, but this does not seem to be the case -- much lower values
 * 17-05-2026 [ES]: GDP growth rate giving negative values and different scale. Investigating WDI variables options and PWT variable options, no improvement.
 * 17-05-2026 [MM]: First test for synthetic controls using the synth package; did not work because of missing data as dataprep cannot run with an unbalanced pannel. 
+* 17-05-2026 [ES]: Devaluation dummy dropped from final SCM predictors because the values reported in the paper do not match a clear pre-treatment average, and no variation among donor countries
 * 18-05-2026 [ES]: Full test suite of all GDP variables available, including manual calculation from PWT population and WDI values -- none match. 
 * 19-05-2026 [ES]: The GDP table in the report has a mistake - both columns have the same values. Priortitising getting values close to the chart, and working from there
 * 20-05-2026 [ES]: Data availability problems: Laos and St Lucia missing agriculture and industry data. Duplications for CPV and SWZ. For cemac countries, CAR and GNQ missing ag and industry data. Starting to solve data problems for donor countries, so complete analysis can be completed for WAEMU countries.
@@ -23,12 +26,16 @@
 * 21-05-2026 [MM]: Tries of changing the parameter in the synth order, aiming at having more similar results to the paper, did not work. 
 * 23-05-2026 [ES]: Testing with PWT gdp variables returns similar results, but does not require as much data filling. Using rgdpo variable for current testing
 * 23-05-2026 [CL]: Downloading trade variables from IMF. Computing the share of exports giong to the Euro Area for each country. Exploring the trade trends via through graphics. Running regressions like DID and TWFE, while checking some assumptions (parallel trends...)
+* 23-05-2026 [ES]: Extension pre-treatment period set to start in 1981 because EU trade-share data are not sufficiently available from 1980.
 * 24-05-2026 [ES]: Testing validity of adding other donor countries. Looking at results when including non-fixed peg countries in Africa (more comparable than elsewhere) shifts almost all weight onto these countries. Gives nice results, but not a suitable set for SCM if all weights end there. 
 * 24-05-2026 [ES]: Testing with added special variable years: 1985, 1990. Some slight improvement in outcome, may keep -- justified by poor data for some input variables. Keeping only 1990 to avoid overfitting
 * 24-05-2026 [ES]: Testing without industry variable, as it is causing poor fit for countries with missing data (CAF, Chad)
 * 24-05-2026 [ES]: Out of GDP variables, wdi_gdp_pc_current is closest fit to decribed variables in report, and also has minimal missing data
 * 24-05-2026 [ES]: For extension variables: MEU, XEU completely missing for many countries, available from 1981 for some. Trade openness incomplete for many countries including in treated. Exports/imports missing for equatorial guinea, barbados, dominica, eswatini (partial), grenada, guyana (partial), laos (partial), lesotho (partial), st kitts and nevis, st lucia, turkmenistan (partial), 
 * 25-05-2026 [ES]: Missing data for equatorial guinea for EU Exports/imports, and many control countries. 
-* 25-05-2026 [ES]: Initially matched on just average trade variables by period. Instead add sparse years as well, as there is a lot of variability.
+* 25-05-2026 [ES]: Initially matched on just average trade variables by period. Instead add special years as well, as there is a lot of variability in trade values, not captured by averages. 
+* 26-05-2026 [ES]: Updated code to export tables to .tex files as well as .csv, for easier formatting in the final report. 
+
+
 
 
