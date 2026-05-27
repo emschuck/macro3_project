@@ -921,40 +921,57 @@ inflation_region <- df_imputed |>
   )
 
 #### ========================================================================###
-#### ======================== 13. GDP GROWTH GRAPH ==========================###
+#### ============ 14. GDP GRAPH USING FINAL GDP VARIABLE =================###
 #### ========================================================================###
 
 # Use the imputed panel for descriptive outputs so generated figures/tables are
-# consistent with the saved processed panel.
+# consistent with the saved processed panel used in the SCM replication.
 analysis_data <- df_imputed
 
-analysis_data <- analysis_data |>
-  arrange(iso3c, year) |>
-  group_by(iso3c) |>
-  mutate(growth = 100 * (wdi_gdp_pc_constant / lag(wdi_gdp_pc_constant) - 1)) |>
-  ungroup()
+# Identify the GDP variable actually used in the SCM replication.
+# In the final replication this should be WDI GDP per capita in current USD.
+scm_gdp_var <- if (exists("gdp_var")) gdp_var else "wdi_gdp_pc_current"
 
-df_growth <- analysis_data |>
+# Check that the selected GDP variable exists in the data.
+if (!scm_gdp_var %in% names(analysis_data)) {
+  stop(
+    "The selected SCM GDP variable '", scm_gdp_var,
+    "' is not present in analysis_data."
+  )
+}
+
+# Create a standardised GDP variable for descriptive output.
+analysis_data <- analysis_data |>
+  mutate(gdp_used = .data[[scm_gdp_var]])
+
+# Average GDP per capita by region, using the exact GDP variable used in SCM.
+df_gdp_used_regions <- analysis_data |>
   filter(region %in% c("WAEMU", "CAEMC", "Non-CFA comparison")) |>
   mutate(region_plot = recode(
     region,
     "Non-CFA comparison" = "Non-CFA countries"
   )) |>
   group_by(region_plot, year) |>
-  summarise(growth = mean(growth, na.rm = TRUE), .groups = "drop") |>
-  filter(year >= 1990, year <= 2021)
+  summarise(
+    gdp_used = safe_mean(gdp_used),
+    .groups = "drop"
+  ) |>
+  filter(year >= 1990, year <= 2019)
 
-# Plot average annual GDP per capita growth by region. The vertical line marks
-# 2002, the first post-treatment year.
-p_gdp_growth <- ggplot(df_growth, aes(year, growth, color = region_plot)) +
+# Plot average GDP per capita by region. The vertical line marks 2002, the first
+# post-treatment year.
+p_gdp_used_regions <- ggplot(
+  df_gdp_used_regions,
+  aes(year, gdp_used, color = region_plot)
+) +
   geom_line(linewidth = 0.9) +
   geom_vline(xintercept = 2002, linewidth = 1.1, color = "black") +
   scale_x_continuous(breaks = seq(1990, 2020, 2)) +
-  scale_y_continuous(breaks = seq(-25, 25, 5), limits = c(-25, 25)) +
   labs(
-    title = "Evolution of GDP per capita growth",
+    title = "Evolution of GDP per capita",
+    subtitle = paste0("GDP variable: ", scm_gdp_var),
     x = NULL,
-    y = "Growth rate (%)",
+    y = "GDP per capita",
     color = NULL
   ) +
   theme_minimal(base_size = 11) +
@@ -964,74 +981,56 @@ p_gdp_growth <- ggplot(df_growth, aes(year, growth, color = region_plot)) +
   )
 
 ggsave(
-  "output/figures/gdp_pc_growth_regions.png",
-  p_gdp_growth,
+  "output/figures/gdp_pc_used_regions.png",
+  p_gdp_used_regions,
   width = 12,
   height = 4,
   dpi = 300
 )
 
-#### ========================================================================###
-#### ======================== 14. GDP GROWTH TABLES =========================###
-#### ========================================================================###
 
-# Compute annual GDP per capita growth for WDI constant and current per-capita
-# GDP variables. These are descriptive appendix tables, not the SCM outcome.
-df_gdp_growth <- analysis_data |>
-  arrange(iso3c, year) |>
-  group_by(iso3c) |>
-  mutate(
-    growth_wdi_gdp_pc_constant = 100 * (wdi_gdp_pc_constant / lag(wdi_gdp_pc_constant) - 1),
-    growth_wdi_gdp_pc_current = 100 * (wdi_gdp_pc_current / lag(wdi_gdp_pc_current) - 1)
-  ) |>
-  ungroup()
+#### ====================================================================###
+#### ======== 15. GDP TABLES USING FINAL GDP VARIABLE ================###
+#### ===================================================================###
 
-# Helper function for GDP growth appendix tables.
-make_gdp_growth_table <- function(data, country_order, average_label) {
+# Helper function for appendix tables using the exact GDP variable used in SCM.
+make_gdp_used_table <- function(data, country_order, average_label) {
   country_rows <- data |>
     filter(
       iso3c %in% country_order,
       year >= 1990,
-      year <= 2021
+      year <= 2019
     ) |>
     mutate(
       table_period = case_when(
         year >= 1990 & year <= 2001 ~ "1990-2001",
-        year >= 2002 & year <= 2021 ~ "2002-2021",
+        year >= 2002 & year <= 2019 ~ "2002-2019",
         TRUE ~ NA_character_
       )
     ) |>
     filter(!is.na(table_period)) |>
     group_by(iso3c, country, table_period) |>
     summarise(
-      growth_wdi_gdp_pc_constant = safe_mean(growth_wdi_gdp_pc_constant),
-      growth_wdi_gdp_pc_current = safe_mean(growth_wdi_gdp_pc_current),
+      mean_gdp_used = safe_mean(gdp_used),
       .groups = "drop"
     ) |>
     pivot_wider(
       names_from = table_period,
-      values_from = c(
-        growth_wdi_gdp_pc_constant,
-        growth_wdi_gdp_pc_current
-      )
+      values_from = mean_gdp_used
     ) |>
     mutate(order = match(iso3c, country_order)) |>
     arrange(order) |>
     select(
       country,
-      `constant GDP pc growth 1990-2001` = `growth_wdi_gdp_pc_constant_1990-2001`,
-      `constant GDP pc growth 2002-2021` = `growth_wdi_gdp_pc_constant_2002-2021`,
-      `current GDP pc growth 1990-2001` = `growth_wdi_gdp_pc_current_1990-2001`,
-      `current GDP pc growth 2002-2021` = `growth_wdi_gdp_pc_current_2002-2021`
+      `Mean GDP pc 1990-2001` = `1990-2001`,
+      `Mean GDP pc 2002-2019` = `2002-2019`
     )
 
   average_row <- country_rows |>
     summarise(
       country = average_label,
-      `constant GDP pc growth 1990-2001` = safe_mean(`constant GDP pc growth 1990-2001`),
-      `constant GDP pc growth 2002-2021` = safe_mean(`constant GDP pc growth 2002-2021`),
-      `current GDP pc growth 1990-2001` = safe_mean(`current GDP pc growth 1990-2001`),
-      `current GDP pc growth 2002-2021` = safe_mean(`current GDP pc growth 2002-2021`)
+      `Mean GDP pc 1990-2001` = safe_mean(`Mean GDP pc 1990-2001`),
+      `Mean GDP pc 2002-2019` = safe_mean(`Mean GDP pc 2002-2019`)
     )
 
   bind_rows(country_rows, average_row) |>
@@ -1039,78 +1038,75 @@ make_gdp_growth_table <- function(data, country_order, average_label) {
 }
 
 # Appendix 3, Panel A: WAEMU.
-gdp_growth_waemu <- make_gdp_growth_table(
-  df_gdp_growth,
+gdp_used_waemu <- make_gdp_used_table(
+  analysis_data,
   country_order = waemu_table1,
   average_label = "Average for the WAEMU area"
 )
 
 # Additional WAEMU average excluding Guinea-Bissau.
-gdp_growth_waemu_excl_gnb <- gdp_growth_waemu |>
+gdp_used_waemu_excl_gnb <- gdp_used_waemu |>
   filter(!country %in% c(
     "Guinea-Bissau",
     "Average for the WAEMU area"
   )) |>
   summarise(
     country = "Average without Guinea-Bissau",
-    `constant GDP pc growth 1990-2001` = safe_mean(`constant GDP pc growth 1990-2001`),
-    `constant GDP pc growth 2002-2021` = safe_mean(`constant GDP pc growth 2002-2021`),
-    `current GDP pc growth 1990-2001` = safe_mean(`current GDP pc growth 1990-2001`),
-    `current GDP pc growth 2002-2021` = safe_mean(`current GDP pc growth 2002-2021`)
+    `Mean GDP pc 1990-2001` = safe_mean(`Mean GDP pc 1990-2001`),
+    `Mean GDP pc 2002-2019` = safe_mean(`Mean GDP pc 2002-2019`)
   ) |>
   mutate(across(where(is.numeric), ~ round(.x, 3)))
 
-gdp_growth_waemu <- bind_rows(
-  gdp_growth_waemu,
-  gdp_growth_waemu_excl_gnb
+gdp_used_waemu <- bind_rows(
+  gdp_used_waemu,
+  gdp_used_waemu_excl_gnb
 )
 
 # Appendix 3, Panel B: CAEMC.
-gdp_growth_caemc <- make_gdp_growth_table(
-  df_gdp_growth,
+gdp_used_caemc <- make_gdp_used_table(
+  analysis_data,
   country_order = caemc,
   average_label = "Average for the CAEMC zone"
 )
 
 # Appendix 4: Non-CFA comparison countries.
-gdp_growth_non_cfa <- make_gdp_growth_table(
-  df_gdp_growth,
+gdp_used_non_cfa <- make_gdp_used_table(
+  analysis_data,
   country_order = non_cfa_comparison_countries,
   average_label = "Average"
 )
 
-print(gdp_growth_waemu)
-print(gdp_growth_caemc)
-print(gdp_growth_non_cfa)
+print(gdp_used_waemu)
+print(gdp_used_caemc)
+print(gdp_used_non_cfa)
 
 cat(
   kable(
-    gdp_growth_waemu,
+    gdp_used_waemu,
     format = "latex",
     booktabs = TRUE,
-    caption = "WAEMU countries' mean annual GDP per capita growth: WDI constant and current GDP per capita"
+    caption = "WAEMU countries' mean GDP per capita"
   ),
-  file = "output/tables/appendix3_panelA_waemu_gdp_growth.tex"
+  file = "output/tables/appendix3_panelA_waemu_gdp_used.tex"
 )
 
 cat(
   kable(
-    gdp_growth_caemc,
+    gdp_used_caemc,
     format = "latex",
     booktabs = TRUE,
-    caption = "CAEMC countries' mean annual GDP per capita growth: WDI constant and current GDP per capita"
+    caption = "CAEMC countries' mean GDP per capita"
   ),
-  file = "output/tables/appendix3_panelB_caemc_gdp_growth.tex"
+  file = "output/tables/appendix3_panelB_caemc_gdp_used.tex"
 )
 
 cat(
   kable(
-    gdp_growth_non_cfa,
+    gdp_used_non_cfa,
     format = "latex",
     booktabs = TRUE,
-    caption = "Non-CFA countries' mean annual GDP per capita growth: WDI constant and current GDP per capita"
+    caption = "Non-CFA countries' mean GDP per capita "
   ),
-  file = "output/tables/appendix4_non_cfa_gdp_growth.tex"
+  file = "output/tables/appendix4_non_cfa_gdp_used.tex"
 )
-
-print("Complete")
+print("Data Download Complete")

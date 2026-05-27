@@ -194,32 +194,4 @@ cat("Number of country-year rows returned by WDI:", nrow(wdi), "\n")
 
 saveRDS(wdi, "data/raw/wdi.rds")
 
-
-# Verify that the saved WDI file contains the extension trade variables.
-wdi_check <- readRDS("data/raw/wdi.rds")
-
-cat("\nSaved WDI file path:\n")
-print(normalizePath("data/raw/wdi.rds"))
-
-cat("\nSaved WDI file timestamp:\n")
-print(file.info("data/raw/wdi.rds")$mtime)
-
-cat("\nSaved WDI columns:\n")
-print(names(wdi_check))
-
-missing_saved_trade_cols <- setdiff(
-  c("trade_openness", "exports_gdp", "imports_gdp"),
-  names(wdi_check)
-)
-
-if (length(missing_saved_trade_cols) > 0) {
-  stop(
-    "The saved wdi.rds is missing these trade columns: ",
-    paste(missing_saved_trade_cols, collapse = ", ")
-  )
-}
-
-print("Complete")
-
-
-print("Complete")
+print("WDI Data Download Complete")
