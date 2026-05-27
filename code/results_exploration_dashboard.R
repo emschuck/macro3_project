@@ -1,7 +1,3 @@
-#### ========================================================================###
-#### ===================== SHINY DASHBOARD: SCM RESULTS =====================###
-#### ========================================================================###
-
 # This Shiny dashboard reads the saved outputs from the replication and
 # extension analyses.
 #
@@ -12,13 +8,9 @@
 #   data/processed/extension_trade/extension_trade_scm_paths_all.rds
 #   output/extension_trade/tables/extension_trade_group_averages.csv
 #
-# Optional files:
-#   output/extension_trade/tables/extension_trade_group_averages_reduced.csv
-#   data/processed/scm_paths_all.rds
-#   output/tables/scm_paths_all.csv
 
 #### ========================================================================###
-#### ======================== 1. PACKAGES ===================================###
+#### ======================== 1. PACKAGES ==================================###
 #### ========================================================================###
 
 library(shiny)
@@ -30,7 +22,7 @@ library(stringr)
 library(scales)
 
 #### ========================================================================###
-#### ======================== 2. PROJECT SETUP ==============================###
+#### ======================== 2. PROJECT SETUP ===============================###
 #### ========================================================================###
 
 constants_file <- "code/00_constants.R"
@@ -114,7 +106,7 @@ country_label <- function(code) {
 #### ======================== 3. LOAD DATA ==================================###
 #### ========================================================================###
 
-# Final/imputed panel used in the main analysis.
+# Final/imputed panel used in the main analysis. 
 panel_imputed <- safe_read_rds("data/processed/processed_panel_imputed.rds")
 
 if (is.null(panel_imputed)) {
@@ -134,27 +126,24 @@ if (is.null(panel_unimputed)) {
 # Use imputed panel as the default panel throughout the dashboard.
 panel_df <- panel_imputed
 
-# Extension SCM paths.
+# Extension SCM paths
 extension_paths <- safe_read_rds(
   file.path(extension_processed_dir, "extension_trade_scm_paths_all.rds")
 )
 
-# Extension group averages.
 extension_group_averages <- safe_read_csv(
   file.path(extension_output_dir, "tables", "extension_trade_group_averages.csv")
 )
 
-# Optional reduced group averages.
 extension_group_averages_reduced <- safe_read_csv(
   file.path(extension_output_dir, "tables", "extension_trade_group_averages_reduced.csv")
 )
 
-# Optional extension placebo p-values.
 extension_placebo_pvalues <- safe_read_rds(
   file.path(extension_processed_dir, "placebo", "extension_trade_placebo_pvalues_all.rds")
 )
 
-# Optional GDP SCM paths.
+
 # The dashboard checks both likely locations.
 gdp_paths <- safe_read_rds("data/processed/scm_paths_all_treated.rds")
 
@@ -201,8 +190,9 @@ if (!is.null(panel_unimputed)) {
 # -------------------------------------------------------------------------- #
 # Restricted raw variables
 # -------------------------------------------------------------------------- #
-# These are the main variables available in the ordinary raw-trend charts.
-# Add or remove variables here to control what appears in the dropdown.
+
+
+
 dashboard_raw_variables <- c(
   "wdi_gdp_pc_current",
   "gdp_selected",
@@ -234,8 +224,7 @@ raw_variable_choices <- dashboard_raw_variables
 # -------------------------------------------------------------------------- #
 # Restricted imputation-comparison variables
 # -------------------------------------------------------------------------- #
-# These are the variables available in the imputed-vs-unimputed charts.
-# They should be variables where it is useful to inspect filling/interpolation.
+
 dashboard_imputation_variables <- c(
   "agriculture",
   "industry",
