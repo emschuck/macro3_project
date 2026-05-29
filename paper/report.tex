@@ -62,7 +62,7 @@ The paper finds positive post-treatment output gaps for several countries, howev
 
 \section{Replication Methodology and Data}
 
-The replication follows the original paper's country-level synthetic control design. For each treated CFA franc country, we estimate a counterfactual GDP path using a weighted average of non-CFA donor countries, and then compare the observed post-2002 GDP path with this synthetic counterfactual. The treatment year, time period, and country sample all follow the original paper's specifications, while variable selection and construction, and missing data approaches diverged. Further details on the variable construction, and missing-data treatment are reported in Appendix~\ref{app:replication_data}: Table~\ref{tab:variable_construction}, and Table~\ref{tab:missing_data_treatment}.
+The replication follows the original paper's country-level synthetic control design. For each treated CFA franc country, we estimate a counterfactual GDP path using a weighted average of non-CFA donor countries, and then compare the observed post-2002 GDP path with this synthetic counterfactual. The treatment year, time period, and country sample all follow the original paper's specifications, while variable selection and construction, and missing data approaches diverged. Further details on the variable construction, and missing-data treatment are reported in Appendix~\ref{app:replication_data}.
 
 Let \(Y_{it}\) denote GDP per capita for country \(i\) in year \(t\). For a treated country \(i=1\), the unobserved counterfactual outcome after treatment is approximated using a weighted average of \(J\) donor countries:
 
@@ -110,23 +110,20 @@ Y_{1t}
 
 A positive value of \(\widehat{\alpha}_{1t}\) indicates that actual GDP per capita was above the synthetic counterfactual, while a negative value indicates that actual GDP per capita was below the counterfactual. The interpretation of these gaps depends on the quality of the pre-treatment fit: if the synthetic control does not reproduce the treated country's pre-2002 path closely, the post-treatment gap is less informative.
 
-The replication is best understood as a reconstructed replication rather than a mechanical reproduction of the original paper. Two issues were especially important. First, the GDP series used in the original paper could not be identified exactly from the published documentation. Second, the paper does not report how missing observations were handled, even though missing outcomes or predictors can affect donor eligibility, predictor averages, and estimated synthetic controls. These issues are discussed in Appendix~\ref{app:replication_issues}; the final variable definitions are summarised in Table~\ref{tab:variable_construction}, and the missing-data procedures are summarised in Table~\ref{tab:missing_data_treatment}.
-
-The analysis proceeds in four steps:
+The replication is best understood as a reconstructed replication rather than a mechanical reproduction of the original paper. Two issues were especially important. First, the GDP series used in the original paper could not be identified exactly from the published documentation. Second, the paper does not report how missing observations were handled, even though missing outcomes or predictors can affect donor eligibility, predictor averages, and estimated synthetic controls. These issues are discussed in Appendix~\ref{app:replication_issues}. 
+Table~\ref{tab:replication_pipeline} summarises the replication steps.
 
 \begin{table}[htbp]
 \centering
+\caption{Replication pipeline}
 \label{tab:replication_pipeline}
 \begin{tabular}{p{1.2cm}p{11.5cm}}
 \toprule
 Step & Description \\
 \midrule
 1 & The country-year panel is reconstructed from public datasets. \\
-
 2 & Variables are harmonised and missing values are handled using documented rules. \\
-
 3 & One synthetic control is estimated for each treated country, producing donor weights, predictor-balance statistics, actual-versus-synthetic GDP paths, and post-treatment gaps. \\
-
 4 & In-space placebo tests are used to compare the treated-country gaps with gaps obtained when the same procedure is applied to donor countries as placebo-treated units. \\
 \bottomrule
 \end{tabular}
@@ -137,7 +134,7 @@ Several additional reporting issues in the original paper also shaped the replic
 
 \section{Replication Results}
 
-The  country weights computed by the synthetic control method, which then allows us to create the synthetic GDP per capita, are shown in Table~\ref{tab:weights_table}. We were not able to replicate the original values exactly as the GDP data were not the same. However, as in the original paper, the synthetic control analysis relies heavily on Bangladesh and Laos. The first has a positive weight for 9 out of the 13 treated countries, being especially present for Mali as well as Burkina Faso. Laos has positive weights for 10 out of the 13 countries, an explanation for this is that the country has similar pre-treatment income to a lot of the treated countries compared to the other donor countries. Iraq, one of the countries that we added, had positive weights for 9 out of 13 treated countries. 
+The  country weights computed by the synthetic control method, which then allows us to create the synthetic GDP per capita, are shown in Table 3. We were not able to replicate the original values exactly as the GDP data were not the same. However, as in the original paper, the synthetic control analysis relies heavily on Bangladesh and Laos. The first has a positive weight for 9 out of the 13 treated countries, being especially present for Mali as well as Burkina Faso. Laos has positive weights for 10 out of the 13 countries, an explanation for this is that the country has similar pre-treatment income to a lot of the treated countries compared to the other donor countries. Iraq, one of the countries that we added, had positive weights for 9 out of 13 treated countries. 
 
 \begingroup
 \tiny
@@ -191,7 +188,7 @@ The p-values are computed using the post/pre Root Mean Square Per Error ratios. 
 
 With this method, we obtained the same results as the authors of the original paper. At the 5 and 10\% level, we find that only the result of Equatorial Guinea was statistically significant, while all the other treated countries do not have any significant results. 
 
-\subsubsection{Equatorial Guinea}
+\subsection{Equatorial Guinea}
 Equatorial Guinea is an unusual case. In Figure~\ref{fig:equatorial_guinea_gap} we can observe the result for its synthetic control, with the output gap. And indeed we observe a consistently positive GDP per capita gap. We can also note that those results are the one that match the most those of the original paper, in terms of closeness of the numbers of the output gap.
 In Figure~\ref{fig:equatorial_guinea_placebo_gaps}, we can observe graphically that those results are significant. 
 
@@ -372,6 +369,8 @@ Overall, the results suggest that the euro peg did not generate broad GDP gains 
 
 \begin{landscape}
 \appendix 
+
+\renewcommand{\thesection}{Appendix \Alph{section}:}
 \section{Data Construction and Variable Definitions} \label{app:replication_data}
 The reconstructed dataset combines World Development Indicators, Penn World Table, Polity5, FAOSTAT, and IMF Direction of Trade Statistics \citep{worldbank2026wdi,feenstra2015pwt,marshall2020polity,faostat2026,imf2026imts}.
 \begin{longtable}{P{3cm}P{3cm}P{3cm}P{3cm}P{4.4cm}P{5.2cm}}
@@ -532,8 +531,10 @@ Donor eligibility & Donor screening before SCM & Donors entirely missing at leas
 \bottomrule
 \end{longtable}
 
-
+\renewcommand{\thesection}{Appendix \Alph{section}:}
 \section{Issues in the Original Paper and Implications for Replication} \label{app:replication_issues}
+
+
 \subsection{Primary issues}
 
 A major obstacle in the replication was identifying the GDP variable used in the original paper. Although the paper describes the outcomes as real GDP per capita, the reported values could not be matched to any standard GDP series available in either WDI or Penn World Table. We tested the full set of WDI GDP per capita measures, PWT output- and expenditure-side GDP variables, and constructed alternatives combining WDI aggregate GDP measures with PWT population to generate per-capita series. None of these reproduced the GDP values reported in the original tables. This created a fundamental reproducibility problem, because GDP per capita is both the main outcome and a key lagged predictor in the SC specification. We therefore treated the GDP series as an empirical reconstruction choice, rather than a directly observed replication input, selecting WDI GDP per capita in current US dollars, because it provided the closest correspondence to the published synthetic control patterns. 
@@ -601,8 +602,9 @@ The non-CFA inflation table reports Sao Tome and Principe as having exactly zero
 
 The paper describes the synthetic-control weights as being expressed in percentage points, but the values in the table are decimal weights. This is just a terminology issues, but matters for the interpretation of the table. 
 
-
+\renewcommand{\thesection}{Appendix \Alph{section}:}
 \section{Extension results: additional figures and tables} \label{app:extension_results}
+
 
 \begin{figure}[htbp]
 \centering
