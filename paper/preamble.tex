@@ -1,0 +1,43 @@
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+
+\usepackage{array}
+\usepackage{hhline}
+\usepackage[table]{xcolor}
+\usepackage{threeparttable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{pdflscape}
+\usepackage{graphicx}
+\usepackage{xcolor}
+% \definecolor{pagebg}{HTML}{fffff}
+% \pagecolor{pagebg}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{mdframed}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{parskip}
+
+\definecolor{lightblue}{RGB}{240, 240, 255}
+
+% OUTLINE BOX BLACK THIN
+\newmdenv[skipabove=10pt, skipbelow=10pt, innertopmargin=10pt, innerbottommargin=10pt, linecolor=black, linewidth=1pt,
+backgroundcolor=white,
+]{kbox}
+
+
+% BLUE BOX
+\newmdenv[skipabove=10pt, skipbelow=10pt, innertopmargin=10pt, innerbottommargin=10pt, 
+backgroundcolor=lightblue, linewidth=0pt, 
+]{bbox}
+
+
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\newenvironment{centerbox}{\begin{center}}{\end{center}}
+
+\providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
+\providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
+\providecommand{\huxtpad}[1]{\rule{0pt}{2.2ex}}
+\providecommand{\huxbpad}[1]{\rule[-0.8ex]{0pt}{0.8ex}}

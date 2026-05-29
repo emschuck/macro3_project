@@ -1,0 +1,601 @@
+% !TEX root = Users/ems/projects/macro3_project/paper/report.tex
+
+\documentclass[a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{array}
+\usepackage{hhline}
+\usepackage[table]{xcolor}
+\usepackage{threeparttable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{pdflscape}
+\usepackage{graphicx}
+\usepackage{xcolor}
+% \definecolor{pagebg}{HTML}{fffff}
+% \pagecolor{pagebg}
+
+
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\newenvironment{centerbox}{\begin{center}}{\end{center}}
+
+\providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
+\providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
+
+\providecommand{\huxtpad}[1]{\rule{0pt}{2.2ex}}
+\providecommand{\huxbpad}[1]{\rule[-0.8ex]{0pt}{0.8ex}}
+
+\title{Macro Three Replication Project: Investigating the Economic Impact of the CFA Franc Zone with Synthetic Control Methods}
+\date{Due: 29 May 2026}
+\author{Callista Lodzinski, Mathilde Muller, and Elizabeth Schuck}
+
+\begin{document}
+
+\maketitle
+
+Test
+
+\section{Replication Target}
+In this project, we aim to replicate the findings of \textit{From the French franc to the euro, is there an economic impact for the CFA franc zone countries? A 'bias-corrected' synthetic control method} by Alassane Diallo and Adama Ba, published in Cogent Economics \& Finance in 2024. This paper assesses the impact of pegging the CFA franc to the euro on real GDP per capita in the West African Economic and Monetary Union (WAEMU) and the Central African Economic and Monetary Community (CAEMC) countries. The original study uses a set of 35 annual country-level panel data from 1980 to 2019 and applies synthetic control methods to estimate the counterfactual economic outcomes for member countries.
+
+%\input{} % Use \input{} to include the content of other .tex files (such as charts). E.g. \input{../output/tables/regression_table.tex}.
+
+
+\section{Data}
+
+\begin{table}[htbp]
+\centering
+\caption{Variables}
+\begin{tabular}{llllll}
+\hline
+\textbf{Variable} &\textbf{Type} & \textbf{Category} & \textbf{(First) Page Ref} & \textbf{Possible Sources} \\
+\hline
+
+Real GDP per capita &  Continuous & Outcome & 6 & WDI, PennWorld Tables \\
+
+Lagged GDP per capita & Continuous & Lagged outcome & 10 & WDI, PennWorld Tables \\
+
+Gross Fixed Capital Formation (\% GDP) & Continuous & Capital & 10 &  \\
+
+Government expenditure (\% GDP) & Continuous & Fiscal & 10 & WDI, PennWorld Tables \\
+
+Official Development Assistance (\% GDP) & Continuous & External & 10 & Source not listed \\
+
+Foreign Development Investment (\% GDP) & Continuous & External & 10 & WDI \\
+
+Employment rate & Continuous & Labour & 10 & WDI \\
+
+Agriculture (\% GDP) & Continuous & Structure & 10 & WDI, PennWorld Tables \\
+
+Industry (\% GDP) &  Continuous & Structure & 10 & WDI, PennWorld Tables \\
+
+Governance / institutional quality & Index & Institutions & 10 & Polity5 Dataset \\
+
+Political regime characteristics & Categorical/Index & Institutions & 10 & Polity5 Dataset \\
+
+Inflation &  Continuous & Macro controls & 5 & WDI, PennWorld Tables \\
+
+\hline
+
+Euro peg dummy & Binary & Treatment &  & Authors \\
+
+\hline
+\hline
+
+Synthetic GDP per capita & $\tilde{Y}_{it}$ & Continuous & Constructed &  &  \\
+
+Treatment effect & $\tau_{it}$ & Continuous & Constructed &  &  \\
+
+\hline
+\end{tabular}
+\end{table}
+
+
+
+% \input{../output/tables/table1_panelA_waemu_inflation.tex}
+% \input{../output/tables/table1_panelB_caemc_inflation.tex}
+% \input{../output/tables/table2_non_cfa_inflation.tex}
+% \input{../output/tables/appendix3_panelA_waemu_gdp_growth.tex}
+% \input{../output/tables/appendix3_panelB_caemc_gdp_growth.tex}
+% \input{../output/tables/appendix4_non_cfa_gdp_growth.tex}
+
+
+% % \input{../output/gdp_exploration/countries/country_method_table_AGO.tex}
+% % \input{../output/gdp_exploration/countries/country_method_table_BEN.tex}
+
+
+% % \input{../output/gdp_exploration/countries/country_method_table_CMR.tex}
+% % \input{../output/gdp_exploration/tables/table_pwt_pwt_cgdpo_pc_log_growth.tex}
+
+
+% \input{../output/tables/scm_weights_all_treated_wide_formatted.tex}
+% \input{../output/tables/table_averages_CFAzone.tex}
+
+% \input{../output/tables/table_averages_CFAzone.tex}
+% % \input{../output/tables/table_ols_regression_gdp_with_treatment.tex}
+
+% \input{../output/tables/table_ols_regression_gdp.tex}
+
+
+% \input{../output/extension_trade/tables/extension_trade_scm_summary.tex}
+
+% \input{../output/extension_trade/tables/extension_trade_scm_summary.tex}
+
+\section{Appendix 1}
+
+\begin{table}[htbp]
+\centering
+\caption{Treated countries and regional classification}
+\label{tab:treated_countries}
+\begin{tabular}{lllll}
+\toprule
+Country & ISO3 & CFA monetary union & Included in SCM sample & Notes \\
+\midrule
+Benin & BEN & WAEMU & Yes & Original CFA member \\
+Burkina Faso & BFA & WAEMU & Yes & Original CFA member \\
+C\^{o}te d'Ivoire & CIV & WAEMU & Yes & Original CFA member \\
+Mali & MLI & WAEMU & Yes & Rejoined WAEMU in 1984 \\
+Niger & NER & WAEMU & Yes & Original CFA member \\
+Senegal & SEN & WAEMU & Yes & Original CFA member \\
+Togo & TGO & WAEMU & Yes & Original CFA member \\
+Cameroon & CMR & CEMAC & Yes & Original CFA member \\
+Central African Republic & CAF & CEMAC & Yes & Original CFA member \\
+Chad & TCD & CEMAC & Yes & Original CFA member \\
+Republic of Congo & COG & CEMAC & Yes & Original CFA member \\
+Gabon & GAB & CEMAC & Yes & Original CFA member \\
+Equatorial Guinea & GNQ & CEMAC & Yes & Joined CFA franc zone in 1985 \\
+Guinea-Bissau & GNB & WAEMU & No & Joined WAEMU in 1997; excluded from main SCM sample \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{landscape}
+\begin{longtable}{P{3.3cm}P{3cm}P{3.1cm}P{3.4cm}P{4.4cm}P{5.2cm}}
+\caption{Variable construction in the original paper, updated replication, and trade extension}
+\label{tab:variable_construction} \\
+\toprule
+Variable & Code name & Role in analysis & Source in updated replication & Construction / definition & Notes \\
+\midrule
+\endfirsthead
+
+\toprule
+Variable & Code name & Role in analysis & Source in updated replication & Construction / definition & Notes \\
+\midrule
+\endhead
+
+Real GDP per capita / selected GDP per capita
+& \texttt{gdp\_selected}; \texttt{wdi\_gdp\_pc\_current}
+& Main GDP outcome in replication
+& World Development Indicators
+& The original paper studies real GDP per capita. In the replication, alternative GDP measures were compared and WDI GDP per capita, current US dollars, was selected as the closest empirical match to the paper's reported results.
+& Main divergence from the original paper; The exact GDP series in the paper could not be reproduced unambiguously, considering numerous WDI and PWT indicators. \\
+
+Agriculture value added
+& \texttt{agriculture}
+& SCM predictor
+& WDI and FAOSTAT
+& Agriculture, forestry, and fishing, value added as a percentage of GDP. WDI indicator: \texttt{NV.AGR.TOTL.ZS}. Alternative agriculture series were used to fill major gaps.
+& Retained in the final predictor set. \\
+
+Industry value added
+& \texttt{industry}
+& Original/intended SCM predictor
+& WDI
+& Industry including construction, value added as a percentage of GDP. Main WDI indicator: \texttt{NV.IND.TOTL.ZS}.
+& Included in the original paper's predictor set but removed from the final replication because of missingness and data-quality problems. \\
+
+Government expenditure share
+& \texttt{govt\_share}
+& SCM predictor
+& Penn World Table
+& Government consumption share from PWT, using \texttt{csh\_g}.
+& Corresponds to the government expenditure control described in the original paper. \\
+
+Investment share / gross fixed capital formation
+& \texttt{invest\_share}
+& SCM predictor
+& Penn World Table
+& Investment or capital-formation share from PWT, using \texttt{csh\_i}.
+& Corresponds to the paper's gross fixed capital formation control. \\
+
+Official development assistance
+& \texttt{oda\_share}
+& SCM predictor
+& World Development Indicators
+& Main WDI series used include net ODA received. \texttt{DT.ODA.ODAT.GD.ZS}.
+& ODA as a share of national income. \\
+
+Foreign direct investment
+& \texttt{fdi}
+& SCM predictor
+& World Development Indicators
+& Foreign direct investment, net inflows as a percentage of GDP. WDI indicator: \texttt{BX.KLT.DINV.WD.GD.ZS}.
+& Retained in the final predictor set. \\
+
+Labour / employment
+& \texttt{labour}
+& SCM predictor
+& Penn World Table
+& Employment as a share of population, constructed as \texttt{100 * emp / pop}.
+& Corresponds to the original paper's labour factor, described as the proportion of the population in work. \\
+
+Political regime / institutions
+& \texttt{polity2}
+& SCM predictor
+& Polity5
+& Polity2 institutional score, ranging from autocracy to democracy (-10 to +10).
+& Interpolation and extrapolation were applied where needed to obtain usable pre-treatment panels. \\
+
+1994 CFA devaluation dummy
+& \texttt{devaluation\_1994}
+& Original control / historical adjustment
+& Constructed
+& Dummy variable intended to capture the January 1994 CFA franc devaluation.
+& The original paper mentions this control. In the replication code, it was not retained as a standard SCM predictor because it has no useful cross-donor variation. \\
+
+Trade openness
+& \texttt{trade\_openness}
+& Trade-extension outcome
+& World Development Indicators
+& Exports plus imports of goods and services as a percentage of GDP. WDI indicator: \texttt{NE.TRD.GNFS.ZS}.
+& Used to test whether the euro peg changed aggregate trade exposure. \\
+
+Exports of goods and services
+& \texttt{exports\_gdp}
+& Trade-extension outcome
+& World Development Indicators
+& Exports of goods and services as a percentage of GDP. WDI indicator: \texttt{NE.EXP.GNFS.ZS}.
+& Used to examine export intensity. \\
+
+Imports of goods and services
+& \texttt{imports\_gdp}
+& Trade-extension outcome
+& World Development Indicators
+& Imports of goods and services as a percentage of GDP. WDI indicator: \texttt{NE.IMP.GNFS.ZS}.
+& Used to examine import intensity. \\
+
+Exports to EU share
+& \texttt{XEU}
+& Trade-extension outcome
+& IMF Direction of Trade Statistics
+& Computed as 100 times exports to the EU divided by exports to the world.
+& Measures export composition toward the EU. \\
+
+Imports from EU share
+& \texttt{MEU}
+& Trade-extension outcome
+& IMF Direction of Trade Statistics
+& Computed as 100 times imports from the EU divided by imports from the world.
+& Measures import composition toward the EU. \\
+
+\bottomrule
+\end{longtable}
+\end{landscape}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Main GDP replication design}
+\label{tab:replication_design}
+\begin{tabular}{p{4cm}p{9cm}}
+\toprule
+Element & Implementation in the reconstructed replication \\
+\midrule
+Research design & Country-level synthetic control method, estimated separately for each treated CFA country. \\
+
+Treatment & Shift from French franc anchor to euro anchor. \\
+
+Treatment year & 2002. \\
+
+Pre-treatment period & 1980--2001. \\
+
+Post-treatment period & 2002--2019. \\
+
+Treated units & 13 CFA countries: seven WAEMU countries and six CEMAC countries. \\
+
+Main outcome & WDI GDP per capita in current US dollars. \\
+
+Donor pool & Updated donor pool of non-CFA countries, based on the original donor list and augmented with additional fixed-exchange-rate candidates. \\
+
+Predictors & Agriculture, government share, investment share, ODA, FDI, labour, and polity score. \\
+
+Lagged outcome predictors & GDP values in selected pre-treatment years: 1980, 1990, 1995, and 2001. \\
+
+Excluded predictor & Industry, dropped because of missingness and data-quality concerns. \\
+
+Inference & In-space placebo tests using donor countries as placebo-treated units. \\
+
+Interpretation & Transparent reconstructed replication, not exact reproduction of the authors' original dataset. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{landscape}
+\begin{longtable}{p{3.2cm}p{3cm}p{4.3cm}p{7cm}}
+\caption{Variable construction in the reconstructed GDP replication}
+\label{tab:variable_construction_replication} \\
+\toprule
+Variable & Code name & Source & Construction and notes \\
+\midrule
+\endfirsthead
+
+\toprule
+Variable & Code name & Source & Construction and notes \\
+\midrule
+\endhead
+
+GDP per capita & \texttt{gdp\_selected}; \texttt{wdi\_gdp\_pc\_current} & WDI & Main outcome. WDI GDP per capita in current US dollars was selected because the GDP values in the original paper could not be matched to any standard WDI or PWT GDP series. \\
+
+Lagged GDP & \texttt{gdp\_selected} in selected years & Constructed from selected GDP outcome & Used as special SCM predictors for 1980, 1990, 1995, and 2001. \\
+
+Agriculture value added & \texttt{agriculture} & WDI; FAOSTAT fallback & WDI agriculture value added share, supplemented with FAOSTAT where WDI observations were missing. Retained in final SCM predictor set. \\
+
+Industry value added & \texttt{industry} & WDI & Initially considered because it appears in the original specification, but excluded from final SCM because of missingness and data-quality problems. \\
+
+Government share & \texttt{govt\_share} & Penn World Table & Constructed from PWT government consumption share. Retained as SCM predictor. \\
+
+Investment share & \texttt{invest\_share} & Penn World Table & Constructed from PWT investment share. Retained as SCM predictor. \\
+
+Official development assistance & \texttt{oda\_share} & WDI & Constructed from WDI ODA data. The denominator used in the project code should be interpreted cautiously and is documented as a reconstruction choice. \\
+
+Foreign direct investment & \texttt{fdi} & WDI & WDI foreign direct investment, net inflows as a share of GDP. Retained as SCM predictor. \\
+
+Labour & \texttt{labour} & Penn World Table & Constructed as employment divided by population, multiplied by 100. Retained as SCM predictor. \\
+
+Political institutions & \texttt{polity2} & Polity5 & Polity score. Missing values were filled using documented imputation rules where needed. \\
+
+Inflation & \texttt{inflation} and related deflator series & WDI and PWT & Used only for descriptive appendix tables. Published inflation-table values were closer to PWT deflator-based values than to WDI inflation indicators. \\
+\bottomrule
+\end{longtable}
+\end{landscape}
+
+
+\begin{longtable}{p{3.8cm}p{5.2cm}p{5.2cm}}
+\caption{Main replication challenges and modelling decisions}
+\label{tab:replication_challenges} \\
+\toprule
+Issue & Problem & Replication decision \\
+\midrule
+\endfirsthead
+
+\toprule
+Issue & Problem & Replication decision \\
+\midrule
+\endhead
+
+GDP variable & The paper describes the outcome as real GDP per capita, but the reported values could not be matched to standard WDI or PWT GDP series. & Tested multiple GDP alternatives and selected WDI GDP per capita in current US dollars as the closest publicly reproducible match. \\
+
+Missing-data treatment & The paper does not document whether missing values were dropped, interpolated, extrapolated, or filled from other sources. & Saved both unimputed and imputed panels and applied documented imputation rules before SCM estimation. \\
+
+Agriculture predictor & WDI agriculture data contained gaps for some country-years. & Supplemented missing WDI agriculture observations with FAOSTAT data where available. \\
+
+Industry predictor & Industry had substantial missingness and data-quality issues. & Dropped industry from the final SCM predictor set. \\
+
+Donor pool & The original donor-pool reporting was not fully reproducible and some donor countries created data limitations. & Used an explicitly defined updated donor pool, retaining most original donors and adding Turkmenistan, Guyana, and Iraq. \\
+
+ODA construction & The original paper does not clearly document the ODA construction. & Constructed ODA from WDI data and treated the variable as a documented reconstruction choice. \\
+
+Inflation tables & The published inflation tables did not match the stated WDI source closely. & Replicated the descriptive inflation tables separately and placed them in the appendix. \\
+
+Inference & The original paper uses bias-corrected SCM; the replication uses standard \texttt{Synth} SCM in R. & Interpreted results as a reconstructed SCM replication and used donor-placebo tests for inference. \\
+\bottomrule
+\end{longtable}
+
+
+\begin{longtable}{p{3.2cm}p{3.2cm}p{6.8cm}}
+\caption{Missing-data treatment in the reconstructed panel}
+\label{tab:missing_data_treatment} \\
+\toprule
+Variable or issue & Method used & Notes \\
+\midrule
+\endfirsthead
+
+\toprule
+Variable or issue & Method used & Notes \\
+\midrule
+\endhead
+
+Polity score & Nearest-observation fill & Applied generally to fill missing institutional observations. \\
+
+Agriculture & FAOSTAT supplement; nearest-observation fill & FAOSTAT was used to fill missing WDI agriculture values where possible. Remaining gaps were handled through the imputation plan. \\
+
+Industry & Nearest-observation fill in data construction; excluded from final SCM & Although industry was included in the broader data construction process, it was dropped from final SCM because data quality remained problematic. \\
+
+ODA & Country-specific and general nearest-observation fill & Several donor countries required endpoint filling. ODA construction remains a reconstruction choice because the original paper does not clearly document the denominator. \\
+
+FDI & Zero-fill for selected early gaps; nearest-observation fill generally & Zero-filling was used for selected cases where missing early values were treated as approximately zero; other gaps were filled using nearest observations. \\
+
+Labour & Country-specific and general nearest-observation fill & Used for countries with early, late, or broad labour-data gaps. \\
+
+Government share & Nearest-observation fill & Constructed from PWT and filled where necessary. \\
+
+Investment share & Nearest-observation fill & Constructed from PWT and filled where necessary. \\
+
+GDP variables & Nearest-observation fill; selected linear interpolation & Several GDP alternatives were constructed and filled during data preparation, though the final outcome was WDI GDP per capita in current US dollars. \\
+
+Donor eligibility & Donor screening before SCM & Donors entirely missing at least one active predictor over the pre-treatment period were excluded from the usable SCM donor pool. \\
+\bottomrule
+\end{longtable}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Original paper specification and reconstructed replication}
+\label{tab:original_vs_replication}
+\begin{tabular}{p{3.5cm}p{4.8cm}p{5.2cm}}
+\toprule
+Element & Original paper & Reconstructed replication \\
+\midrule
+Outcome & Described as real GDP per capita. & WDI GDP per capita in current US dollars, selected after testing alternative GDP series. \\
+
+SCM implementation & Bias-corrected SCM using Stata implementation. & Standard SCM using R \texttt{Synth}. \\
+
+Treated countries & CFA-zone countries; reporting is not fully consistent across tables. & 13 treated CFA countries; Guinea-Bissau excluded from main SCM sample. \\
+
+Treatment year & 2002. & 2002. \\
+
+Pre-treatment period & 1980--2001 or 1980--2002 depending on wording. & 1980--2001. \\
+
+Donor pool & Published donor pool, with some ambiguity in reporting. & Explicit updated donor pool defined in shared constants. \\
+
+Predictors & Sectoral, macroeconomic, institutional, and lagged-GDP predictors, including industry. & Agriculture, government share, investment share, ODA, FDI, labour, polity score, and lagged GDP; industry excluded. \\
+
+Missing data & Not documented. & Documented imputation plan; both unimputed and imputed panels saved. \\
+
+Inflation table & Described as WDI-based. & Replicated separately; values appear closer to PWT deflator-based series. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\section{Synthetic control method and analysis pipeline}
+
+\section{Replication strategy and data}
+
+The replication follows the original paper's country-level synthetic control design. For each treated CFA franc country, we estimate a counterfactual GDP path using a weighted average of non-CFA donor countries, and then compare the observed post-2002 GDP path with this synthetic counterfactual. The treatment year is 2002, corresponding to the shift from the French franc anchor to the euro anchor. The pre-treatment period is 1980--2001 and the post-treatment period is 2002--2019. The main treated sample contains 13 CFA countries across WAEMU and CEMAC. Further details on the sample, donor pool, variable construction, and missing-data treatment are reported in Appendix~\ref{app:replication_data}, Table~\ref{tab:variable_construction}, and Table~\ref{tab:missing_data_treatment}.
+
+Let \(Y_{it}\) denote GDP per capita for country \(i\) in year \(t\). For a treated country \(i=1\), the unobserved counterfactual outcome after treatment is approximated using a weighted average of \(J\) donor countries:
+
+\begin{equation}
+\widehat{Y}_{1t}^{N}
+=
+\sum_{j=2}^{J+1} w_j Y_{jt},
+\label{eq:synthetic_outcome}
+\end{equation}
+
+where the donor weights satisfy the standard synthetic control constraints:
+
+\begin{equation}
+w_j \geq 0,
+\qquad
+\sum_{j=2}^{J+1} w_j = 1.
+\label{eq:weight_constraints}
+\end{equation}
+
+The weights are chosen to make the synthetic control resemble the treated country as closely as possible before treatment. Let \(X_1\) denote the vector of pre-treatment characteristics for the treated country, and let \(X_0\) denote the corresponding matrix for the donor countries. The donor-weight vector \(W\) is selected to minimise the distance between the treated country and the weighted donor average:
+
+\begin{equation}
+\min_W
+\left(X_1 - X_0 W\right)' V \left(X_1 - X_0 W\right),
+\label{eq:scm_minimization}
+\end{equation}
+
+subject to the constraints in Equation~\ref{eq:weight_constraints}. The matrix \(V\) determines the relative importance assigned to each predictor in matching the treated country to the donor pool. In the reconstructed specification, the predictors include agriculture, government share, investment share, official development assistance, foreign direct investment, labour, institutional quality, and selected pre-treatment GDP values. Industry is excluded from the final specification because of missingness and data-quality concerns, as discussed in Appendix~\ref{app:replication_issues}.
+
+The estimated treatment effect is the post-treatment gap between the observed outcome and the synthetic counterfactual:
+
+\begin{equation}
+\widehat{\alpha}_{1t}
+=
+Y_{1t}
+-
+\widehat{Y}_{1t}^{N}
+=
+Y_{1t}
+-
+\sum_{j=2}^{J+1} w_j Y_{jt},
+\qquad t \geq 2002.
+\label{eq:treatment_effect}
+\end{equation}
+
+A positive value of \(\widehat{\alpha}_{1t}\) indicates that actual GDP per capita was above the synthetic counterfactual, while a negative value indicates that actual GDP per capita was below the counterfactual. The interpretation of these gaps depends on the quality of the pre-treatment fit: if the synthetic control does not reproduce the treated country's pre-2002 path closely, the post-treatment gap is less informative.
+
+The replication is best understood as a reconstructed replication rather than a mechanical reproduction of the original paper. Two issues were especially important. First, the GDP series used in the original paper could not be identified exactly from the published documentation. Second, the paper does not report how missing observations were handled, even though missing outcomes or predictors can affect donor eligibility, predictor averages, and estimated synthetic controls. These issues are discussed in Appendix~\ref{app:replication_issues}; the final variable definitions are summarised in Table~\ref{tab:variable_construction}, and the missing-data procedures are summarised in Table~\ref{tab:missing_data_treatment}.
+
+The analysis proceeds in four steps:
+
+\begin{table}[htbp]
+\centering
+\label{tab:replication_pipeline}
+\begin{tabular}{p{1.2cm}p{11.5cm}}
+\toprule
+Step & Description \\
+\midrule
+1 & The country-year panel is reconstructed from public datasets. \\
+
+2 & Variables are harmonised and missing values are handled using documented rules. \\
+
+3 & One synthetic control is estimated for each treated country, producing donor weights, predictor-balance statistics, actual-versus-synthetic GDP paths, and post-treatment gaps. \\
+
+4 & In-space placebo tests are used to compare the treated-country gaps with gaps obtained when the same procedure is applied to donor countries as placebo-treated units. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Several additional reporting issues in the original paper also shaped the replication strategy. These include donor-pool ambiguity, inconsistent country naming, unclear variable definitions, inflation-source inconsistencies, table-label errors, and numerical values that are difficult to reconcile with the stated data structure. These issues do not invalidate the paper's research question, but they reduce confidence that the published tables provide sufficient information for an exact replication. The purpose of the replication is therefore to evaluate the robustness of the paper's broad conclusions using a transparent, reproducible data construction and estimation procedure.
+
+
+
+\section{Replication Tables}
+
+\input{../output/tables/scm_weights_all_treated_wide_formatted.tex}
+
+% \input{../output/tables/scm_weights_all_treated_wide.tex}
+
+\input{../output/tables/table_averages_CFAzone.tex}
+
+
+\input{../output/tables/table1_panelA_waemu_inflation.tex}
+
+\input{../output/tables/table1_panelB_caemc_inflation.tex}
+
+\input{../output/tables/table2_non_cfa_inflation.tex}
+
+\input{../output/tables/appendix3_panelA_waemu_gdp_used.tex}
+
+\input{../output/tables/appendix3_panelB_caemc_gdp_used.tex}
+
+\input{../output/tables/appendix4_non_cfa_gdp_used.tex}
+
+\pagebreak
+
+\section{Replication Figures}
+
+\includegraphics[width=\textwidth]{../output/figures/gdp_pc_used_regions.png}
+
+\includegraphics[width=\textwidth]{../output/figures/scm_gaps_all_treated.png}
+
+\includegraphics[width=\textwidth]{../output/figures/scm_paths_all_treated.png}
+
+\includegraphics[width=\textwidth]{../output/figures/scm_placebo_pvalues_rmspe_ratio.png}
+
+\includegraphics[width=\textwidth]{../output/figures/scm_gap_GNQ.png}
+
+\includegraphics[width=\textwidth]{../output/figures/scm_placebo_gaps_GNQ.png}
+
+\section{Extension Tables}
+
+\begin{landscape}
+\input{../output/extension_trade/tables/extension_trade_scm_summary.tex}
+    
+\end{landscape}
+
+\section{Extension Figures}
+
+\includegraphics[width=\textwidth]{../output/extension_trade/figures/extension_trade_scm_gaps_MEU.png}
+
+\includegraphics[width=\textwidth]{../output/extension_trade/figures/extension_trade_scm_gaps_XEU.png}
+
+\includegraphics[width=\textwidth]{../output/extension_trade/figures/extension_trade_scm_paths_MEU.png}
+
+\includegraphics[width=\textwidth]{../output/extension_trade/figures/extension_trade_scm_paths_XEU.png}
+
+\includegraphics[width=\textwidth]{../output/extension_trade/figures/extension_trade_group_averages_reduced.png}
+
+\section{Extension Placebo}
+
+\includegraphics[width=\textwidth]{../output/extension_trade/placebo/figures/extension_trade_placebo_gaps_MEU.png}
+
+\includegraphics[width=\textwidth]{../output/extension_trade/placebo/figures/extension_trade_placebo_gaps_XEU.png}
+
+\includegraphics[width=\textwidth]{../output/extension_trade/placebo/figures/extension_trade_placebo_pvalues_MEU.png}
+
+\includegraphics[width=\textwidth]{../output/extension_trade/placebo/figures/extension_trade_placebo_pvalues_XEU.png}
+
+\section{Extension Placebo}
+
+
+\end{document}

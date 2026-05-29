@@ -34,7 +34,7 @@
 * 24-05-2026 [ES]: For extension variables: MEU, XEU completely missing for many countries, available from 1981 for some. Trade openness incomplete for many countries including in treated. Exports/imports missing for equatorial guinea, barbados, dominica, eswatini (partial), grenada, guyana (partial), laos (partial), lesotho (partial), st kitts and nevis, st lucia, turkmenistan (partial), 
 * 25-05-2026 [ES]: Missing data for equatorial guinea for EU Exports/imports, and many control countries. 
 * 25-05-2026 [ES]: Initially matched on just average trade variables by period. Instead add special years as well, as there is a lot of variability in trade values, not captured by averages. 
-* 26-05-2026 [ES]: Updated code to export tables to .tex files as well as .csv, for easier formatting in the final report. 
+* 26-05-2026 [ES]: Exports are now in tables to .tex files as well as .csv, for easier formatting and replicability for the final report.
 
 
 
