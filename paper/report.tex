@@ -6,6 +6,7 @@
 
 \title{Investigating the Economic Impact of the CFA Franc Zone with Synthetic Control Methods}
 \author{Callista Lodzinski, Mathilde Muller, and Elizabeth Schuck}
+\date{May 2026}
 
 \begin{document}
 
@@ -177,7 +178,7 @@ Both figures are tools to compare the growth that actually happened with the tre
 However our results conflict with the one of the original paper. Indeed, Diallo \& Ba (2024) found a positive output gap for multiple countries, for instance Chad, the Central African Republic or Mali. Thus their result would suggest that the peg of CFA Franc to the euro may boost the real GDP per capita compared to the synthetic output. Due to the data and methodology issues in the original paper, we cannot be sure about the exact reasons for this discrepancy, but it is likely that the different GDP series, missing-data treatments, or errors in the original implementation played a major role.
 
 \subsection{Replication placebo testing}
-Figure~\ref{fig:scm_placebo_pvalues} presents the results of our placebo significance testing. We followed the in-place placebo method, which consists of analysing each donor country as if it had received the treatment. Then we have estimated the synthetic control for each donor country and we can then compute the output gap for each country. The aim of this approach is to compare the difference between the pre-treatment and post-treatment output gap of each treated country with the analogous output gaps of the donor countries. 
+The results of our placebo significance testing are displayed in Figure~\ref{fig:scm_placebo_pvalues}. We followed the in-place placebo method, which consists of analysing each donor country as if it had received the treatment. Then we have estimated the synthetic control for each donor country and we can then compute the output gap for each country. The aim of this approach is to compare the difference between the pre-treatment and post-treatment output gap of each treated country with the analogous output gaps of the donor countries. 
 
 \begin{figure}[htbp]
     \centering
@@ -194,7 +195,7 @@ With this method, we obtained the same results as the authors of the original pa
 Equatorial Guinea is an unusual case. In Figure~\ref{fig:equatorial_guinea_gap} we can observe the result for its synthetic control, with the output gap. And indeed we observe a consistently positive GDP per capita gap. We can also note that those results are the one that match the most those of the original paper, in terms of closeness of the numbers of the output gap.
 In Figure~\ref{fig:equatorial_guinea_placebo_gaps}, we can observe graphically that those results are significant. 
 
-Equatorial Guinea should be interpreted cautiously because its post-treatment GDP path coincides with the oil boom. Large oil discoveries in the 1990s transformed the economy, and by the early 2000s oil and gas had become the major driver of exports and government revenue \citep{tordo2011national,vines2009well}. The authors of the original paper also reference studies that show an undervaluation of its exchange rates (Feindouno et al., 2020). As such, Equatorial Guinea may not be a typical case for the CFA franc zone.
+Equatorial Guinea should be interpreted cautiously because its post-treatment GDP path coincides with an oil boom. Large oil discoveries in the mid 1990s transformed the economy, and by the early 2000s oil and gas had become the major driver of exports and government revenue \citep{tordo2011national,vines2009well}. The authors of the original paper also reference studies that show an undervaluation of its exchange rates (Feindouno et al., 2020). As such, Equatorial Guinea may not be a typical case for the CFA franc zone, and its positive output gap may reflect oil-driven growth rather than a general effect of the euro peg. 
 
 
 \begin{figure}[htbp]
@@ -341,7 +342,7 @@ These results are consistent with the overvaluation channel interpretation. The 
 \begin{kbox}
 \subsubsection{CFA franc overvaluation channel: Cotton}
 
-There is literature noting this effect for some specific goods, including cotton. \citet{pigeaud2021africa} discuss cotton as a concrete example,arguing that CFA exporters can be squeezed when export prices are denominated in dollars, but domestic costs and producer prices are denominated in the CFA franc. They note that this was particularly important for Burkina Faso, Mali, and Benin, where cotton is a major export, and describe the 2004--2007 euro appreciation as damaging for Burkina Faso's cotton sector when combined with falling world cotton prices. 
+There is literature noting this effect for some specific goods, including cotton. \citet{pigeaud2021africa} discuss cotton as a concrete example, arguing that CFA exporters can be squeezed when export prices are denominated in dollars, but domestic costs and producer prices are denominated in the CFA franc. They note that this was particularly important for Burkina Faso, Mali, and Benin, where cotton is a major export, and describe the 2004--2007 euro appreciation as damaging for Burkina Faso's cotton sector when combined with falling world cotton prices. 
 
 This interpretation is supported by \citet{bellocq2007coton}, who conducted an AFD study of the Burkina Faso cotton crisis, which documents the losses of cotton companies and the fiscal support required from the Burkinabe state during this period. It is also consistent with the World Bank's Burkina Faso diagnostic, which states that the fall in the CFA-franc price of cotton was aggravated by the rise of the euro, and that euro appreciation created major competitiveness problems for exports, especially cotton. Earlier policy analysis for the European Parliament made the same point during the early euro period, arguing that CFA cotton producers' competitiveness declined as the euro strengthened against the dollar.
 
@@ -622,7 +623,7 @@ The paper describes the synthetic-control weights as being expressed in percenta
 \label{fig:extension_placebo_gaps_all}
 \end{figure}
 
-
+\pagebreak
 \bibliographystyle{apalike}
 \bibliography{references}
 
