@@ -2,10 +2,9 @@
 
 \documentclass[a4paper]{article}
 
-\include{preamble.tex}
+\input{preamble.tex}
 
-\title{Macro Three Replication Project: Investigating the Economic Impact of the CFA Franc Zone with Synthetic Control Methods}
-\date{Due: 29 May 2026}
+\title{Investigating the Economic Impact of the CFA Franc Zone with Synthetic Control Methods}
 \author{Callista Lodzinski, Mathilde Muller, and Elizabeth Schuck}
 
 \begin{document}
@@ -13,15 +12,17 @@
 \maketitle
 
 \section{The CFA Franc Zone}
-The CFA franc zone is one of the longest-running fixed exchange rate arrangements in the global economy. It links a group of West and Central African countries to an external anchor currency through two monetary unions: the West African Economic and Monetary Union (WAEMU) and the Central African Economic and Monetary Community (CEMAC). The institutional architecture has historically rested on four central features: a fixed parity against the anchor currency, convertibility guarantee by the French Treasury, free capital mobility, and the pooling of foreign exchange reserves.These features have made the CFA franc zone an important case study in international macroeconomics because it combines monetary credibility and exchange-rate stability with a substantial loss of nominal exchange rate flexibility and monetary policy autonomy. The central policy question is whether this arrangement has supported or constrained economic performance. 
+The CFA franc zone is one of the longest-running fixed exchange rate arrangements in the global economy. It links a group of West and Central African countries to an external anchor currency through two monetary unions: the West African Economic and Monetary Union (WAEMU) and the Central African Economic and Monetary Community (CEMAC). The institutional architecture has historically rested on four central features: a fixed parity against the anchor currency, a convertibility guarantee by the French Treasury, free capital mobility, and the pooling of foreign exchange reserves \citep{hadjimichael1997cfa, banquedefrance2015cfazone}. These features have made the CFA franc zone an important case study in international macroeconomics because it combines monetary credibility and exchange-rate stability with a substantial loss of nominal exchange rate flexibility and monetary policy autonomy. The central policy question is whether this arrangement has supported or constrained economic performance. 
 
 \section{Replication of the Original Study}
 
-In their article, Alassane Diallo and Adama Ba sought to explore the impact of the peg from the French franc to the euro on the economies of the countries in the CFA-zone. There are a lot of conflicts in the literature about whether they have experienced a stronger or weaker growth after the peg shift, compared to what would have been without France joining the euro-zone. On one hand we could expect a high growth rate due to the access to an intensive trade market with the European Economic Community (Dearden, 1999; Hadjimichael and Galy, 1997). But on the other hand there are many uncertainties linked to the consequence of being pegged to a strong currency like the euro, this could undermine expectations following the switch of anchor currencies (Zafar, 2005). 
-At the time of the peg switch, in 2002, a report of the French Senate stated that there was no comprehensive study that would prove that the peg of the CFA-Franc to the euro would be an advantage or a drawback for member countries. 
+ Alassane Diallo and Adama Ba sought to explore the impact of the peg from the French franc to the euro on the economies of the countries in the CFA-zone  \citep{diallo2024french}. The literature is divided about whether they have experienced a stronger or weaker growth after the peg shift, compared to what would have been without France joining the euro-zone. On one hand we could expect a high growth rate due to the access to an intensive trade market with the European Economic Community \citep{hadjimichael1997cfa,dearden1999cfa}. But on the other hand there are many uncertainties linked to the consequence of being pegged to a strong currency like the euro, this could undermine expectations following the switch of anchor currencies \citep{zafar2005strong}. 
+
+A French Senate report later made a similar point, stating that there was no general study allowing one to say clearly whether membership of the Franc Zone was an advantage or a handicap for member countries \citep{goulet2020zonefranc}.
+
 Therefore, the authors of the paper wanted to address this gap by estimating the impact of the euro changeover on CFA-zone economies. Their goal was first to allow for more empirical evidence to strengthen the debates but also to inform CFA-zone policy makers. For their analysis they chose to use GDP per capita as the outcome variable of interest. 
 
-Diallo and Ba (2024) use the synthetic control method (Abadie, 2021) to construct a proxy GDP per capita for each CFA-countries, meaning an estimate of what the growth would have been without the peg changeover. This is done through the construction of a weighted average of comparable non-CFA countries, based on pre-treatment characteristics. This method provides a transparent comparison group for our treated countries, and it can produce a more credible counterfactual than with a single control country. 
+Diallo and Ba use the synthetic control method to construct counterfactual GDP paths for each treated CFA country \citep{abadie2021using,abadie2010synthetic}. This is done through the construction of a weighted average of comparable non-CFA countries, based on pre-treatment characteristics. This method provides a transparent comparison group for our treated countries, and it can produce a more credible counterfactual than with a single control country. 
 
 The thirteen treated countries of the CFA-zone are divided between two economical communities: the West African Economic and Monetary Community (WAEMU) and the Central African Economic and Monetary Community (CAEMC), as shown in Table \ref{tab:treated_countries}. 
 
@@ -175,7 +176,7 @@ Both figures are tools to compare the growth that actually happened with the tre
 
 However our results conflict with the one of the original paper. Indeed, Diallo \& Ba (2024) found a positive output gap for multiple countries, for instance Chad, the Central African Republic or Mali. Thus their result would suggest that the peg of CFA Franc to the euro may boost the real GDP per capita compared to the synthetic output. Due to the data and methodology issues in the original paper, we cannot be sure about the exact reasons for this discrepancy, but it is likely that the different GDP series, missing-data treatments, or errors in the original implementation played a major role.
 
-\subsection{Placebo testing}
+\subsection{Replication placebo testing}
 Figure~\ref{fig:scm_placebo_pvalues} presents the results of our placebo significance testing. We followed the in-place placebo method, which consists of analysing each donor country as if it had received the treatment. Then we have estimated the synthetic control for each donor country and we can then compute the output gap for each country. The aim of this approach is to compare the difference between the pre-treatment and post-treatment output gap of each treated country with the analogous output gaps of the donor countries. 
 
 \begin{figure}[htbp]
@@ -192,7 +193,8 @@ With this method, we obtained the same results as the authors of the original pa
 \subsubsection{Equatorial Guinea}
 Equatorial Guinea is an unusual case. In Figure~\ref{fig:equatorial_guinea_gap} we can observe the result for its synthetic control, with the output gap. And indeed we observe a consistently positive GDP per capita gap. We can also note that those results are the one that match the most those of the original paper, in terms of closeness of the numbers of the output gap.
 In Figure~\ref{fig:equatorial_guinea_placebo_gaps}, we can observe graphically that those results are significant. 
-This suggests that the changeover to the euro peg had a significantly positive impact on Equatorial Guinea. However it is important to highlight that Equatorial Guinea is a very singular country. Indeed the authors of the original paper reference studies that show an undervaluation of its exchange rates (Feindouno et al., 2020). We can also acknowledge that there was a large discovery of oil in Equatorial Guinea's land. Since then it has become one of Sub-Saharan Africa's largest oil producers. Because of the closeness of this event and the changeover to the euro peg, we cannot conclude on if the changeover had an impact on the growth of the country. The economic boom can be easily explained by their development on the oil market, thus bringing a significant bias in our analysis. 
+
+Equatorial Guinea should be interpreted cautiously because its post-treatment GDP path coincides with the oil boom. Large oil discoveries in the 1990s transformed the economy, and by the early 2000s oil and gas had become the major driver of exports and government revenue \citep{tordo2011national,vines2009well}. The authors of the original paper also reference studies that show an undervaluation of its exchange rates (Feindouno et al., 2020). As such, Equatorial Guinea may not be a typical case for the CFA franc zone.
 
 
 \begin{figure}[htbp]
@@ -216,11 +218,161 @@ This suggests that the changeover to the euro peg had a significantly positive i
 \end{figure}
 
 
+\section{Extension: Trade}
+\subsection{Extension Motivation}
+The GDP replication suggests that the shift to the euro anchor did not generate a clear increase in output across the CFA franc zone. However, the peg may still have impacts on trade outcomes, and the direction of these effects is not agreed on. 
+
+The impact of the euro peg on the trade channel is theoretically ambiguous. One the one side, the euro peg could strengthen trade with Europe by reducing exchange-rate uncertainty, lowering transaction costs, and increasing monetary credibility. This mechanism is consistent with broader currency-union literature, which finds that common currencies and reduced exchange-rate volatility can increase bilateral trade \citep{rose2000one,glick2016currency}. In the specific CFA context, \citet{martinez2019euro} finds positive sectoral trade effects from the euro for some CFA exports to euro-area countries.
+
+On the other side, because the CFA franc moves with the euro, euro appreciation can appreciate the CFA franc relative to non-euro currencies. This may weaken export competitiveness and make euro-area imports relatively more expensive, encouraging firms and consumers to shift towards non-euro suppliers. This concern is supported by \citet{coulibaly2014competitiveness}, who argues that after the switch to the euro, CFA-zone competitiveness became more dependent on movements in the anchor currency.
+
+The extension therefore asks whether there is evidence that the euro peg increased trade with the euro area, or reduced it, to add empirical evidence to the discussions on the direction of the impact on euro trade. 
+
+\subsection{Extension Methodology}
+
+Focusing on the trade channel, we considered different variables. The ones that caught our attention are the share of imports coming from the Euro Area (MEU) and the share of exports going to the Euro Area (XEU). These are the most relevant variables in our context because they allow us to partly avoid a confounding issue with the 1994 devaluation of the CFA franc. The CFA franc was devalued by 50 percent in January 1994, partly to restore external competitiveness \citep{imf1994aftermath,imf1994devaluation}. This makes level variables like exports and imports as a share of GDP, as shown in Figure~\ref{fig:trade_chart}, unsuitable as SCM outcomes. Using trade shares reduces, but does not eliminate, the risk that the 1994 devaluation mechanically drives the results. As a result, these variables are better suited to asking whether the euro peg changed the composition of trade toward or away from Europe. 
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{../output/extension_trade/figures/extension_trade_group_averages_reduced.png}
+    \caption{Level trade variables for different groups of countries}
+    \label{fig:trade_chart}
+\end{figure}
+
+The subsequent step is to apply the SCM to our two extension variables, MEU and XEU, following the same four-step structure as the replication: pre-treatment fit, actual versus synthetic paths, gap analysis, and placebo inference.
+
+As previously stated, the quality of the pre-treatment fit between the synthetic counterfactual and the treated unit is central to the credibility of the synthetic control method. This can be assessed by examining Figure~\ref{fig:meu_scm_paths_all}, which plots the actual EU trade shares of treated countries alongside their synthetic counterfactuals. For the import variable MEU, the fit is reasonable across most countries over the 1980 to 2002 period. However there are still some imperfections remaining, as trade shares tend to be more volatile than GDP per capita, making them inherently harder to match precisely. The pre-treatment fit for MEU is therefore weaker than the one obtained in the GDP replication. For the export variable XEU, the pre-treatment fit is more uneven still, with several countries showing larger discrepancies before 2002.
+
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../output/extension_trade/figures/extension_trade_scm_paths_MEU.png}
+    \caption{MEU paths between actual and synthetic controls for treated CFA countries}
+    \label{fig:meu_scm_paths_all}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../output/extension_trade/figures/extension_trade_scm_paths_XEU.png}
+    \caption{XEU paths between actual and synthetic controls for treated CFA countries}
+    \label{fig:xeu_scm_paths_all}
+\end{subfigure}
+
+\caption{Trade extension paths between actual and synthetic controls for treated CFA countries}
+\label{fig:trade_extension_paths_all}
+\end{figure}
+
+
+Then Figure~\ref{fig:trade_extension_gaps_all} presents the gap between the actual and synthetic trade shares with Europe for each country. This provides another way of assessing pre-treatment fit, as the gaps should oscillate around zero before 2002. For the trade shares this is less clean than in the GDP replication, but the gaps remain broadly centred around zero for most countries, supporting the use of these synthetic controls as credible counterfactuals.
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../output/extension_trade/figures/extension_trade_scm_gaps_MEU.png}
+    \caption{MEU gaps between actual and synthetic controls for treated CFA countries}
+    \label{fig:meu_scm_gaps_all}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../output/extension_trade/figures/extension_trade_scm_gaps_XEU.png}
+    \caption{XEU gaps between actual and synthetic controls for treated CFA countries}
+    \label{fig:xeu_scm_gaps_all}
+\end{subfigure}
+
+\caption{Trade extension gaps between actual and synthetic controls for treated CFA countries}
+\label{fig:trade_extension_gaps_all}
+\end{figure}
+
+On the whole, while the pre-treatment fit for both MEU and XEU is weaker than the one obtained in the GDP replication, it remains sufficiently close to zero to justify proceeding with the post-treatment analysis. 
+
+Focusing now on post-treatment gaps, the results diverge between the two variables, MEU and XEU. For MEU : we observe only negative gaps across all countries, meaning the share of imports coming from the EU fell following the pegging to the euro. For XEU, no clear pattern emerges from the gaps, with no consistent directional trend across treated countries
+
+\subsection{Extension placebo analysis}
+
+To assess whether these post-treatment gaps are statistically unusual relative to what could occur by chance, we turn to placebo inference, shown in Figures~\ref{fig:meu_placebo_pvalues} and~\ref{fig:xeu_placebo_pvalues}. Full visualisations of the placebo results are included in Appendix~\ref{app:extension_results}. One important constraint applies to both variables: with only 13 donor countries, the reference distribution contains 14 units in total, meaning the minimum achievable rank p-value is 1/14, approximately 0.077. Significance at the 5\% level is therefore unreachable by construction for either variable. 
+
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../output/extension_trade/placebo/figures/extension_trade_placebo_pvalues_MEU.png}
+    \caption{Placebo p-values for MEU}
+    \label{fig:meu_placebo_pvalues}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../output/extension_trade/placebo/figures/extension_trade_placebo_pvalues_XEU.png}
+    \caption{Placebo p-values for XEU}
+    \label{fig:xeu_placebo_pvalues}
+\end{subfigure}
+
+\caption{Placebo p-values for trade extension}
+\end{figure}
+
+Within that constraint, results diverge depending on whether we look at the import or export side. For the share of imports coming from the EU, 9 out of 13 countries show significant negative gaps, by reaching the lowest attainable p-value. This indicates that EU import shares fell below their synthetic counterfactual following the change in peg.
+
+In contrast, for the share of exports going to the EU, the evidence of any effect is considerably weaker. Almost no treated countries display significant gaps relative to the placebo distribution, with Senegal representing the only borderline exception at the 10\% significance level. The euro peg therefore appears to have had little detectable effect on the share of exports directed toward the EU.
+
+Overall, the significant tests using the placebo method confirm that the negative gaps in the import shares are statistically significant for a majority of treated countries, but as expected, the export shares do not yield significant results to interpret.
+
+\subsection{Interpretation of extension placebo testing results}
+
+The placebo results therefore point to an asymmetric trade response: the euro peg is associated with a statistically detectable fall in EU import shares for many CFA countries, but not with a comparable change in EU export shares. The results suggest a compositional adjustment in import sourcing, where CFA countries appear to have moved away from EU suppliers relative to their synthetic counterfactuals. 
+
+These results are consistent with the overvaluation channel interpretation. The euro-dollar chart in Figure~\ref{fig:euro_dollar_chart} is useful here. It shows a sharp appreciation of the euro after the early 2000s, especially between 2003 and 2008. Since a large share of international trade is invoiced in dominant currencies, especially the US dollar, exchange-rate movements against the dollar can strongly affect import prices and trade values \citep{gopinath2020dominant,boz2022patterns}. This appreciation would therefore have raised the relative price of euro-area imports for CFA countries compared with imports from dollar-linked or non-euro suppliers.
+
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{../output/figures/eur_usd.png}
+    \caption{Euro-dollar exchange rate, 1999-2026}
+    \label{fig:euro_dollar_chart}
+\end{figure}
+
+
+\begin{kbox}
+\subsubsection{CFA franc overvaluation channel: Cotton}
+
+There is literature noting this effect for some specific goods, including cotton. \citet{pigeaud2021africa} discuss cotton as a concrete example,arguing that CFA exporters can be squeezed when export prices are denominated in dollars, but domestic costs and producer prices are denominated in the CFA franc. They note that this was particularly important for Burkina Faso, Mali, and Benin, where cotton is a major export, and describe the 2004--2007 euro appreciation as damaging for Burkina Faso's cotton sector when combined with falling world cotton prices. 
+
+This interpretation is supported by \citet{bellocq2007coton}, who conducted an AFD study of the Burkina Faso cotton crisis, which documents the losses of cotton companies and the fiscal support required from the Burkinabe state during this period. It is also consistent with the World Bank's Burkina Faso diagnostic, which states that the fall in the CFA-franc price of cotton was aggravated by the rise of the euro, and that euro appreciation created major competitiveness problems for exports, especially cotton. Earlier policy analysis for the European Parliament made the same point during the early euro period, arguing that CFA cotton producers' competitiveness declined as the euro strengthened against the dollar.
+
+More broadly, IMF work on WAEMU trade highlights the macroeconomic importance of cotton exports for Benin, Burkina Faso, Mali, and Togo, while studies of CFA real exchange-rate misalignment argue that appreciation of the CFA franc against the dollar can reduce competitiveness outside the euro area. These sources support the idea that export effects may be sector-specific, which might suggest why aggregate EU export shares may not show a strong average response in the analysis results.
+\end{kbox}
+
+The extension results partly contrast with literature that emphasises positive trade effects from fixed exchange rates or currency unions. Martínez-Zarzoso finds that the euro had positive and significant effects for some CFA export flows to euro-area countries, although the effects vary by sector and direction of trade. Our results are not necessarily inconsistent with this sectoral evidence, because the extension uses aggregate EU trade shares rather than bilateral sector-level flows. Positive effects in specific export sectors may be offset by negative effects in others, or may be too small to change aggregate export shares. The absence of strong export-share effects may also reflect the structure of CFA exports: many are primary commodities whose destinations are impacted by global demand, resource endowments, long-term contracts, and commodity-market conditions, as well as exchange-rate impacts.
+
+There are also methodological limitations with the extension analysis. The extension uses a synthetic control framework adapted from the GDP replication, but the best predictors of trade composition may differ from the best predictors of GDP per capita. Variables such as bilateral distance, port access, logistics quality, product composition, tariff exposure, colonial trade networks, and partner-country demand may be more relevant for predicting EU trade shares than the macroeconomic predictors available in the reconstructed GDP panel. These limitations are consistent with the gravity-trade literature, where bilateral trade is typically modelled as depending on economic mass, distance, trade costs, borders, policy barriers, and multilateral resistance terms \citep{anderson2003gravity,head2014gravity}.
+
+The donor pool is also limited by missing trade data, leaving a smaller set of usable placebo countries (13 of 20). For this reason, care should be taken when interpreting the result of no statistically significant effects for the export sector. Export-side effects may be weaker, more sector-specific, or simply harder to detect using aggregate trade-share outcomes.
+
+\section{Conclusions}
+This project began as a replication exercise for the work of Diallo and Ba, asking whether the CFA franc's shift from the French franc anchor to the euro anchor changed economic outcomes in the CFA franc zone. However, the project became a reconstruction exercise instead, because the original paper contains data gaps, methodological ambiguities, and reporting errors that prevent a fully mechanical replication. In particular, the GDP variable could not be identified exactly, the treatment of missing values is not documented, and several tables contain inconsistencies. The analysis therefore reconstructs the study using public data, explicit variable choices, and documented cleaning decisions.
+
+The GDP results support a cautious version of the original paper's conclusion. The reconstructed SCM estimates do not show clear evidence of broad GDP gains after 2002. Most countries have negative average post-treatment GDP gaps, although these are generally not statistically unusual in the placebo analysis. Equatorial Guinea remains the main positive exception, but its oil dependence and unusual GDP trajectory make it difficult to interpret as evidence of a general CFA-zone effect.
+
+The trade extension gives a more specific picture. Although aggregate GDP effects are weak, the euro peg appears to have affected trade composition, especially import sourcing. The strongest extension result is that EU import shares fall relative to synthetic controls for many CFA countries. This suggests that the EU became less important in import baskets than it would have been under the counterfactual, rather than that total imports necessarily fell.
+
+This finding supports the overvaluation and relative-price narrative in the CFA franc literature. Because the CFA franc moves with the euro, euro appreciation can make euro-area goods relatively more expensive and can reduce the CFA value of dollar-denominated export revenues. This is consistent with concerns about competitiveness pressures under the euro peg, including those discussed for cotton-exporting countries. At the same time, the results do not strongly support the alternative narrative that the euro anchor broadly increased Europe-oriented trade through credibility, lower transaction costs, or reduced exchange-rate uncertainty.
+
+The main limitation of the extension is that the SCM specification was adapted from the GDP replication, while trade composition may require different predictors, such as distance, logistics, sectoral export structure, tariffs, commodity dependence, and partner-country demand. The donor pool is also limited by missing trade data, reducing the number of placebo countries. Future work could therefore use richer bilateral and sectoral trade data, expand the donor pool, and test whether effects differ across major export sectors such as cotton, oil, cocoa, and minerals.
+
+Overall, the results suggest that the euro peg did not generate broad GDP gains across the CFA franc zone, but may have mattered through trade composition. A plausible conclusion is that the euro anchor provided monetary continuity while also reshaping external adjustment pressures, especially through relative prices and import sourcing.
 
 
 
 \begin{landscape}
-\appendix \section{Data Construction and Variable Definitions} \label{app:replication_data}
+\appendix 
+\section{Data Construction and Variable Definitions} \label{app:replication_data}
+The reconstructed dataset combines World Development Indicators, Penn World Table, Polity5, FAOSTAT, and IMF Direction of Trade Statistics \citep{worldbank2026wdi,feenstra2015pwt,marshall2020polity,faostat2026,imf2026imts}.
 \begin{longtable}{P{3cm}P{3cm}P{3cm}P{3cm}P{4.4cm}P{5.2cm}}
 \caption{Variable construction in the original paper, updated replication, and trade extension}
 \label{tab:variable_construction} \\
@@ -380,7 +532,7 @@ Donor eligibility & Donor screening before SCM & Donors entirely missing at leas
 \end{longtable}
 
 
-\appendix \section{Issues in the Original Paper and Implications for Replication} \label{app:replication_issues}
+\section{Issues in the Original Paper and Implications for Replication} \label{app:replication_issues}
 \subsection{Primary issues}
 
 A major obstacle in the replication was identifying the GDP variable used in the original paper. Although the paper describes the outcomes as real GDP per capita, the reported values could not be matched to any standard GDP series available in either WDI or Penn World Table. We tested the full set of WDI GDP per capita measures, PWT output- and expenditure-side GDP variables, and constructed alternatives combining WDI aggregate GDP measures with PWT population to generate per-capita series. None of these reproduced the GDP values reported in the original tables. This created a fundamental reproducibility problem, because GDP per capita is both the main outcome and a key lagged predictor in the SC specification. We therefore treated the GDP series as an empirical reconstruction choice, rather than a directly observed replication input, selecting WDI GDP per capita in current US dollars, because it provided the closest correspondence to the published synthetic control patterns. 
@@ -449,7 +601,30 @@ The non-CFA inflation table reports Sao Tome and Principe as having exactly zero
 The paper describes the synthetic-control weights as being expressed in percentage points, but the values in the table are decimal weights. This is just a terminology issues, but matters for the interpretation of the table. 
 
 
+\section{Extension results: additional figures and tables} \label{app:extension_results}
 
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../output/extension_trade/placebo/figures/extension_trade_placebo_gaps_MEU.png}
+    \caption{Placebo gaps for MEU}
+    \label{fig:meu_placebo_gaps}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../output/extension_trade/placebo/figures/extension_trade_placebo_gaps_XEU.png}
+    \caption{Placebo gaps for XEU}
+    \label{fig:xeu_placebo_gaps}
+\end{subfigure}
+\caption{Extension placebo gaps}
+\label{fig:extension_placebo_gaps_all}
+\end{figure}
+
+
+\bibliographystyle{apalike}
+\bibliography{references}
 
 
 \end{document}
